@@ -1,7 +1,7 @@
 {
-  "name": "nodeApp boilerplate",
+  "name": "node-app-boilerplate",
   "version": "1.0.0",
-  "description": "Boilerplate code for node app",
+  "description": "Boilerplate code for node app project start",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
