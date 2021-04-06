@@ -10,6 +10,9 @@ require('dotenv').config()
 // initiate express app instance
 var app = express()
 
+// Initiate Router
+require('./routes/router')(app)
+
 // Use middlewares
 // CORS Enabled for all requesting sources
 app.use(cors())
@@ -23,7 +26,12 @@ app.use(bodyParser.json())
 
 // Default route
 app.get('/', (req,res)=>{
-    res.send("Welcome to Node app version 1.0")
+    res.json({
+        'name': 'Haatbazaar',
+        'description': 'multi vendor ecommerce api',
+        'version': '1.0',
+        'baseurl': '/api/v1'
+    })
 })
 // App listening to requests
 app.listen(process.env.PORT, ()=>{
