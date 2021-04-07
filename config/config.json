@@ -1,3 +1,7 @@
 {
-    "baseurl": "/api/v1"
+    "baseurl": "/api/v1",
+    "jwt": {
+        "SECRET": "hsda89uasdkkjskaus989wqwhaksj",
+        "EXPIRY": "1d"
+    }
 }
