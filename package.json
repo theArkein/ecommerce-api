@@ -1,7 +1,7 @@
 {
-  "name": "node-app-boilerplate",
+  "name": "haatbazaar",
   "version": "1.0.0",
-  "description": "Boilerplate code for node app project start",
+  "description": "API endpoints for haatbazaar e-commerce platform",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
@@ -19,6 +19,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.3",
     "morgan": "^1.10.0",
-    "multer": "^1.4.2"
+    "multer": "^1.4.2",
+    "uniqid": "^5.3.0"
   }
 }

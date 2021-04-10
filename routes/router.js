@@ -1,21 +1,27 @@
-let productsRoutes = require('./Product/routes')
-let adminRoutes = require('./Admin/router')
-let userRoutes = require('./User/router')
+const adminRoutes = require('./Admin/router')
+const userRoutes = require('./User/router')
+const categoryRoutes = require('./Category/routes')
+const productRoutes = require('./Product/routes')
+const orderRoutes = require('./Order/routes')
 
 
+const config = require('../config/config.json')
 
-let config = require('../config/config.json')
-
-let router = (app)=>{
-    // Products
-    app.use(`${config.baseurl}/products`, productsRoutes)
-
+const router = (app)=>{    
     // Admin
-    app.use(`${config.baseurl}/admin`, adminRoutes)
+    app.use(`${config.base}/admin`, adminRoutes)
 
     // User
-    app.use(`${config.baseurl}/user`, userRoutes)
+    app.use(`${config.base}/user`, userRoutes)
 
+    // Product
+    app.use(`${config.base}/product`, productRoutes)
+
+    // Category
+    app.use(`${config.base}/category`, categoryRoutes)
+
+    // Order
+    app.use(`${config.base}/order`, orderRoutes)
 }
 
 module.exports = router
