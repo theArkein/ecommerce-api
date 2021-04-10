@@ -45,7 +45,7 @@ app.get('/', (req,res)=>{
         'name': 'Haatbazaar',
         'description': 'multi vendor ecommerce api',
         'version': '1.0',
-        'baseurl': '/api/v1'
+        'base': '/api/v1'
     })
 })
 

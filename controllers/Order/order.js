@@ -39,9 +39,16 @@ const create = (req, res)=>{
      let order = {
           details: {
                orderId: uniqid('HB-O-'),
-               totalProducts: 5,
-               status: "true"
-          }
+               totalProducts: {type: Number},
+               totalCost: {type: Number},
+               userId: 1
+         },
+         products: [{
+             productId: {type: Schema.Types.ObjectId, ref: 'Product'},
+             quantity: {type: Number},
+             unitPrice: {type: Number},
+             totalPrice: {type: Number}
+         }]
      }
      let newOrder = new Order(order)
      res.json(newOrder)
