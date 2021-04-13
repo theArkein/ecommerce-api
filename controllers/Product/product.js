@@ -66,7 +66,7 @@ const listByVendor = (req, res)=>{
           userType = req.user.userType
 
      if(userType === 3 || userType === null )
-          findQuery[publish] = true
+          findQuery['publish'] = true
      
      console.log(findQuery)
      Product.find(findQuery)
