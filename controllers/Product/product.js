@@ -65,10 +65,10 @@ const listByVendor = (req, res)=>{
      if(req.user)
           userType = req.user.userType
 
-     if(userType === 3 ){
-          findQuery.publish = true
-     }
-
+     if(userType === 3 || userType === null )
+          findQuery[publish] = true
+     
+     console.log(findQuery)
      Product.find(findQuery)
      .populate('mainCategory', 'name slug icon')
      .populate('subCategory', 'name slug')
