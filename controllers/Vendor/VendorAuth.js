@@ -1,4 +1,4 @@
-var Admin = require('../../models/admin')
+var Vendor = require('../../models/vendor')
 var bcrypt = require('bcrypt')
 var jwt = require('jsonwebtoken')
 var Joi = require('joi')
@@ -26,7 +26,7 @@ const validateSignIn = (data)=>{
 }
 
 const signin = (req, res)=>{
-    console.log("Admin Signin")
+    console.log("Vendor Signin")
     let {username, password} = req.body
     
     let errors = validateSignIn(req.body)
@@ -37,14 +37,14 @@ const signin = (req, res)=>{
             errors
         })
 
-    Admin.findOne({username}).then(admin=>{
-        console.log(admin)
-        if(!admin)
+    Vendor.findOne({username}).then(vendor=>{
+        console.log(vendor)
+        if(!vendor)
             return res.status(400).json({
                 success: false,
                 message: "No accounts with such id",
             })
-        let isMatch = bcrypt.compareSync(password, admin.password);
+        let isMatch = bcrypt.compareSync(password, vendor.password);
         if(!isMatch)
             return res.status(401).json({
                 status: false,
@@ -52,14 +52,14 @@ const signin = (req, res)=>{
                 errors: {}
             })
 
-        var token = jwt.sign({ id: admin._id, userType: 1 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
+        var token = jwt.sign({ id: vendor._id, userType: 2 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
 
         // var decoded = jwt.verify(token, config.jwt.SECRET)
         return res.status(200).json({
             status: true,
             message: "Successfully signedin",
             token: token,
-            data: admin
+            data: vendor
         })
     }).catch(err=>{
         return res.status(500).json({
@@ -72,22 +72,23 @@ const signin = (req, res)=>{
 }
 
 const signup = (req, res)=>{
-    console.log("Admin Signup")
-    let admin = new Admin(req.body)
-    admin.save().then((admin)=>{
+    console.log("Vendor Signup")
+    let vendor = new Vendor(req.body)
+    console.log(vendor)
+    vendor.save().then((vendor)=>{
         return res.json({
             success: true,
             message: "Successfully Added",
-            data: admin
+            data: vendor
         })
 
     }).catch(err=>{
-        return res.json({
-            success: false,
-            message: "Something went wrong",
-            errors: err
+        res.json({
+             status: false,
+             message: err.message,
+             errors: err.errors
         })
-    })  
+   })  
 }
 
 module.exports = {

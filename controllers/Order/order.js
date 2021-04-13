@@ -36,35 +36,23 @@ const listById = (req, res)=>{
 }
 
 const create = (req, res)=>{
-     let order = {
-          details: {
-               orderId: uniqid('HB-O-'),
-               totalProducts: {type: Number},
-               totalCost: {type: Number},
-               userId: 1
-         },
-         products: [{
-             productId: {type: Schema.Types.ObjectId, ref: 'Product'},
-             quantity: {type: Number},
-             unitPrice: {type: Number},
-             totalPrice: {type: Number}
-         }]
-     }
+     let order = req.body
+     console.log(req.body)
+     order.id = uniqid()
      let newOrder = new Order(order)
-     res.json(newOrder)
-     // newOrder.save().then(created=>{
-     //      res.json({
-     //           status: true,
-     //           message: "Successfully created",
-     //           data: created
-     //      })
-     // }).catch(err=>{
-     //      res.json({
-     //           status: false,
-     //           message: err.message,
-     //           errors: err.errors
-     //      })
-     // })
+     newOrder.save().then(created=>{
+          res.json({
+               status: true,
+               message: "Successfully created",
+               data: created
+          })
+     }).catch(err=>{
+          res.json({
+               status: false,
+               message: err.message,
+               errors: err.errors
+          })
+     })
 }
 
 const edit = (req, res)=>{
@@ -97,7 +85,6 @@ const removeOne = (req, res)=>{
           res.json({
                status: false,
                message: "Something went wrong",
-               deleted
           })
      })
 }

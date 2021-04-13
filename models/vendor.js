@@ -2,12 +2,16 @@ var mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const config = require("../config/config.json")
 
+
 const { Schema } = mongoose;
 
 const schema = new Schema({
     username: { type: String, required: true, unique: true },
     // email: { type: String, index: true, unique: true, required: true },
     password: { type: String, required: true },
+    name: {type: String, required: true },
+    products: [{type: Schema.Types.ObjectId, ref: 'Product'}],
+    orders: [{type: Schema.Types.ObjectId, ref: 'Order'}],
     date: { type: Date, default: Date.now },
 });
 
@@ -22,5 +26,5 @@ schema.pre('save', function(next) {
 });
 
 
-const Admin = mongoose.model('Admin', schema);
-module.exports = Admin
+const Vendor = mongoose.model('Vendor', schema);
+module.exports = Vendor

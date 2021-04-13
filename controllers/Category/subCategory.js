@@ -1,6 +1,6 @@
-const SubCategory = require('../../models/sub-category')
-const MainCategory = require('../../models/main-category')
-const ChildCategory = require('../../models/child-category')
+const SubCategory = require('../../models/subCategory')
+const MainCategory = require('../../models/mainCategory')
+const ChildCategory = require('../../models/childCategory')
 
 const slugify = require('slugify')
 
@@ -111,6 +111,7 @@ const removeAll = (req, res)=>{
 module.exports = {
      list,
      create,
+     edit,
      removeOne,
      removeAll
 }

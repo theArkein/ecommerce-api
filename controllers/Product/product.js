@@ -1,8 +1,22 @@
 const Product = require('../../models/product')
-const MainCategory = require('../../models/main-category')
 
 const list = (req, res)=>{
-     Product.find({'publish': true})
+     let userType = null
+     if(req.user)
+          userType = req.user.userType
+     let findQuery = {}
+     if(userType === 3 || userType == null){
+          findQuery = {
+               publish: true
+          }
+     }
+     if(userType === 2){
+          findQuery = {}
+     }
+     if(userType === 1){
+          findQuery = {}
+     }
+     Product.find(findQuery)
      .populate('mainCategory', 'name slug icon')
      .populate('subCategory', 'name slug')
      .populate('childCategory', 'name slug')
@@ -41,14 +55,49 @@ const listById = (req, res)=>{
      })
 }
 
+const listByVendor = (req, res)=>{
+     
+     let vendorId = req.params.id
+     let userType = null
+
+     let findQuery = {vendor: vendorId}
+
+     if(req.user)
+          userType = req.user.userType
+
+     if(userType === 3 ){
+          findQuery.publish = true
+     }
+
+     Product.find(findQuery)
+     .populate('mainCategory', 'name slug icon')
+     .populate('subCategory', 'name slug')
+     .populate('childCategory', 'name slug')
+     .then(products=>{
+          res.json({
+               status: true,
+               results: products.length,
+               data: products
+          })
+     }).catch(err=>{
+          res.json({
+               status: true,
+               message: "Something went wrong",
+               error: err
+          })
+     })
+}
+
 const create = (req, res)=>{
+     let vendor = req.user.id
      let product = {
           name: req.body.name,
           shortName: req.body.shortName,
           sku: req.body.sku,
+          vendor: req.body.vendor || vendor,
           price: req.body.price,
           stock: req.body.stock,
-          publish: (req.body.publish === 'false')?false:true,
+          publish: req.body.publish || false,
           status: req.body.status || 1,
           mainCategory: req.body.mainCategory,
           subCategory: req.body.subCategory,
@@ -132,7 +181,7 @@ const edit = (req, res)=>{
           sku: req.body.sku,
           price: req.body.price,
           stock: req.body.stock,
-          publish: (req.body.publish === 'false')?false:true,
+          publish: req.body.publish || false,
           status: req.body.status || 1,
           mainCategory: req.body.mainCategory,
           subCategory: req.body.subCategory,
@@ -161,7 +210,7 @@ const edit = (req, res)=>{
      });
      let images = req.files
      
-     // Save images paths
+     // Save images paths if images provided
      if(images.length){
           // save featuredImage path if provided
           if(images[0].fieldname == "featuredImage"){
@@ -192,7 +241,8 @@ const edit = (req, res)=>{
      if(req.body.galleryImageLink)
           product.images.gallery.links = req.body.galleryImageLink || undefined
 
-     Product.findByIdAndUpdate(id).then(updated=>{
+          console.log("Update Product")
+     Product.findByIdAndUpdate(id, product).then(updated=>{
           res.json({
                status: true,
                message: "Successfully updated",
@@ -238,6 +288,7 @@ const removeAll = (req, res)=>{
 module.exports = {
      list,
      listById,
+     listByVendor,
      create,
      edit,
      removeOne,

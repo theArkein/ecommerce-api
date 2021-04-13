@@ -8,6 +8,7 @@ const schema = new Schema({
     username: { type: String, required: true, unique: true },
     // email: { type: String, index: true, unique: true, required: true },
     password: { type: String, required: true },
+    orders: [{type: Schema.Types.ObjectId, ref: 'Order'}],
     date: { type: Date, default: Date.now },
 });
 
@@ -22,5 +23,5 @@ schema.pre('save', function(next) {
 });
 
 
-const Admin = mongoose.model('Admin', schema);
-module.exports = Admin
+const User = mongoose.model('User', schema);
+module.exports = User

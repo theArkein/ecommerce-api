@@ -1,11 +1,12 @@
 // import required dependencies
-var express = require('express')
-var bodyParser = require('body-parser')
-var multer  = require('multer')
-var cors = require('cors')
-var morgan = require('morgan')
+const express = require('express')
+const bodyParser = require('body-parser')
+const multer  = require('multer')
+const cors = require('cors')
+const morgan = require('morgan')
 const path = require('path');
 
+const authenticateMiddleware = require('./middlewares/authenticate')
 require('dotenv').config()
 
 var storage = multer.diskStorage({
@@ -38,7 +39,6 @@ app.use(bodyParser.json())
 // Parse multi-part form data
 app.use(multer({storage}).any())
 
-
 // Default route
 app.get('/', (req,res)=>{
     res.json({
@@ -48,6 +48,9 @@ app.get('/', (req,res)=>{
         'base': '/api/v1'
     })
 })
+
+// Middlewares
+app.use(authenticateMiddleware)
 
 // Initiate other routes router
 require('./routes/router')(app)

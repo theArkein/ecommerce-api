@@ -1,5 +1,8 @@
 {
     "base": "/api/v1",
+    "bcrypt": {
+        "saltRounds": 10
+    },
     "jwt": {
         "SECRET": "hsda89uasdkkjskaus989wqwhaksj",
         "EXPIRY": "1d"

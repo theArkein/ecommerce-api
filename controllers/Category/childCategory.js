@@ -1,13 +1,11 @@
-const MainCategory = require('../../models/main-category')
-const SubCategory = require('../../models/sub-category')
-const ChildCategory = require('../../models/child-category')
+const ChildCategory = require('../../models/childCategory')
+const SubCategory = require('../../models/subCategory')
 
 const slugify = require('slugify')
 
 const list = (req, res)=>{
-     MainCategory.find()
+     ChildCategory.find()
      .select('name slug')
-     .populate({ path: 'children',select: 'name slug', populate: { path: 'children' , select: 'name slug'}})
      .then(categories=>{
           res.json({
                status: true,
@@ -24,13 +22,16 @@ const list = (req, res)=>{
 }
 
 const create = (req, res)=>{
-     let {name} = req.body
+     let {name, parent, grandParent} = req.body
      let slug = slugify(name, {lower: true})
-     console.log(req.files)
-
-     let icon = req.files[0].filename
-     let category = new MainCategory({name, slug, icon})
+     let category = new ChildCategory({name, slug, parent, grandParent})
      category.save().then(created=>{
+          console.log("saved")
+          // Add to parent category
+          SubCategory.findByIdAndUpdate(parent, { $push: { children: created._id } }).then(data=>{
+               console.log("Added to parent category")
+          })
+          
           res.json({
                status: true,
                message: "Successfully created",
@@ -44,18 +45,13 @@ const create = (req, res)=>{
           })
      })
 }
-
 const edit = (req, res)=>{
      let id = req.params.id
      let {name} = req.body
      let slug = slugify(name, {lower: true})
-     let category = {name, slug}
-     
-     if(req.files.length){
-          let icon = req.files[0].filename
-          category.icon = icon
-     }
-     MainCategory.findByIdAndUpdate(id, category ).then(updated=>{
+     let icon = req.files[0].filename
+
+     ChildCategory.findByIdAndUpdate(id, {name, slug, icon} ).then(updated=>{
           res.json({
                status: true,
                message: "Successfully updated",
@@ -69,24 +65,15 @@ const edit = (req, res)=>{
           })
      })
 }
-
 const removeOne = (req, res)=>{
      let id = req.params.id
      console.log("Remove One")
-     MainCategory.findByIdAndRemove(id).then(deleted=>{          
-          
-          SubCategory.deleteMany({parent: deleted._id}).then(data=>{
-               console.log("All Child Category Removed")
+     ChildCategory.findByIdAndRemove(id).then(deletedCategory=>{
+          SubCategory.findByIdAndUpdate(deletedCategory.parent, { $pull: { children: deletedCategory._id } }).then(data=>{
+               console.log("Removed from parent category")
           }).catch(err=>{
                console.log(err)
           })
-
-          ChildCategory.deleteMany({grandParent: deleted._id}).then(data=>{
-               console.log("All GrandChild Category Removed")
-          }).catch(err=>{
-               console.log(err)
-          })
-          
           res.json({
                status: true,
                message: "Successfully deleted",
@@ -102,8 +89,8 @@ const removeOne = (req, res)=>{
 }
 
 const removeAll = (req, res)=>{
-     console.log("Remove All")
-     MainCategory.deleteMany({}).then(data=>{
+     console.log("Rmeove All")
+     ChildCategory.deleteMany({}).then(data=>{
           console.log("All Categories Deleted")
           res.json(data)
      }).catch(err=>{

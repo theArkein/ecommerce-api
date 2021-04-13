@@ -12,6 +12,10 @@ const schema = new Schema({
     sku: {
         type: String,
     },
+    vendor: {
+        type: Schema.Types.ObjectId, ref: 'Vendor',
+        required: true
+    },
     price: {
         type: Number,
         required: true
