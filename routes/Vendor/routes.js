@@ -13,13 +13,13 @@ const ProductController = require('../../controllers/Product/product')
 router.post('/auth/signin', VendorAuthController.signin)
 router.post('/auth/signup', VendorAuthController.signup)
 
-// Vendor
+// vendor
 router.get('/list', VendorController.list)
 
-// products
-router.get('/:id/product/list', ProductController.listByVendor)
+// product
+router.get('/product/list', ProductController.listByVendor)
 
-// orders
-router.get('/order/list', authorize([1,2,3]), OrderController.list)
+// order
+router.get('/order/list', authorize([2]), OrderController.listByVendor)
 
 module.exports = router

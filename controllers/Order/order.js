@@ -18,6 +18,23 @@ const list = (req, res)=>{
      })
 }
 
+const listByVendor = (req, res)=>{
+     Order.find()
+     .then(orders=>{
+          res.json({
+               status: true,
+               results: orders.length,
+               data: orders
+          })
+     }).catch(err=>{
+          res.json({
+               status: true,
+               message: "Something went wrong",
+               error: err
+          })
+     })
+}
+
 const listById = (req, res)=>{
      let id = req.params.id
      Order.findOne({_id: id})
@@ -101,6 +118,7 @@ const removeAll = (req, res)=>{
 
 module.exports = {
      list,
+     listByVendor,
      listById,
      create,
      edit,
