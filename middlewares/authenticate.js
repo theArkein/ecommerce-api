@@ -23,8 +23,15 @@ const authenticate = (req, res, next)=>{
         return next()
     }
 
-    var decoded = jwt.verify(token, config.jwt.SECRET)
-    
+    try{
+        var decoded = jwt.verify(token, config.jwt.SECRET)
+    }
+    catch(err){
+        return res.status(400).json({
+            success: false,
+            message: "Invalid signature, token malfunctioned.",
+        })
+    }
     // if authorization token provided authenticate = user-3/vendor-2/admin-1
     req.user = decoded
     console.log("Authentication: ", req.user.userType)

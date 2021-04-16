@@ -4,8 +4,16 @@ const SubCategory = require('../../models/subCategory')
 const slugify = require('slugify')
 
 const list = (req, res)=>{
-     ChildCategory.find()
-     .select('name slug')
+     // for users, guests, vendors
+     let selectQuery = 'name slug'
+     
+     // For admin
+     if(req.user != null)
+          if(req.user,userType == 3){
+               selectQuery = null
+          }
+
+     ChildCategory.find().select(selectQuery).populate(populateQuery)
      .then(categories=>{
           res.json({
                status: true,

@@ -1,9 +1,18 @@
-var express = require('express')
-var router = express.Router()
+const express = require('express')
+const router = express.Router()
 
-var UserAuthController = require('../../controllers/User/UserAuth')
+const UserAuthController = require('../../controllers/User/UserAuth')
+const OrderController = require('../../controllers/Order/order')
+
+const authorize = require('../../middlewares/authorize')
 
 router.post('/auth/signin', UserAuthController.signin)
 router.post('/auth/signup', UserAuthController.signup)
+
+// orders
+router.get('/order/list', authorize([3]), OrderController.listByUser)
+router.post('/order/create', authorize([3]), OrderController.createByUser)
+
+
 
 module.exports = router

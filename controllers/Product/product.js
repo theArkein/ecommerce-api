@@ -1,22 +1,7 @@
 const Product = require('../../models/product')
 
 const list = (req, res)=>{
-     let userType = null
-     if(req.user)
-          userType = req.user.userType
-     let findQuery = {}
-     if(userType === 3 || userType == null){
-          findQuery = {
-               publish: true
-          }
-     }
-     if(userType === 2){
-          findQuery = {}
-     }
-     if(userType === 1){
-          findQuery = {}
-     }
-     Product.find(findQuery)
+     Product.find({publish: true})
      .populate('mainCategory', 'name slug icon')
      .populate('subCategory', 'name slug')
      .populate('childCategory', 'name slug')
@@ -34,10 +19,9 @@ const list = (req, res)=>{
           })
      })
 }
-
 const listById = (req, res)=>{
      let id = req.params.id
-     Product.findOne({_id: id, status: true})
+     Product.findOne({_id: id, publish: true})
      .populate('mainCategory', 'name slug icon')
      .populate('subCategory', 'name slug')
      .populate('childCategory', 'name slug')
@@ -54,22 +38,71 @@ const listById = (req, res)=>{
           })
      })
 }
-
 const listByVendor = (req, res)=>{
-     
      let vendorId = req.params.id
-     let userType = null
-
-     let findQuery = {vendor: vendorId}
-
-     if(req.user)
-          userType = req.user.userType
-
-     if(userType === 3 || userType === null )
-          findQuery['publish'] = true
-     
-     console.log(findQuery)
-     Product.find(findQuery)
+     console.log("Vendor Products")
+     Product.find({vendor: vendorId, publish: true})
+     .populate('mainCategory', 'name slug icon')
+     .populate('subCategory', 'name slug')
+     .populate('childCategory', 'name slug')
+     .then(products=>{
+          res.json({
+               status: true,
+               results: products.length,
+               data: products
+          })
+     }).catch(err=>{
+          res.json({
+               status: true,
+               message: "Something went wrong",
+               error: err
+          })
+     })
+}
+const listByMainCategory = (req, res)=>{
+     let categoryId = req.params.id
+     console.log("Main Category Products")
+     Product.find({mainCategory: categoryId, publish: true})
+     .populate('mainCategory', 'name slug icon')
+     .populate('subCategory', 'name slug')
+     .populate('childCategory', 'name slug')
+     .then(products=>{
+          res.json({
+               status: true,
+               results: products.length,
+               data: products
+          })
+     }).catch(err=>{
+          res.json({
+               status: true,
+               message: "Something went wrong",
+               error: err
+          })
+     })
+}
+const listBySubCategory = (req, res)=>{
+     let categoryId = req.params.id
+     Product.find({subCategory: categoryId, publish: true})
+     .populate('mainCategory', 'name slug icon')
+     .populate('subCategory', 'name slug')
+     .populate('childCategory', 'name slug')
+     .then(products=>{
+          res.json({
+               status: true,
+               results: products.length,
+               data: products
+          })
+     }).catch(err=>{
+          res.json({
+               status: true,
+               message: "Something went wrong",
+               error: err
+          })
+     })
+}
+const listByChildCategory = (req, res)=>{
+     let categoryId = req.params.id
+     Product.find({childCategory: categoryId, publish: true})
      .populate('mainCategory', 'name slug icon')
      .populate('subCategory', 'name slug')
      .populate('childCategory', 'name slug')
@@ -89,7 +122,8 @@ const listByVendor = (req, res)=>{
 }
 
 const create = (req, res)=>{
-     let vendor = req.user.id
+     let vendor = (req.user.userType===3)?req.body.vendor:req.user.id
+
      let product = {
           name: req.body.name,
           shortName: req.body.shortName,
@@ -289,6 +323,9 @@ module.exports = {
      list,
      listById,
      listByVendor,
+     listByMainCategory,
+     listBySubCategory,
+     listByChildCategory,
      create,
      edit,
      removeOne,
