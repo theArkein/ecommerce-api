@@ -1,6 +1,8 @@
 const adminRoutes = require('./Admin/routes')
 const vendorRoutes = require('./Vendor/routes')
 const userRoutes = require('./User/routes')
+const publicRoutes = require('./Public/routes')
+
 const categoryRoutes = require('./Category/routes')
 const productRoutes = require('./Product/routes')
 const orderRoutes = require('./Order/routes')
@@ -17,6 +19,9 @@ const router = (app)=>{
 
     // User
     app.use(`${config.base}/user`, userRoutes)
+
+    // User
+    app.use(`${config.base}/public`, publicRoutes)
 
     // Product
     app.use(`${config.base}/product`, productRoutes)
