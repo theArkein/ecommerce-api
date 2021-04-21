@@ -5,6 +5,7 @@ const multer  = require('multer')
 const cors = require('cors')
 const morgan = require('morgan')
 const path = require('path');
+require('module-alias/register')
 
 const authenticateMiddleware = require('./middlewares/authenticate')
 require('dotenv').config()
@@ -37,7 +38,8 @@ app.use(morgan('tiny'))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 // Parse multi-part form data
-app.use(multer({storage}).any())
+// app.use(multer({storage}).any())
+
 
 // Default route
 app.get('/', (req,res)=>{

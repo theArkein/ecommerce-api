@@ -9,6 +9,13 @@
   },
   "author": "theArkein",
   "license": "ISC",
+  "_moduleAliases": {
+    "@root": ".",
+    "@controllers": "controllers",
+    "@middlewares": "middlewares",
+    "@models": "models",
+    "@routes": "routes"
+  },
   "dependencies": {
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
