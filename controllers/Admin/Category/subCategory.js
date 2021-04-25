@@ -2,20 +2,15 @@ const SubCategory = require('@models/subCategory')
 const MainCategory = require('@models/mainCategory')
 const ChildCategory = require('@models/childCategory')
 
+const validate = require('@middlewares/admin/category')
+
 const slugify = require('slugify')
 
 const list = (req, res)=>{
-     // for users, guests, vendors
-     let selectQuery = 'name slug'
-     let populateQuery = { path: 'children',select: 'name slug'}
-     
-     // For admin
-     if(req.user != null)
-          if(req.user,userType == 3){
-               selectQuery = null
-               populateQuery = { path: 'children'}
-          }
-     SubCategory.find().select(selectQuery).populate(populateQuery)
+     let populateQuery = { path: 'children'}
+
+     SubCategory.find()
+     .populate(populateQuery)
      .then(categories=>{
           res.json({
                status: true,
@@ -32,6 +27,15 @@ const list = (req, res)=>{
 }
 
 const create = (req, res)=>{
+     // Validate Request data
+     let errors = validate.subCategoryCreate(req.body)
+     if(errors)
+        return res.status(400).json({
+            success: false,
+            message: "Validation failed",
+            errors
+        })
+
      let {name, parent} = req.body
      let slug = slugify(name, {lower: true})
      let category = new SubCategory({name, slug, parent})
@@ -48,19 +52,28 @@ const create = (req, res)=>{
      }).catch(err=>{
           res.json({
                status: false,
-               message: "Failed to create",
-               error: err
+               message: err.message,
+               error: err.errors
           })
      })
 }
 
 const edit = (req, res)=>{
-     let id = req.params.id
+     // Validate Request data
+     let errors = validate.subCategoryEdit(req.body)
+     if(errors)
+        return res.status(400).json({
+            success: false,
+            message: "Validation failed",
+            errors
+        })
+
      let {name} = req.body
      let slug = slugify(name, {lower: true})
-     let icon = req.files[0].filename
-
-     SubCategory.findByIdAndUpdate(id, {name, slug, icon} ).then(updated=>{
+     let filter = {slug: req.params.slug}
+     let update = {name, slug}
+     SubCategory.findOneAndUpdate(filter, update)
+     .then(updated=>{
           res.json({
                status: true,
                message: "Successfully updated",
@@ -76,9 +89,9 @@ const edit = (req, res)=>{
 }
 
 const removeOne = (req, res)=>{
-     let id = req.params.id
-     console.log("Remove One")
-     SubCategory.findByIdAndRemove(id).then(deletedCategory=>{
+     let filter = {slug: req.params.slug}
+     SubCategory.findOneAndDelete(filter)
+     .then(deletedCategory=>{
           
           MainCategory.findByIdAndUpdate(deletedCategory.parent, { $pull: { children: deletedCategory._id } }).then(data=>{
                console.log("Removed from parent category")

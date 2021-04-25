@@ -6,11 +6,25 @@ const schema = new Schema({
         type: String,
         required: true,
     },
-    shortName: {
+    shortname: {
         type: String,
+        required: true
+    },
+    slug: {
+        type: String,
+        required: true,
+        unique: true,
+        index: true
     },
     sku: {
         type: String,
+        required: true,
+    },
+    slug: {
+        type: String,
+        required: true,
+        unique: true,
+        index: true,
     },
     vendor: {
         type: Schema.Types.ObjectId, ref: 'Vendor',

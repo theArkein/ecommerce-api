@@ -11,6 +11,7 @@
   "license": "ISC",
   "_moduleAliases": {
     "@root": ".",
+    "@config": "config",
     "@controllers": "controllers",
     "@middlewares": "middlewares",
     "@models": "models",
@@ -24,6 +25,7 @@
     "express": "^4.17.1",
     "joi": "^17.4.0",
     "jsonwebtoken": "^8.5.1",
+    "module-alias": "^2.2.2",
     "mongoose": "^5.12.3",
     "morgan": "^1.10.0",
     "multer": "^1.4.2",

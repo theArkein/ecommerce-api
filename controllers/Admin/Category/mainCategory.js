@@ -2,6 +2,8 @@ const MainCategory = require('@models/mainCategory')
 const SubCategory = require('@models/subCategory')
 const ChildCategory = require('@models/childCategory')
 
+const validate = require('@middlewares/admin/category')
+
 const slugify = require('slugify')
 
 const list = (req, res)=>{
@@ -26,9 +28,18 @@ const list = (req, res)=>{
 }
 
 const create = (req, res)=>{
+
+     // Validate request
+     let errors = validate.mainCategoryCreate(req.body)
+    if(errors)
+        return res.status(400).json({
+            success: false,
+            message: "Validation failed",
+            errors
+        })
+
      let {name} = req.body
      let slug = slugify(name, {lower: true})
-     console.log(req.files)
 
      let icon = null
      if(req.files.length)
@@ -52,16 +63,26 @@ const create = (req, res)=>{
 }
 
 const edit = (req, res)=>{
-     let id = req.params.id
+     // Validate request
+     let errors = validate.mainCategoryEdit(req.body)
+     if(errors)
+        return res.status(400).json({
+            success: false,
+            message: "Validation failed",
+            errors
+        })
+
      let {name} = req.body
+     console.log(req.body)
      let slug = slugify(name, {lower: true})
      let category = {name, slug}
      
      if(req.files.length)
           category.icon = "images/" + req.files[0].filename
 
-     console.log(category)
-     MainCategory.findByIdAndUpdate(id, category)
+     let filter = {slugL: req.params.slugs} 
+     let update = category
+     MainCategory.findOneAndUpdate(filter, update)
      .then(updated=>{
           if(!updated)
                res.json({
@@ -83,10 +104,10 @@ const edit = (req, res)=>{
 }
 
 const removeOne = (req, res)=>{
-     let id = req.params.id
-     console.log("Remove One")
-     MainCategory.findByIdAndRemove(id).then(deleted=>{          
-          
+     let filter = {slug: req.params.slug}
+     MainCategory.findOneAndDelete(filter)
+     .then(deleted=>{          
+          console.log(deleted)
           SubCategory.deleteMany({parent: deleted._id}).then(data=>{
                console.log("All Child Category Removed")
           }).catch(err=>{

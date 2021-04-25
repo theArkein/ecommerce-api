@@ -1,37 +1,49 @@
-const Product = require('../../models/product')
+const Product = require('@models/product')
+const Vendor = require('@models/vendor')
+const MainCategory = require('@models/mainCategory')
+const SubCategory = require('@models/subCategory')
+const ChildCategory = require('@models/childCategory')
+
+
 
 const list = (req, res)=>{
-     Product.find({publish: true})
+     let filterQuery = {publish: true}
+     Product.find()
      .populate('mainCategory', 'name slug icon')
      .populate('subCategory', 'name slug')
      .populate('childCategory', 'name slug')
      .then(products=>{
-          res.json({
+          return res.json({
                status: true,
                results: products.length,
                data: products
           })
      }).catch(err=>{
-          res.json({
+          return res.json({
                status: true,
                message: "Something went wrong",
                error: err
           })
      })
 }
-const listById = (req, res)=>{
-     let id = req.params.id
-     Product.findOne({_id: id, publish: true})
+const detail = (req, res)=>{
+     let filterQuery = {slug: req.params.slug, publish: true}
+     Product.findOne(filterQuery)
      .populate('mainCategory', 'name slug icon')
      .populate('subCategory', 'name slug')
      .populate('childCategory', 'name slug')
      .then(product=>{
-          res.json({
+          if(!product)
+               return res.json({
+                    status: false,
+                    message: "No product found"
+               })
+          return res.json({
                status: true,
                data: product
           })
      }).catch(err=>{
-          res.json({
+          return res.json({
                status: true,
                message: "Something went wrong",
                error: err
@@ -39,17 +51,32 @@ const listById = (req, res)=>{
      })
 }
 const listByVendor = (req, res)=>{
-     let vendorId = req.params.id
-     console.log("Vendor Products")
-     Product.find({vendor: vendorId, publish: true})
-     .populate('mainCategory', 'name slug icon')
-     .populate('subCategory', 'name slug')
-     .populate('childCategory', 'name slug')
-     .then(products=>{
+     let filterQuery = {slug: req.params.slug}
+     let selectQuery = 'products'
+     Vendor.findOne(filterQuery)
+     .select(selectQuery)
+     .populate({
+          path: 'products',
+          populate: {
+               path: 'mainCategory',
+               select: 'name slug icon'
+          },
+          populate: {
+               path: 'subCategory',
+               select: 'name slug'
+          },
+          populate: {
+               path: 'childCategory',
+               select: 'name slug'
+          }
+
+     })
+     .then(vendor=>{
+          console.log(vendor)
           res.json({
                status: true,
-               results: products.length,
-               data: products
+               results: vendor.products.length,
+               data: vendor.products
           })
      }).catch(err=>{
           res.json({
@@ -60,70 +87,90 @@ const listByVendor = (req, res)=>{
      })
 }
 const listByMainCategory = (req, res)=>{
-     let categoryId = req.params.id
-     console.log("Main Category Products")
-     Product.find({mainCategory: categoryId, publish: true})
-     .populate('mainCategory', 'name slug icon')
-     .populate('subCategory', 'name slug')
-     .populate('childCategory', 'name slug')
-     .then(products=>{
-          res.json({
-               status: true,
-               results: products.length,
-               data: products
-          })
-     }).catch(err=>{
-          res.json({
-               status: true,
-               message: "Something went wrong",
-               error: err
+     MainCategory.findOne({slug: req.params.slug}).then(category=>{
+          if(!category)
+               return res.json({
+                    success: false,
+                    message: "no such category found"
+               })
+          let filterQuery = {mainCategory: category._id, publish: true}
+          Product.find(filterQuery)
+          .populate('mainCategory', 'name slug icon')
+          .populate('subCategory', 'name slug')
+          .populate('childCategory', 'name slug')
+          .then(products=>{
+               res.json({
+                    status: true,
+                    results: products.length,
+                    data: products
+               })
+          }).catch(err=>{
+               res.json({
+                    status: false,
+                    message: "Something went wrong",
+                    error: err
+               })
           })
      })
 }
 const listBySubCategory = (req, res)=>{
-     let categoryId = req.params.id
-     Product.find({subCategory: categoryId, publish: true})
-     .populate('mainCategory', 'name slug icon')
-     .populate('subCategory', 'name slug')
-     .populate('childCategory', 'name slug')
-     .then(products=>{
-          res.json({
-               status: true,
-               results: products.length,
-               data: products
-          })
-     }).catch(err=>{
-          res.json({
-               status: true,
-               message: "Something went wrong",
-               error: err
+     SubCategory.findOne({slug: req.params.slug}).then(category=>{
+          if(!category)
+               return res.json({
+                    success: false,
+                    message: "no such category found"
+               })
+          let filterQuery = {subCategory: category._id, publish: true}
+          Product.find(filterQuery)
+          .populate('mainCategory', 'name slug icon')
+          .populate('subCategory', 'name slug')
+          .populate('childCategory', 'name slug')
+          .then(products=>{
+               res.json({
+                    status: true,
+                    results: products.length,
+                    data: products
+               })
+          }).catch(err=>{
+               res.json({
+                    status: false,
+                    message: "Something went wrong",
+                    error: err
+               })
           })
      })
 }
 const listByChildCategory = (req, res)=>{
-     let categoryId = req.params.id
-     Product.find({childCategory: categoryId, publish: true})
-     .populate('mainCategory', 'name slug icon')
-     .populate('subCategory', 'name slug')
-     .populate('childCategory', 'name slug')
-     .then(products=>{
-          res.json({
-               status: true,
-               results: products.length,
-               data: products
-          })
-     }).catch(err=>{
-          res.json({
-               status: true,
-               message: "Something went wrong",
-               error: err
+     ChildCategory.findOne({slug: req.params.slug}).then(category=>{
+          if(!category)
+               return res.json({
+                    success: false,
+                    message: "no such category found"
+               })
+          let filterQuery = {childCategory: category._id, publish: true}
+          Product.find(filterQuery)
+          .populate('mainCategory', 'name slug icon')
+          .populate('subCategory', 'name slug')
+          .populate('childCategory', 'name slug')
+          .then(products=>{
+               res.json({
+                    status: true,
+                    results: products.length,
+                    data: products
+               })
+          }).catch(err=>{
+               res.json({
+                    status: false,
+                    message: "Something went wrong",
+                    error: err
+               })
           })
      })
 }
 
 module.exports = {
      list,
-     listById,
+     detail,
      listByVendor,
      listByMainCategory,
      listBySubCategory,

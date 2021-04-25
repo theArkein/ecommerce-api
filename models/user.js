@@ -5,11 +5,43 @@ const config = require("../config/config.json")
 const { Schema } = mongoose;
 
 const schema = new Schema({
-    username: { type: String, required: true, unique: true },
-    // email: { type: String, index: true, unique: true, required: true },
-    password: { type: String, required: true },
-    orders: [{type: Schema.Types.ObjectId, ref: 'Order'}],
-    date: { type: Date, default: Date.now },
+    email: { 
+        type: String, 
+        index: true, 
+        unique: true, 
+        required: true 
+    },
+    username: { 
+        type: String, 
+        required: true, 
+        unique: true 
+    },
+    password: { 
+        type: String, 
+        required: true 
+    },
+    slug: { 
+        type: String, 
+        required: true, 
+        unique: true,
+        index: true 
+    },
+    orders: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'Order'
+    }],
+    wishlist: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'Product'
+    }],
+    cartList: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'Product'
+    }],
+    date: { 
+        type: Date, 
+        default: Date.now 
+    },
 });
 
 schema.pre('save', function(next) {

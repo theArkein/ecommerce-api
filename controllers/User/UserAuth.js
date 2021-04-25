@@ -1,35 +1,15 @@
-var User = require('../../models/user')
-var bcrypt = require('bcrypt')
-var jwt = require('jsonwebtoken')
-var Joi = require('joi')
-const config = require("../../config/config.json")
-
-const validateSignIn = (data)=>{
-    const schema = Joi.object({
-        username: Joi.string()
-            .alphanum()
-            .min(3)
-            .max(30)
-            .required(),
-        password: Joi.string()
-        .required()
-    
-    }).options({abortEarly : false})
-
-    let validation = schema.validate(data)
-    if(!validation.error)
-        return null
-    let errors = validation.error.details.map(error=>{
-        return {message: error.message, field: error.path[0]}
-    })
-    return errors   
-}
+const User = require('@models/user')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+const config = require("@config/config.json")
+const userValidation = require('@middlewares/user/userValidation')
+const { default: slugify } = require('slugify')
 
 const signin = (req, res)=>{
     console.log("User Signin")
     let {username, password} = req.body
     
-    let errors = validateSignIn(req.body)
+    let errors = userValidation.signin(req.body)
     if(errors)
         return res.status(400).json({
             success: false,
@@ -52,7 +32,7 @@ const signin = (req, res)=>{
                 errors: {}
             })
 
-        var token = jwt.sign({ id: user._id, userType: 3 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
+        const token = jwt.sign({ id: user._id, userType: 3 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
 
         return res.status(200).json({
             status: true,
@@ -72,7 +52,15 @@ const signin = (req, res)=>{
 
 const signup = (req, res)=>{
     console.log("User Signup")
+    let errors = userValidation.signup(req.body)
+    if(errors)
+        return res.status(400).json({
+            success: false,
+            message: "Validation failed",
+            errors
+        })
     let user = new User(req.body)
+    user.slug = slugify(user.username, {lower: true})
     user.save().then((user)=>{
         return res.json({
             success: true,
@@ -84,7 +72,7 @@ const signup = (req, res)=>{
         return res.json({
             success: false,
             message: "Something went wrong",
-            errors: err
+            errors: err.errors
         })
     })  
 }

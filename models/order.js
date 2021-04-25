@@ -14,6 +14,22 @@ const schema = new Schema({
         unitCost: {type: Number, required: true},
         totalCost: {type: Number},
     }],
+    billingDetails: {
+        name: {type: String},
+        email: {type: String},
+        phone: {type: Number},
+        address: {type: String},
+        country: {type: String},
+        postalCode: {type: Number}
+    },
+    shippingDetails: {
+        name: {type: String},
+        email: {type: String},
+        phone: {type: Number},
+        address: {type: String},
+        country: {type: String},
+        postalCode: {type: Number}
+    },  
     status: {type: Number, default: 0},
 }, {timestamps: true});
 

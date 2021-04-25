@@ -1,16 +1,23 @@
 const ChildCategory = require('../../models/childCategory')
 const SubCategory = require('../../models/subCategory')
-const MainCategory = require('../../models/subCategory')
+const MainCategory = require('../../models/mainCategory')
 
 const slugify = require('slugify')
 
 // main
 const listMain = (req, res)=>{
-
+     let filterQuery = {publish: true}
      let selectQuery = 'name slug'
-     let populateQuery = { path: 'children',select: 'name slug', populate: { path: 'children' , select: 'name slug'}}
+     let populateQuery = { 
+          path: 'children', 
+          match: { publish: true }, 
+          select: 'name slug', 
+          populate: { path: 'children' , 
+          match: { publish: true }, 
+          select: 'name slug'}
+     }
 
-     MainCategory.find()
+     MainCategory.find(filterQuery)
      .select(selectQuery)
      .populate(populateQuery)
      .then(categories=>{
@@ -30,18 +37,25 @@ const listMain = (req, res)=>{
 
 // sub
 const listSub = (req, res)=>{
-
+     let filterQuery = {
+          publish: true,
+          slug: req.params.main
+     }
      let selectQuery = 'name slug'
-     let populateQuery = { path: 'children',select: 'name slug'}
+     let populateQuery = { 
+          path: 'children', 
+          match: { publish: true }, 
+          select: 'name slug'
+     }
      
-     SubCategory.find()
+     MainCategory.findOne(filterQuery)
      .select(selectQuery)
      .populate(populateQuery)
      .then(categories=>{
           res.json({
                status: true,
                results: categories.length,
-               data: categories
+               data: categories.children
           })
      }).catch(err=>{
           res.json({
@@ -54,15 +68,25 @@ const listSub = (req, res)=>{
 
 // child
 const listChild = (req, res)=>{
+     let filterQuery = {
+          publish: true,
+          slug: req.params.sub
+     }
      let selectQuery = 'name slug'
+     let populateQuery = { 
+          path: 'children', 
+          match: { publish: true }, 
+          select: 'name slug'
+     }
 
-     ChildCategory.find()
+     SubCategory.findOne(filterQuery)
      .select(selectQuery)
+     .populate(populateQuery)
      .then(categories=>{
           res.json({
                status: true,
                results: categories.length,
-               data: categories
+               data: categories.children
           })
      }).catch(err=>{
           res.json({
