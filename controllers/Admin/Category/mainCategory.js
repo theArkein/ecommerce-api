@@ -2,7 +2,7 @@ const MainCategory = require('@models/mainCategory')
 const SubCategory = require('@models/subCategory')
 const ChildCategory = require('@models/childCategory')
 
-const validate = require('@middlewares/admin/category')
+const validate = require('@middlewares/Admin/category')
 
 const slugify = require('slugify')
 
