@@ -11,7 +11,7 @@ const config = require('../config/config.json')
 
 const router = (app)=>{    
     // Admin
-    app.use(`${config.base}/admin`, adminRoutes)
+    // app.use(`${config.base}/admin`, adminRoutes)
 
     // Admin
     app.use(`${config.base}/vendor`, vendorRoutes)
