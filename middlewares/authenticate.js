@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken')
-const config = require('../config/config.json')
-const User = require('../models/user')
-const Vendor = require('../models/vendor')
-const Admin = require('../models/admin')
+const config = require('@config/config.json')
+const User = require('@models/user')
+const Vendor = require('@models/vendor')
+const Admin = require('@models/admin')
 
 
 const authenticate = (req, res, next)=>{

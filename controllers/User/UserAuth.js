@@ -2,7 +2,7 @@ const User = require('@models/user')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const config = require("@config/config.json")
-const userValidation = require('@middlewares/user/userValidation')
+const userValidation = require('@middlewares/User/userValidation')
 const { default: slugify } = require('slugify')
 
 const signin = (req, res)=>{

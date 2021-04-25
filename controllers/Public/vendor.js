@@ -1,4 +1,4 @@
-const Vendor = require('../../models/vendor')
+const Vendor = require('@models/vendor')
 
 const list = (req, res)=>{
      let selectQuery = 'name'

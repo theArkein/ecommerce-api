@@ -1,6 +1,6 @@
-const Vendor = require('../../models/vendor')
-const Product = require('../../models/product')
-const Order = require('../../models/product')
+const Vendor = require('@models/vendor')
+const Product = require('@models/product')
+const Order = require('@models/product')
 
 
 const listProducts = (req, res)=>{

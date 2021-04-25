@@ -1,6 +1,6 @@
-const ChildCategory = require('../../models/childCategory')
-const SubCategory = require('../../models/subCategory')
-const MainCategory = require('../../models/mainCategory')
+const ChildCategory = require('@models/childCategory')
+const SubCategory = require('@models/subCategory')
+const MainCategory = require('@models/mainCategory')
 
 const slugify = require('slugify')
 

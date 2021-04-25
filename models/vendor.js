@@ -1,6 +1,6 @@
 var mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
-const config = require("../config/config.json")
+const config = require("@config/config.json")
 
 
 const { Schema } = mongoose;

@@ -2,9 +2,9 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const slugify = require('slugify')
 
-const Vendor = require('../../models/vendor')
-const config = require("../../config/config.json")
-const vendorValidate = require("@middlewares/vendor/vendorValidation")
+const Vendor = require('@models/vendor')
+const config = require("@config/config.json")
+const vendorValidate = require("@middlewares/Vendor/vendorValidation")
 
 const signin = (req, res)=>{
     console.log("Vendor Signin")

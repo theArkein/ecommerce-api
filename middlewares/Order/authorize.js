@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const Product = require('../../models/product')
+const Product = require('@models/product')
 
 const authorize = (req, res, next)=>{
     if(req.user.userType == 1)

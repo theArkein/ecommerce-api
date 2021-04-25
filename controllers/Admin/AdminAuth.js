@@ -1,8 +1,8 @@
-var Admin = require('../../models/admin')
+var Admin = require('@models/admin')
 var bcrypt = require('bcrypt')
 var jwt = require('jsonwebtoken')
 var Joi = require('joi')
-const config = require("../../config/config.json")
+const config = require("@config/config.json")
 
 const validateSignIn = (data)=>{
     const schema = Joi.object({

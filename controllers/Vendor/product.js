@@ -4,7 +4,7 @@ const slugify = require('slugify')
 const Product = require('@models/product')
 const Vendor = require('@models/vendor')
 
-const productValidation = require('@middlewares/vendor/productValidation')
+const productValidation = require('@middlewares/Vendor/productValidation')
 
 const list = (req, res)=>{
      let filterQuery = {vendor: req.user.id}

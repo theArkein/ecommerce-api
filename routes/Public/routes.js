@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
 
-const CategoryController = require('@controllers/public/category')
-const ProductController = require('@controllers/public/product')
-const VendorController = require('@controllers/public/vendor')
+const CategoryController = require('@controllers/Public/category')
+const ProductController = require('@controllers/Public/product')
+const VendorController = require('@controllers/Public/vendor')
 
 // Category
 router.get('/category/main/list', CategoryController.listMain)
