@@ -9,6 +9,7 @@ const ChildCategoryController = require('@controllers/Admin/Category/childCatego
 
 const VendorController = require('@controllers/Admin/vendor')
 const UserController = require('@controllers/Admin/user')
+const ProductController = require('@controllers/Admin/product')
 const OrderController = require('@controllers/Admin/order')
 
 
@@ -43,6 +44,10 @@ router.post('/category/child/create', ChildCategoryController.create)
 router.put('/category/child/:slug/edit', ChildCategoryController.edit)
 router.delete('/category/child/:slug/remove', ChildCategoryController.removeOne)
 router.delete('/category/child/removeAll', ChildCategoryController.removeAll)
+
+// product
+router.get('/product/list', ProductController.list)
+router.get('/product/:slug/detail', ProductController.detail)
 
 // vendor
 router.get('/vendor/list', VendorController.list)

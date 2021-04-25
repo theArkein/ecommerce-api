@@ -10,13 +10,13 @@ const router = (app)=>{
     // Admin
     app.use(`${config.base}/admin`, adminRoutes)
 
-    // Admin
+    // Vendor
     app.use(`${config.base}/vendor`, vendorRoutes)
 
     // User
     app.use(`${config.base}/user`, userRoutes)
 
-    // User
+    // Public
     app.use(`${config.base}/public`, publicRoutes)
 
 }
