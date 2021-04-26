@@ -52,7 +52,7 @@ const schema = new Schema({
     }
 }, {timestamps: true});
 
-schema.index({createdAt: 1},{expireAfterSeconds: 5*60, partialFilterExpression : {status: 1}});
+schema.index({createdAt: 1},{expireAfterSeconds: 10, partialFilterExpression : {status: 1}});
 
 schema.pre('save', function(next) {
     // only hash the password if it has been modified (or is new)

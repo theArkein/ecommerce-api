@@ -51,10 +51,6 @@ app.use(authenticateMiddleware)
 // Initiate other routes router
 require('./routes/router')(app)
 
-var os = require("os");
-var hostname = os.hostname();
-console.log(hostname)
-
 // App listening to requests
 app.listen(process.env.PORT, ()=>{
     console.log("App listening to port: ", process.env.PORT)

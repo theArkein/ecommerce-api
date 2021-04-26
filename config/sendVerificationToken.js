@@ -1,6 +1,5 @@
 const nodemailer = require('nodemailer');
 const config  = require('@config/config');
-const { process } = require('uniqid');
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
