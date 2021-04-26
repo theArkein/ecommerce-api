@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken')
 const config = require("@config/config.json")
 const userValidation = require('@middlewares/User/userValidation')
 const { default: slugify } = require('slugify')
+const sendVerificationToken = require('@config/sendVerificationToken')
 
 const signin = (req, res)=>{
     console.log("User Signin")
@@ -61,6 +62,11 @@ const signup = (req, res)=>{
         })
     let user = new User(req.body)
     user.slug = slugify(user.username, {lower: true})
+
+    const token = jwt.sign({ id: user._id, userType: 3 }, config.jwt.SECRET, { expiresIn: 5*60*1000 })
+
+    sendVerificationToken(user.email, token)
+
     user.save().then((user)=>{
         return res.json({
             success: true,

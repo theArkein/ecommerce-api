@@ -26,10 +26,6 @@ const schema = new Schema({
         unique: true,
         index: true 
     },
-    orders: [{
-        type: Schema.Types.ObjectId, 
-        ref: 'Order'
-    }],
     wishlist: [{
         type: Schema.Types.ObjectId, 
         ref: 'Product'
@@ -42,7 +38,21 @@ const schema = new Schema({
         type: Date, 
         default: Date.now 
     },
-});
+    status: {
+        type: Number,
+        default: 1,
+        min: 1,
+        max: 3
+    },
+    passwordResetOTP: {
+        type: String,
+        unique: true,
+        index: true,
+        default: null,
+    }
+}, {timestamps: true});
+
+schema.index({createdAt: 1},{expireAfterSeconds: 5*60, partialFilterExpression : {status: 1}});
 
 schema.pre('save', function(next) {
     // only hash the password if it has been modified (or is new)

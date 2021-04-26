@@ -5,6 +5,7 @@ const CategoryController = require('@controllers/Public/category')
 const ProductController = require('@controllers/Public/product')
 const VendorController = require('@controllers/Public/vendor')
 
+
 // Category
 router.get('/category/main/list', CategoryController.listMain)
 router.get('/category/:main/sub/list', CategoryController.listSub)

@@ -9,7 +9,7 @@ const schema = new Schema({
     // email: { type: String, index: true, unique: true, required: true },
     password: { type: String, required: true },
     date: { type: Date, default: Date.now },
-});
+},{timestamps: true});
 
 schema.pre('save', function(next) {
     // only hash the password if it has been modified (or is new)

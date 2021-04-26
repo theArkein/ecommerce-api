@@ -1,3 +1,4 @@
+const { number } = require('joi')
 var Joi = require('joi')
 
 const signin = (data)=>{
@@ -25,13 +26,13 @@ const signup = (data)=>{
             .max(30)
             .required(),
         email: Joi.string()
+            .email()
             .required(),
         name: Joi.string()
             .min(3)
             .required(),
         password: Joi.string()
-        .required()
-    
+        .required(),
     }).options({abortEarly : false})
 
     let validation = schema.validate(data)

@@ -43,7 +43,7 @@ const schema = new Schema({
         type: Date, 
         default: Date.now 
     },
-});
+}, {timestamps: true});
 
 schema.pre('save', function(next) {
     // only hash the password if it has been modified (or is new)
