@@ -65,13 +65,11 @@ const signup = (req, res)=>{
 
     const token = jwt.sign({ id: user._id, userType: 3 }, config.jwt.SECRET, { expiresIn: 5*60*1000 })
 
-    sendVerificationToken(user.email, token)
-
     user.save().then((user)=>{
+        sendVerificationToken(user.email, token)
         return res.json({
             success: true,
-            message: "Successfully Added",
-            data: user
+            message: "Successfully registered, verification needed"
         })
 
     }).catch(err=>{

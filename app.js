@@ -36,6 +36,7 @@ app.use(bodyParser.json())
 
 // Default route
 app.get('/', (req,res)=>{
+    console.log(req)
     res.json({
         'name': 'Haatbazaar',
         'description': 'multi vendor ecommerce api',
@@ -50,6 +51,9 @@ app.use(authenticateMiddleware)
 // Initiate other routes router
 require('./routes/router')(app)
 
+var os = require("os");
+var hostname = os.hostname();
+console.log(hostname)
 
 // App listening to requests
 app.listen(process.env.PORT, ()=>{
