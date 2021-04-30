@@ -30,10 +30,10 @@ const verify = (req, res)=>{
                 message: "User doesnot exists or deleted",
             })
         }
-        User.findByIdAndUpdate(user._id, {status: 2}).then(updated=>{
+        User.findByIdAndUpdate(user._id, {verified: true}).then(updated=>{
             return res.json({
                 success:true,
-                message: "Account successfully activated"
+                message: "Account successfully verified"
             })
         }).catch(err=>{
             return res.json({

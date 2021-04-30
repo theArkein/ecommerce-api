@@ -9,22 +9,19 @@ const schema = new Schema({
         type: String, 
         index: true, 
         unique: true, 
-        required: true 
+        sparse: true 
     },
-    username: { 
-        type: String, 
-        required: true, 
-        unique: true 
+    googleId: {
+        type: Number,
+        default: null
+    },
+    facebookId: {
+        type: Number,
+        default: null
     },
     password: { 
-        type: String, 
-        required: true 
-    },
-    slug: { 
-        type: String, 
-        required: true, 
-        unique: true,
-        index: true 
+        type: String,
+        default: null
     },
     wishlist: [{
         type: Schema.Types.ObjectId, 
@@ -34,9 +31,64 @@ const schema = new Schema({
         type: Schema.Types.ObjectId, 
         ref: 'Product'
     }],
-    date: { 
-        type: Date, 
-        default: Date.now 
+    profileDeatils:{
+        firstame: {
+            type: Schema.Types.String,
+            default: null
+        },
+        lastname: {
+            type: Schema.Types.String,
+            default: null
+        },
+        email: {
+            type: Schema.Types.String,
+            default: null,
+        },
+        phone: {
+            type: Schema.Types.Number,
+            default: null
+        },
+        address: {
+            type: Schema.Types.String,
+            default: null
+        },
+        profilePicture: {
+            type: Schema.Types.String,
+            default: null
+        },
+        profilePictureExternal: {
+            type: Schema.Types.String,
+            default: null
+        }
+    },
+    shippingDetails: {
+        fullname: {
+            type: Schema.Types.String,
+            default: null
+        },
+        phone: {
+            type: Schema.Types.Number,
+            default: null
+        },
+        region: {
+            type: Schema.Types.String,
+            default: null
+        },
+        city: {
+            type: Schema.Types.String,
+            default: null
+        },
+        zone: {
+            type: Schema.Types.String,
+            default: null
+        },
+        address: {
+            type: Schema.Types.String,
+            default: null
+        }
+    },
+    billingDetails:{
+
     },
     status: {
         type: Number,
@@ -44,15 +96,19 @@ const schema = new Schema({
         min: 1,
         max: 3
     },
+    verified: {
+        type: Schema.Types.Boolean,
+        default: false
+    },
     passwordResetOTP: {
         type: String,
-        unique: true,
         index: true,
         default: null,
+        sparse: true,
     }
 }, {timestamps: true});
 
-schema.index({createdAt: 1},{expireAfterSeconds: 5*60, partialFilterExpression : {status: 1}});
+schema.index({createdAt: 1}, {expireAfterSeconds: 5*60, partialFilterExpression : {verified: false}});
 
 schema.pre('save', function(next) {
     // only hash the password if it has been modified (or is new)

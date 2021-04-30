@@ -74,6 +74,8 @@ const create = (req, res)=>{
           sku: req.body.sku,
           vendor: req.user.id,
           price: req.body.price,
+          discount: req.body.discount || 0,
+          discountedPrice: req.body.discount? req.body.price - req.body.discount/100 * req.body.price : req.body.price,
           stock: req.body.stock,
           publish: req.body.publish || true,
           status: req.body.status || 1,

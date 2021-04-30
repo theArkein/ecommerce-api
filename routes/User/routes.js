@@ -1,5 +1,7 @@
 const express = require('express')
 const router = express.Router()
+const passport = require('passport')
+
 
 const UserAuthController = require('@controllers/User/UserAuth')
 const OrderController = require('@controllers/User/order')
@@ -8,8 +10,19 @@ const authorize = require('@middlewares/authorize')
 
 const UserAccount = require('@controllers/User/account')
 
+// authentication
 router.post('/auth/signin', UserAuthController.signin)
 router.post('/auth/signup', UserAuthController.signup)
+
+// Google auth
+router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email']}));
+router.get('/auth/google/return', passport.authenticate('google', {session : false}), UserAuthController.google);
+
+// Facebook auth
+router.get('/auth/facebook', passport.authenticate('facebook', {scope: ['email', 'user_birthday']} ));
+router.get('/auth/facebook/return', passport.authenticate('facebook', {session : false}), UserAuthController.facebook);
+
+
 
 // Account Verification
 router.get('/account/verify', UserAccount.verify )
@@ -25,3 +38,4 @@ router.get('/order/:orderId/detail', authorize([3]), OrderController.detail)
 router.post('/order/create', authorize([3]), OrderController.create)
 
 module.exports = router
+

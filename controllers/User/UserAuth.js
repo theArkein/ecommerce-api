@@ -8,7 +8,7 @@ const sendVerificationToken = require('@config/sendVerificationToken')
 
 const signin = (req, res)=>{
     console.log("User Signin")
-    let {username, password} = req.body
+    let {email, password} = req.body
     
     let errors = userValidation.signin(req.body)
     if(errors)
@@ -18,7 +18,7 @@ const signin = (req, res)=>{
             errors
         })
 
-    User.findOne({username}).then(user=>{
+    User.findOne({email}).then(user=>{
         console.log(user)
         if(!user)
             return res.status(400).json({
@@ -30,6 +30,12 @@ const signin = (req, res)=>{
             return res.status(401).json({
                 status: false,
                 message: "Ceredentials did not match",
+                errors: {}
+            })
+        if(!user.verified)
+            return res.status(401).json({
+                status: false,
+                message: "Please verify your account first",
                 errors: {}
             })
 
@@ -61,7 +67,6 @@ const signup = (req, res)=>{
             errors
         })
     let user = new User(req.body)
-    user.slug = slugify(user.username, {lower: true})
 
     const token = jwt.sign({ id: user._id, userType: 3 }, config.jwt.SECRET, { expiresIn: 5*60*1000 })
 
@@ -82,7 +87,33 @@ const signup = (req, res)=>{
     }) 
 }
 
+const google = (req, res)=>{
+    let user = req.user
+    const token = jwt.sign({ id: user._id, userType: 3 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
+
+    return res.status(200).json({
+        status: true,
+        message: "Successfully signedin",
+        token: token,
+        data: user
+    })
+}
+
+const facebook = (req, res)=>{
+    let user = req.user
+    const token = jwt.sign({ id: user._id, userType: 3 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
+
+    return res.status(200).json({
+        status: true,
+        message: "Successfully signedin",
+        token: token,
+        data: user
+    })
+}
+
 module.exports = {
     signin,
     signup,
+    google,
+    facebook
 }

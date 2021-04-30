@@ -7,5 +7,15 @@
     "jwt": {
         "SECRET": "hsda89uasdkkjskaus989wqwhaksj",
         "EXPIRY": "1d"
+    },
+    "keys": {
+        "google": {     
+            "clientID": "348489310053-k55d0d79tovpva7debii65g9uerh7d1k.apps.googleusercontent.com",
+            "clientSecret": "HFf5lz1sidfE5EKzhH_hAYe9"
+       },
+        "facebook": {     
+            "clientID": "1352578591773787",
+            "clientSecret": "ca51828f7321bd557e30ae49f4a4585f"
+        }
     }
 }

@@ -34,10 +34,24 @@ const schema = new Schema({
         type: Number,
         required: true
     },
+    discount: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 100,
+    },
+    discountedPrice: {
+        type: Number,
+        default: this.price
+    },
     stock: {
         type: Number,
         default: null,
         min: 0
+    },
+    viewCounts: {
+        type: Number,
+        default: 0
     },
     images: {
         featured: {

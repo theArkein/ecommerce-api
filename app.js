@@ -5,6 +5,7 @@ const multer  = require('multer')
 const cors = require('cors')
 const morgan = require('morgan')
 const path = require('path');
+const passport = require('passport')
 require('module-alias/register')
 
 const authenticateMiddleware = require('./middlewares/authenticate')
@@ -15,7 +16,11 @@ require('dotenv').config()
 var app = express()
 
 // DB Connection
-require('./config/db')()
+require('@config/db')()
+
+// passport config
+require('@config/passport')
+
 
 // Use middlewares
 
@@ -31,12 +36,14 @@ app.use(morgan('tiny'))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+// passport
+app.use(passport.initialize());
+
 // Parse multi-part form data
 // app.use(multer().any())
 
 // Default route
 app.get('/', (req,res)=>{
-    console.log(req)
     res.json({
         'name': 'Haatbazaar',
         'description': 'multi vendor ecommerce api',

@@ -3,7 +3,7 @@ const Vendor = require('@models/vendor')
 const MainCategory = require('@models/mainCategory')
 const SubCategory = require('@models/subCategory')
 const ChildCategory = require('@models/childCategory')
-
+const WebSetting = require('@models/siteSetting')
 
 
 const list = (req, res)=>{
@@ -38,6 +38,7 @@ const detail = (req, res)=>{
                     status: false,
                     message: "No product found"
                })
+          Product.findByIdAndUpdate(product._id, { $inc: { viewCounts: 1 }}).exec()
           return res.json({
                status: true,
                data: product
@@ -168,6 +169,132 @@ const listByChildCategory = (req, res)=>{
      })
 }
 
+const listLatest = (req, res)=>{
+     let filterQuery = {publish: true}
+     Product.find(filterQuery)
+     .populate('mainCategory', 'name slug icon')
+     .populate('subCategory', 'name slug')
+     .populate('childCategory', 'name slug')
+     .sort({createdAt: -1})
+     .limit(18)
+     .then(products=>{
+          return res.json({
+               status: true,
+               results: products.length,
+               data: products
+          })
+     }).catch(err=>{
+          return res.json({
+               status: true,
+               message: "Something went wrong",
+               error: err
+          })
+     })
+}
+
+const listMostViewed = (req, res)=>{
+     let filterQuery = {publish: true}
+     Product.find(filterQuery)
+     .populate('mainCategory', 'name slug icon')
+     .populate('subCategory', 'name slug')
+     .populate('childCategory', 'name slug')
+     .sort({viewCounts: -1})
+     .limit(18)
+     .then(products=>{
+          return res.json({
+               status: true,
+               results: products.length,
+               data: products
+          })
+     }).catch(err=>{
+          return res.json({
+               status: true,
+               message: "Something went wrong",
+               error: err
+          })
+     })
+}
+
+const listFlashDeal = (req, res)=>{
+     let filterQuery = {publish: true}
+     Product.find(filterQuery)
+     .populate('mainCategory', 'name slug icon')
+     .populate('subCategory', 'name slug')
+     .populate('childCategory', 'name slug')
+     .sort({discountedPrice: 1})
+     .limit(18)
+     .then(products=>{
+          return res.json({
+               status: true,
+               results: products.length,
+               data: products
+          })
+     }).catch(err=>{
+          return res.json({
+               status: true,
+               message: "Something went wrong",
+               error: err
+          })
+     })
+}
+
+const listFeaturedCategory = (req, res)=>{
+     WebSetting.findOne()
+    .select('featuredCategory')
+    .populate({
+        path: 'featuredCategory.category',
+        select: 'name slug icon',
+        model: 'MainCategory'
+    })
+    .then(async setting=>{
+         let featuredCategory = setting.featuredCategory.toObject()
+         let promise = await featuredCategory.map(async item=>{
+              if(item.active && item.category){
+                   let filterQuery = {
+                        publish: true,
+                        mainCategory: item.category
+                   }
+                    let products = await Product.find(filterQuery)
+                    item.products = products
+                    return item
+               }
+         })
+         Promise.all(promise).then(data=>{
+              return res.json({
+                   success: true,
+                   data
+              })
+         })
+
+    })
+}
+
+const listRecommendedCategory = (req, res)=>{
+     WebSetting.findOne()
+    .then(async setting=>{
+         setting = setting.toObject()
+         console.log(setting)
+         let recommendedCategory = setting.recommendedCategory
+         let promise = await recommendedCategory.map(async item=>{
+              if(item.active && item.category){
+                   let filterQuery = {
+                        publish: true,
+                        mainCategory: item.category
+                   }
+                    let products = await Product.find(filterQuery)
+                    item.products = products
+                    return item
+               }
+         })
+         Promise.all(promise).then(data=>{
+              return res.json({
+                   success: true,
+                   data
+              })
+         })
+    })
+}
+
 module.exports = {
      list,
      detail,
@@ -175,4 +302,9 @@ module.exports = {
      listByMainCategory,
      listBySubCategory,
      listByChildCategory,
+     listLatest,
+     listMostViewed,
+     listFlashDeal,
+     listFeaturedCategory,
+     listRecommendedCategory,
 }

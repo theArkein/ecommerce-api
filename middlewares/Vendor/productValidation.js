@@ -9,7 +9,7 @@ const create = (data)=>{
         mainCategory: Joi.string().required(),
         subCategory: Joi.string().required(),
         childCategory: Joi.string().required()
-    }).options({abortEarly : false})
+    }).options({abortEarly : false, allowUnknown: true})
 
     let validation = schema.validate(data)
     if(!validation.error)
@@ -29,7 +29,7 @@ const edit = (data)=>{
         mainCategory: Joi.string().required(),
         subCategory: Joi.string().required(),
         childCategory: Joi.string().required()
-    }).options({abortEarly : false})
+    }).options({abortEarly : false, allowUnknown: true})
 
     let validation = schema.validate(data)
     if(!validation.error)

@@ -3,12 +3,12 @@ var Joi = require('joi')
 
 const signin = (data)=>{
     const schema = Joi.object({
-        username: Joi.string()
+        email: Joi.string()
             .required(),
         password: Joi.string()
         .required()
     
-    }).options({abortEarly : false})
+    }).options({abortEarly : false, allowUnknown: true})
 
     let validation = schema.validate(data)
     if(!validation.error)
@@ -21,19 +21,14 @@ const signin = (data)=>{
 
 const signup = (data)=>{
     const schema = Joi.object({
-        username: Joi.string()
-            .min(3)
-            .max(30)
-            .required(),
         email: Joi.string()
             .email()
             .required(),
-        name: Joi.string()
-            .min(3)
-            .required(),
         password: Joi.string()
+        .pattern(new RegExp('^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,30}$'))
         .required(),
-    }).options({abortEarly : false})
+        confirmPassword: Joi.ref('password')
+    }).options({abortEarly : false, allowUnknown: true})
 
     let validation = schema.validate(data)
     if(!validation.error)

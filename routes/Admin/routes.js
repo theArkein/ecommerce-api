@@ -12,6 +12,13 @@ const UserController = require('@controllers/Admin/user')
 const ProductController = require('@controllers/Admin/product')
 const OrderController = require('@controllers/Admin/order')
 
+const SiteSetting = {
+    featuredCategory: require('@controllers/Admin/SiteSetting/featuredCategory'),
+    recommendedCategory: require('@controllers/Admin/SiteSetting/recommendedCategory'),
+    featuredBanner: require('@controllers/Admin/SiteSetting/featuredBanner'),
+    featuredAds: require('@controllers/Admin/SiteSetting/featuredAds'),
+    footer: require('@controllers/Admin/SiteSetting/footer'),
+}
 
 const authorize = require('@middlewares/authorize')
 const multer  = require('@middlewares/multer')
@@ -61,5 +68,25 @@ router.get('/user/:slug/detail', UserController.detail)
 router.get('/order/list', OrderController.list)
 router.get('/order/:orderId/detail', OrderController.detail)
 
+// site setting
+
+// site setting - featured category
+router.get('/site/setting/featured-category/info', SiteSetting.featuredCategory.info)
+router.post('/site/setting/featured-category/update', SiteSetting.featuredCategory.update)
+
+// site setting - recommended category
+router.get('/site/setting/recommended-category/info', SiteSetting.recommendedCategory.info)
+router.post('/site/setting/recommended-category/update', SiteSetting.recommendedCategory.update)
+
+// site setting - featured banner
+router.get('/site/setting/featured-banner/info', SiteSetting.featuredBanner.info)
+router.post('/site/setting/featured-banner/update', SiteSetting.featuredBanner.update)
+
+// site setting - featured ads
+router.get('/site/setting/featured-ads/info', SiteSetting.featuredAds.info)
+router.post('/site/setting/featured-ads/update', SiteSetting.featuredAds.update)
+
+// site setting - footer Links
+router.get('/site/setting/footer/info', SiteSetting.footer.info)
 
 module.exports = router
