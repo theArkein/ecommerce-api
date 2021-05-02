@@ -1,5 +1,5 @@
 const WebSetting = require('@models/siteSetting')
-const featuredCategoryValidation = require('@middlewares/admin/SiteSetting/featuredCategoryValidation')
+const featuredCategoryValidation = require('@middlewares/Admin/SiteSetting/featuredCategoryValidation')
 
 
 const info = (req, res)=>{
