@@ -1,5 +1,5 @@
 const WebSetting = require('@models/siteSetting')
-const featuredBannerValidation = require('@middlewares/admin/SiteSetting/featuredBannerValidation')
+const featuredBannerValidation = require('@middlewares/Admin/SiteSetting/featuredBannerValidation')
 const saveImage = require('@config/saveImage')
 const uniqId = require('uniqid')
 const fs = require('fs')
