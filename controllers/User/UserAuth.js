@@ -73,7 +73,7 @@ const signup = (req, res)=>{
     User.findOne({email: user.email}).then(registered=>{
         if(registered)
             return res.json({
-                success: true,
+                success: false,
                 message: "Already registered with this email"
             })
         user.save().then((user)=>{

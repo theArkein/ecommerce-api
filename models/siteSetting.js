@@ -2,21 +2,50 @@ var mongoose = require('mongoose')
 const { Schema } = mongoose;
 
 const schema = new Schema({
-    featuredCategory : [{
-        title: {
-            type: Schema.Types.ObjectId,
-            require: true
+    featuredCategory : {
+        A: {
+            title: {
+                type: Schema.Types.String,
+            },
+            category: {
+                type: Schema.Types.ObjectId, 
+                default: null,
+                ref: 'MainCategory',
+            },
+            active: {
+                type: Schema.Types.Boolean,
+                default: false,
+            }
         },
-        category: {
-            type: Schema.Types.ObjectId, 
-            default: null,
-            ref: 'MainCategory'
+        B: {
+            title: {
+                type: Schema.Types.String,
+            },
+            category: {
+                type: Schema.Types.ObjectId, 
+                default: null,
+                ref: 'MainCategory',
+            },
+            active: {
+                type: Schema.Types.Boolean,
+                default: false,
+            }
         },
-        active: {
-            type: Schema.Types.Boolean,
-            default: false
+        C: {
+            title: {
+                type: Schema.Types.String,
+            },
+            category: {
+                type: Schema.Types.ObjectId, 
+                default: null,
+                ref: 'MainCategory',
+            },
+            active: {
+                type: Schema.Types.Boolean,
+                default: false,
+            }
         }
-    }],
+    },
     recommendedCategory : [{
         title: {
             type: Schema.Types.ObjectId,

@@ -34,7 +34,7 @@ app.use(morgan('tiny'))
 
 // Parse request body 
 app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+app.use(bodyParser.json({limit: '50mb'}))
 
 // passport
 app.use(passport.initialize());

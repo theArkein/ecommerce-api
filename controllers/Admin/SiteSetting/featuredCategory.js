@@ -1,5 +1,5 @@
 const WebSetting = require('@models/siteSetting')
-const Product = require('@models/product')
+const featuredCategoryValidation = require('@middlewares/admin/SiteSetting/featuredCategoryValidation')
 
 
 const info = (req, res)=>{
@@ -20,7 +20,27 @@ const info = (req, res)=>{
 }
 
 const update = (req, res)=>{
-
+    let errors = featuredCategoryValidation.update(req.body)
+    if(errors)
+        return res.status(400).json({
+            success: false,
+            message: "Validation failed",
+            errors
+        })
+    let update = req.body
+    WebSetting.findOneAndUpdate({featuredCategory: update}).then(webSetting=>{
+        console.log(webSetting)
+        return res.json({
+            success: true,
+            featuredCategory: webSetting.featuredCategory
+        })
+    }).catch(err=>{
+        return res.json({
+            success: false,
+            message: err.message,
+            errors: err.errors
+        })
+    })
 }
 
 module.exports = {

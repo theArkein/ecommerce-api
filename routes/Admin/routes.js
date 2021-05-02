@@ -72,19 +72,19 @@ router.get('/order/:orderId/detail', OrderController.detail)
 
 // site setting - featured category
 router.get('/site/setting/featured-category/info', SiteSetting.featuredCategory.info)
-router.post('/site/setting/featured-category/update', SiteSetting.featuredCategory.update)
+router.put('/site/setting/featured-category/update', SiteSetting.featuredCategory.update)
 
 // site setting - recommended category
 router.get('/site/setting/recommended-category/info', SiteSetting.recommendedCategory.info)
-router.post('/site/setting/recommended-category/update', SiteSetting.recommendedCategory.update)
+router.put('/site/setting/recommended-category/update', SiteSetting.recommendedCategory.update)
 
 // site setting - featured banner
 router.get('/site/setting/featured-banner/info', SiteSetting.featuredBanner.info)
-router.post('/site/setting/featured-banner/update', SiteSetting.featuredBanner.update)
+router.put('/site/setting/featured-banner/update', SiteSetting.featuredBanner.update)
 
 // site setting - featured ads
 router.get('/site/setting/featured-ads/info', SiteSetting.featuredAds.info)
-router.post('/site/setting/featured-ads/update', SiteSetting.featuredAds.update)
+router.put('/site/setting/featured-ads/update', SiteSetting.featuredAds.update)
 
 // site setting - footer Links
 router.get('/site/setting/footer/info', SiteSetting.footer.info)
