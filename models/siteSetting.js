@@ -48,17 +48,24 @@ const schema = new Schema({
     },
     recommendedCategory : [{
         title: {
-            type: Schema.Types.ObjectId,
+            type: Schema.Types.String,
             require: true
         },
         category: {
             type: Schema.Types.ObjectId, 
             default: null,
-            ref: 'MainCategory'
+            ref: 'MainCategory',
+            require: true
         },
         active: {
             type: Schema.Types.Boolean,
-            default: false
+            default: false,
+            require: true,
+        },
+        image: {
+            type: Schema.Types.String, 
+            default: null,
+            require: true
         }
     }],
     featuredBanner: {

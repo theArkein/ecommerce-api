@@ -4,6 +4,7 @@ const router = express.Router()
 const CategoryController = require('@controllers/Public/category')
 const ProductController = require('@controllers/Public/product')
 const VendorController = require('@controllers/Public/vendor')
+const SiteController = require('@controllers/Public/siteSetting')
 
 
 // Category
@@ -23,10 +24,17 @@ router.get('/product/category/child/:slug/list', ProductController.listByChildCa
 router.get('/product/latest/list', ProductController.listLatest)
 router.get('/product/most-viewed/list', ProductController.listMostViewed)
 router.get('/product/flash-deal/list', ProductController.listFlashDeal)
-router.get('/product/featured-category/list', ProductController.listFeaturedCategory)
-router.get('/product/recommended-category/list', ProductController.listRecommendedCategory)
+// router.get('/product/featured-category/list', ProductController.listFeaturedCategory)
+// router.get('/product/recommended-category/list', ProductController.listRecommendedCategory)
 
 // Vendor
 router.get('/vendor/list', VendorController.list)
+
+// Site
+router.get('/site/banner', SiteController.banner)
+router.get('/site/slider', SiteController.slider)
+router.get('/site/recommended', SiteController.recommended)
+
+
 
 module.exports = router

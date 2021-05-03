@@ -15,12 +15,15 @@ router.post('/auth/signin', UserAuthController.signin)
 router.post('/auth/signup', UserAuthController.signup)
 
 // Google auth
-router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email']}));
-router.get('/auth/google/return', passport.authenticate('google', {session : false}), UserAuthController.google);
+router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email']}))
+router.get('/auth/google/return', passport.authenticate('google', {session : false}), UserAuthController.google)
+router.post('/auth/google/token', passport.authenticate('google-oauth-token'), UserAuthController.googleToken)
 
 // Facebook auth
-router.get('/auth/facebook', passport.authenticate('facebook', {scope: ['email', 'user_birthday']} ));
-router.get('/auth/facebook/return', passport.authenticate('facebook', {session : false}), UserAuthController.facebook);
+router.get('/auth/facebook', passport.authenticate('facebook', {scope: ['email', 'user_birthday']} ))
+router.get('/auth/facebook/return', passport.authenticate('facebook', {session : false}), UserAuthController.facebook)
+router.post('/auth/facebook/token', passport.authenticate('facebook-token'), UserAuthController.facebookToken)
+
 
 
 

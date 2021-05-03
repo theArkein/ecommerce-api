@@ -31,23 +31,23 @@ const update = (req, res)=>{
     // Save Images and path
 
     try {
-        let img1 = `images/site/banner/${uniqId()}${uniqId()}.jpg`
+        let img1 = `images/site/banner/${uniqId()}${uniqId()}.png`
         saveImage(update.large.image, img1)
         update.large.image = img1
 
-        let img2 = `images/site/banner/${uniqId()}${uniqId()}.jpg`
+        let img2 = `images/site/banner/${uniqId()}${uniqId()}.png`
         saveImage(update.small[0].image, img2)
         update.small[0].image = img2
 
-        let img3 = `images/site/banner/${uniqId()}${uniqId()}.jpg`
+        let img3 = `images/site/banner/${uniqId()}${uniqId()}.png`
         saveImage(update.small[1].image, img3)
         update.small[1].image = img3
 
-        let img4 = `images/site/banner/${uniqId()}${uniqId()}.jpg`
+        let img4 = `images/site/banner/${uniqId()}${uniqId()}.png`
         saveImage(update.small[3].image, img4)
         update.small[2].image = img4
 
-        let img5 = `images/site/banner/${uniqId()}${uniqId()}.jpg`
+        let img5 = `images/site/banner/${uniqId()}${uniqId()}.png`
         saveImage(update.small[3].image, img5)
         update.small[3].image = img5
         

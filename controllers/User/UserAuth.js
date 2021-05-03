@@ -99,7 +99,45 @@ const google = (req, res)=>{
     })
 }
 
+const googleToken = (req, res)=>{
+    if(req.error)
+        return res.status(200).json({
+            status: false,
+            message: "Failed to sign in",
+            error: req.error
+        })
+        
+    let user = req.user
+    const token = jwt.sign({ id: user._id, userType: 3 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
+
+    return res.status(200).json({
+        status: true,
+        message: "Successfully signedin",
+        token: token,
+        data: user
+    })
+}
+
 const facebook = (req, res)=>{
+    let user = req.user
+    const token = jwt.sign({ id: user._id, userType: 3 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
+
+    return res.status(200).json({
+        status: true,
+        message: "Successfully signedin",
+        token: token,
+        data: user
+    })
+}
+
+const facebookToken = (req, res)=>{
+    if(req.error)
+        return res.status(200).json({
+            status: false,
+            message: "Failed to sign in",
+            error: req.error
+        })
+        
     let user = req.user
     const token = jwt.sign({ id: user._id, userType: 3 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
 
@@ -115,5 +153,7 @@ module.exports = {
     signin,
     signup,
     google,
-    facebook
+    googleToken,
+    facebook,
+    facebookToken
 }
