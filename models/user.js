@@ -31,8 +31,8 @@ const schema = new Schema({
         type: Schema.Types.ObjectId, 
         ref: 'Product'
     }],
-    profileDeatils:{
-        firstame: {
+    profileDetails:{
+        firstname: {
             type: Schema.Types.String,
             default: null
         },

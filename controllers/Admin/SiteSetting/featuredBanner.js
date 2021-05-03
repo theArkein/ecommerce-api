@@ -2,7 +2,7 @@ const WebSetting = require('@models/siteSetting')
 const featuredBannerValidation = require('@middlewares/Admin/SiteSetting/featuredBannerValidation')
 const saveImage = require('@config/saveImage')
 const uniqId = require('uniqid')
-const fs = require('fs')
+const deleteImage = require("@config/deleteImage")
 
 
 const info = (req, res)=>{
@@ -61,26 +61,11 @@ const update = (req, res)=>{
     console.log(update)
 
     WebSetting.findOneAndUpdate({featuredBanner: update}).then(({featuredBanner})=>{
-        fs.unlink(featuredBanner.large.image, (err)=>{
-            if(err)
-                console.log("Couln't delete prvious banner image")
-        })
-        fs.unlink(featuredBanner.small[0].image, (err)=>{
-            if(err)
-                console.log("Couln't delete prvious banner image")
-        })
-        fs.unlink(featuredBanner.small[1].image, (err)=>{
-            if(err)
-                console.log("Couln't delete prvious banner image")
-        })
-        fs.unlink(featuredBanner.small[2].image, (err)=>{
-            if(err)
-                console.log("Couln't delete prvious banner image")
-        })
-        fs.unlink(featuredBanner.small[3].image, (err)=>{
-            if(err)
-                console.log("Couln't delete prvious banner image")
-        })
+        deleteImage(featuredBanner.large.image)
+        deleteImage(featuredBanner.small[0].image)
+        deleteImage(featuredBanner.small[1].image)
+        deleteImage(featuredBanner.small[2].image)
+        deleteImage(featuredBanner.small[3].image,)
         return res.json({
             success: true,
             featuredBanner: featuredBanner

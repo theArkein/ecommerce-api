@@ -38,7 +38,37 @@ const signup = (data)=>{
     return errors 
 }
 
+const profileUpdate = (data)=>{
+    const schema = Joi.object({
+        profileDetails: Joi.object({
+            firstname: Joi.string().allow(null),
+            lastname: Joi.string().allow(null),
+            email: Joi.string().allow(null),
+            phone: Joi.string().allow(null),
+            address: Joi.string().allow(null),
+            profilePicture: Joi.string().allow(null)
+        }).required(),
+        shippingDetails: Joi.object({
+            fullname: Joi.string().allow(null),
+            phone: Joi.string().allow(null),
+            region: Joi.string().allow(null),
+            city: Joi.string().allow(null),
+            zone: Joi.string().allow(null),
+            address: Joi.string().allow(null)
+        }).required()
+    }).options({abortEarly : false})
+
+    let validation = schema.validate(data)
+    if(!validation.error)
+        return null
+    let errors = validation.error.details.map(error=>{
+        return {message: error.message, field: error.path[0]}
+    })
+    return errors 
+}
+
 module.exports = {
     signin,
-    signup
+    signup,
+    profileUpdate
 }

@@ -1,9 +1,13 @@
 const jwt = require('jsonwebtoken')
 const uniqid = require('uniqid')
 const config = require('@config/config')
+const saveImage = require('@config/saveImage')
 const sendOTP = require('@config/sendOTP')
 const User = require('@models/user')
 const bcrypt = require('bcrypt')
+const deleteImage = require('@config/deleteImage')
+const userValidation = require('@middlewares/User/userValidation')
+
 
 const verify = (req, res)=>{
     let token = req.query.token
@@ -112,8 +116,66 @@ const resetPassword = (req, res)=>{
     })
 }
 
+const profileDetails = (req, res)=>{
+    User.findById(req.user.id).then(user=>{
+        return res.json({
+            success: true,
+            data: {
+                profileDetails: user.profileDetails,
+                shippingDetails: user.shippingDetails,
+            }
+        })
+    }).catch(err=>{
+        return res.json({
+            success: false,
+            message: "Something went wrong",
+            err: err.errors
+        })
+    })
+
+}
+
+const profileUpdate = (req, res)=>{
+    let {profileDetails, shippingDetails} = req.body
+
+    let errors = userValidation.profileUpdate(req.body)
+    if(errors)
+        return res.status(400).json({
+            success: false,
+            message: "Validation failed",
+            errors
+        })
+
+        if(profileDetails.profilePicture){
+            let profilePicture = `images/user/profile/${uniqid()}${uniqid()}.png`
+            saveImage(profileDetails.profilePicture, profilePicture)
+            profileDetails.profilePicture = profilePicture
+        }
+    
+    let update = {
+        profileDetails,
+        shippingDetails
+    }
+    User.findByIdAndUpdate(req.user.id, update).then(user=>{
+        if(user.profileDetails.profilePicture)
+            deleteImage(user.profileDetails.profilePicture)
+        return res.json({
+            success: true,
+            message: "Successfully Updated"
+        })
+    }).catch(err=>{
+        return res.json({
+            success: false,
+            message: "Somehting went wrong"
+        })
+    })
+
+}
+
 module.exports = {
     verify,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    profileDetails,
+    profileUpdate
 }

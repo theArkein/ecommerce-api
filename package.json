@@ -1,7 +1,7 @@
 {
-  "name": "haatbazaar",
+  "name": "travel-right",
   "version": "1.0.0",
-  "description": "API endpoints for haatbazaar e-commerce platform",
+  "description": "API endpoints for travel-right e-commerce",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",

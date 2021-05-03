@@ -27,10 +27,15 @@ router.get('/auth/facebook/return', passport.authenticate('facebook', {session :
 // Account Verification
 router.get('/account/verify', UserAccount.verify )
 
+
 // reset password
 router.post('/account/forgot-password', UserAccount.forgotPassword)
 router.post('/account/reset-password', UserAccount.resetPassword)
 
+
+// account details & update
+router.get('/account/profile/details', authorize([3]), UserAccount.profileDetails )
+router.put('/account/profile/update', authorize([3]), UserAccount.profileUpdate )
 
 // orders
 router.get('/order/list', authorize([3]), OrderController.list)

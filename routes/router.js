@@ -4,7 +4,7 @@ const userRoutes = require('./User/routes')
 const publicRoutes = require('./Public/routes')
 
 
-const config = require('../config/config.json')
+const config = require('@config/config.json')
 
 const router = (app)=>{    
     // Admin
