@@ -14,13 +14,13 @@ const list = (req, res)=>{
      .populate(populateQuery)
      .then(categories=>{
           res.json({
-               status: true,
+               success: true,
                results: categories.length,
                data: categories
           })
      }).catch(err=>{
           res.json({
-               status: false,
+               success: false,
                message: "Something went wrong",
                error: err
           })
@@ -49,13 +49,13 @@ const create = (req, res)=>{
      console.log(category)
      category.save().then(created=>{
           res.json({
-               status: true,
+               success: true,
                message: "Successfully created",
                created
           })
      }).catch(err=>{
           res.json({
-               status: false,
+               success: false,
                message: err.message,
                errors: err.errors
           })
@@ -86,17 +86,17 @@ const edit = (req, res)=>{
      .then(updated=>{
           if(!updated)
                res.json({
-                    status: false,
+                    success: false,
                     message: "No such category found"
                })
 
           res.json({
-               status: true,
+               success: true,
                message: "Successfully updated"
           })
      }).catch(err=>{
           res.json({
-               status: false,
+               success: false,
                message: err.message,
                errors: err.errors
           })
@@ -121,13 +121,13 @@ const removeOne = (req, res)=>{
           })
           
           res.json({
-               status: true,
+               success: true,
                message: "Successfully deleted",
                deleted
           })
      }).catch(err=>{
           res.json({
-               status: false,
+               success: false,
                message: "Something went wrong",
                deleted
           })

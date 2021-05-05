@@ -11,13 +11,13 @@ const listProducts = (req, res)=>{
      .populate('childCategory', 'name slug')
      .then(products=>{
           res.json({
-               status: true,
+               success: true,
                results: products.length,
                data: products
           })
      }).catch(err=>{
           res.json({
-               status: true,
+               success: true,
                message: "Something went wrong",
                error: err
           })
@@ -29,13 +29,13 @@ const listOrders = (req, res)=>{
      Order.find({vendor: vendorId})
      .then(orders=>{
           res.json({
-               status: true,
+               success: true,
                results: orders.length,
                data: orders
           })
      }).catch(err=>{
           res.json({
-               status: true,
+               success: true,
                message: "Something went wrong",
                error: err
           })

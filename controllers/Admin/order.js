@@ -5,13 +5,13 @@ const list = (req, res)=>{
      Order.find()
      .then(orders=>{
           res.json({
-               status: true,
+               success: true,
                results: orders.length,
                data: orders
           })
      }).catch(err=>{
           res.json({
-               status: true,
+               success: true,
                message: "Something went wrong",
                error: err
           })
@@ -23,13 +23,13 @@ const detail = (req, res)=>{
      Order.findOne(filterQuery)
      .then(orders=>{
           res.json({
-               status: true,
+               success: true,
                results: orders.length,
                data: orders
           })
      }).catch(err=>{
           res.json({
-               status: true,
+               success: true,
                message: "Something went wrong",
                error: err
           })

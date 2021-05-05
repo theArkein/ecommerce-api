@@ -28,23 +28,41 @@ passport.use(
           clientSecret: google.clientSecret,
           callbackURL: "/api/v1/user/auth/google/return",
      }, (accessToken, refreshToken, profile, done)=>{
-          console.log(profile)
-            User.findOne({googleId: profile.id}).then((user)=>{
-               if(user){
-                 //if we already have a record with the given profile ID
-                    done(null, user)
-               } else{
-                    //if not, create a new user 
-                   new User({
-                     googleId: profile.id,
-                     username: profile.displayName,
-                     email: profile.emails[0].value,
-                     verified: true
-                   }).save().then((user) =>{
-                         done(null, user);
-                   });
-               } 
-            })
+          console.log(accessToken)
+          User.findOne({googleId: profile.id}).then((user)=>{
+          if(user){
+               //if we already have a record with the given profile ID
+               console.log("Already registered")
+               return done(null, user)
+          } else{
+               // check if email alreay exists
+               User.findOne({email: profile.emails[0].value}).then(user=>{
+                    if(user){
+                         let error = {
+                              message: "User with this email already exists. Please sigin"
+                         }
+                         console.log("found")
+                         return done(null, {error})
+                    } else {
+                         //if not, create a new user 
+                         new User({
+                              googleId: profile.id,
+                              profileDetails: {
+                                   firstname: profile.name.givenName, 
+                                   lastname: profile.name.familyName,
+                                   email: profile.emails[0].value,
+                                   profilePictureExternal: profile.photos[0].value
+                              },
+                              email: profile.emails[0].value,
+                              verified: true
+                         }).save().then((user) =>{
+                              return done(null, user);
+                         });
+                    }
+               })
+               
+          } 
+          })
      })
 )
 
@@ -53,24 +71,41 @@ passport.use(new GoogleOauthTokenStrategy({
      clientSecret: google.clientSecret,
      profileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
 }, (accessToken, refreshToken, profile, done) => {
-     User.findOne({googleId: profile.id}).then(user=>{
+     console.log(profile)
+     User.findOne({googleId: profile.id}).then((user)=>{
           if(user){
-            //if we already have a record with the given profile ID
+               //if we already have a record with the given profile ID
+               console.log("Already registered")
                return done(null, user)
           } else{
-               //if not, create a new user 
-              new User({
-                googleId: profile.id,
-                email: profile.emails[0].value,
-                verified: true
-              }).save().then((savedUser) =>{
-                    return done(null, savedUser);
-              }).catch(err=>{
-                   console.log(err)
-                   return done(err, null)
-              });
+               // check if email alreay exists
+               User.findOne({email: profile.emails[0].value}).then(user=>{
+                    if(user){
+                         let error = {
+                              message: "User with this email already exists. Please sigin"
+                         }
+                         console.log("found")
+                         return done(null, {error})
+                    } else {
+                         //if not, create a new user 
+                         new User({
+                              googleId: profile.id,
+                              profileDetails: {
+                                   firstname: profile.name.givenName, 
+                                   lastname: profile.name.familyName,
+                                   email: profile.emails[0].value,
+                                   profilePictureExternal: profile.photos[0].value
+                              },
+                              email: profile.emails[0].value,
+                              verified: true
+                         }).save().then((user) =>{
+                              return done(null, user);
+                         });
+                    }
+               })
+               
           } 
-       })
+     })
 }));
 
 // Facebook Strategy
@@ -89,15 +124,30 @@ passport.use(
                  //if we already have a record with the given profile ID
                     done(null, currentUser)
                } else{
-                    //if not, create a new user 
-                   new User({
-                         facebookId: profile.id,
-                         username: profile.displayName || null,
-                         email: profile.emails[0].value,
-                         verified: true
-                     }).save().then((newUser) =>{
-                         done(null, newUser);
-                   });
+                    User.findOne({email: profile.emails[0].value}).then(user=>{
+                         if(user){
+                              let error = {
+                                   message: "User with this email already exists. Please sigin"
+                              }
+                              console.log("found")
+                              return done(null, {error})
+                         } else {
+                              //if not, create a new user 
+                              new User({
+                                   facebookId: profile.id,
+                                   profileDetails: {
+                                        firstname: profile.name.givenName, 
+                                        lastname: profile.name.familyName,
+                                        email: profile.emails[0].value,
+                                        profilePictureExternal: profile.photos[0].value
+                                   },
+                                   email: profile.emails[0].value,
+                                   verified: true
+                              }).save().then((newUser) =>{
+                                   done(null, newUser);
+                              });
+                         }
+                    })
                 } 
              })
      })
@@ -112,19 +162,31 @@ passport.use(new FacebookTokenStrategy({
           console.log(profile)
           if(currentUser){
             //if we already have a record with the given profile ID
-               return done(null, currentUser)
+               done(null, currentUser)
           } else{
-               //if not, create a new user 
-              new User({
-                    facebookId: profile.id,
-                    username: profile.displayName || null,
-                    email: profile.emails[0].value,
-                    verified: true
-                }).save().then((newUser) =>{
-                    return done(null, newUser);
-              }).catch(err=>{
-                    console.log(err)
-                    return done(err, null)
+               User.findOne({email: profile.emails[0].value}).then(user=>{
+                    if(user){
+                         let error = {
+                              message: "User with this email already exists. Please sigin"
+                         }
+                         console.log("found")
+                         return done(null, {error})
+                    } else {
+                         //if not, create a new user 
+                         new User({
+                              facebookId: profile.id,
+                              profileDetails: {
+                                   firstname: profile.name.givenName, 
+                                   lastname: profile.name.familyName,
+                                   email: profile.emails[0].value,
+                                   profilePictureExternal: profile.photos[0].value
+                              },
+                              email: profile.emails[0].value,
+                              verified: true
+                         }).save().then((newUser) =>{
+                              done(null, newUser);
+                         });
+                    }
                })
            } 
         })

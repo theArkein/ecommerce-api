@@ -28,13 +28,13 @@ const signin = (req, res)=>{
         let isMatch = bcrypt.compareSync(password, user.password);
         if(!isMatch)
             return res.status(401).json({
-                status: false,
+                success: false,
                 message: "Ceredentials did not match",
                 errors: {}
             })
         if(!user.verified)
             return res.status(401).json({
-                status: false,
+                success: false,
                 message: "Please verify your account first",
                 errors: {}
             })
@@ -42,10 +42,15 @@ const signin = (req, res)=>{
         const token = jwt.sign({ id: user._id, userType: 3 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
 
         return res.status(200).json({
-            status: true,
+            success: true,
             message: "Successfully signedin",
             token: token,
-            data: user
+            data: {
+                profileDetails: user.profileDetails,
+                shippingAddress: user.shippingAddress,
+                wishlist: user.wishlist,
+                cartlist: user.cartlist
+            }
         })
     }).catch(err=>{
         return res.status(500).json({
@@ -88,21 +93,32 @@ const signup = (req, res)=>{
 }
 
 const google = (req, res)=>{
+    if(req.user.error)
+        return res.json({
+            success: false,
+            message: req.user.error.message
+        })
+
     let user = req.user
     const token = jwt.sign({ id: user._id, userType: 3 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
 
     return res.status(200).json({
-        status: true,
+        success: true,
         message: "Successfully signedin",
         token: token,
-        data: user
+        data: {
+            profileDetails: user.profileDetails,
+            shippingAddress: user.shippingAddress,
+            wishlist: user.wishlist,
+            cartlist: user.cartlist
+        }
     })
 }
 
 const googleToken = (req, res)=>{
     if(req.error)
         return res.status(200).json({
-            status: false,
+            success: false,
             message: "Failed to sign in",
             error: req.error
         })
@@ -111,29 +127,45 @@ const googleToken = (req, res)=>{
     const token = jwt.sign({ id: user._id, userType: 3 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
 
     return res.status(200).json({
-        status: true,
+        success: true,
         message: "Successfully signedin",
         token: token,
-        data: user
+        data: {
+            profileDetails: user.profileDetails,
+            shippingAddress: user.shippingAddress,
+            wishlist: user.wishlist,
+            cartlist: user.cartlist
+        }
     })
 }
 
 const facebook = (req, res)=>{
+    if(req.user.error)
+        return res.json({
+            success: false,
+            message: req.user.error.message
+        })
+        
     let user = req.user
     const token = jwt.sign({ id: user._id, userType: 3 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
 
     return res.status(200).json({
-        status: true,
+        success: true,
         message: "Successfully signedin",
         token: token,
-        data: user
+        data: {
+            profileDetails: user.profileDetails,
+            shippingAddress: user.shippingAddress,
+            wishlist: user.wishlist,
+            cartlist: user.cartlist
+        }
     })
 }
 
 const facebookToken = (req, res)=>{
     if(req.error)
         return res.status(200).json({
-            status: false,
+            success: false,
             message: "Failed to sign in",
             error: req.error
         })
@@ -142,10 +174,15 @@ const facebookToken = (req, res)=>{
     const token = jwt.sign({ id: user._id, userType: 3 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
 
     return res.status(200).json({
-        status: true,
+        success: true,
         message: "Successfully signedin",
         token: token,
-        data: user
+        data: {
+            profileDetails: user.profileDetails,
+            shippingAddress: user.shippingAddress,
+            wishlist: user.wishlist,
+            cartlist: user.cartlist
+        }
     })
 }
 

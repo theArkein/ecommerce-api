@@ -5,13 +5,13 @@ const list = (req, res)=>{
      Order.find(filterQuery)
      .then(orders=>{
           return res.json({
-               status: true,
+               success: true,
                results: orders.length,
                data: orders
           })
      }).catch(err=>{
           return res.json({
-               status: true,
+               success: true,
                message: "Something went wrong",
                error: err
           })
@@ -26,16 +26,16 @@ const detail = (req, res)=>{
      .then(order=>{
           if(order.vendor!=req.user.id)
                return res.json({
-                    status: false,
+                    success: false,
                     message: "Vendor not authorized for this product"
                })
           return res.json({
-               status: true,
+               success: true,
                data: order
           })
      }).catch(err=>{
           return res.json({
-               status: true,
+               success: true,
                message: "Something went wrong",
                error: err
           })
@@ -46,13 +46,13 @@ const edit = (req, res)=>{
      let id = req.params.id
      Order.findByIdAndUpdate(id).then(updated=>{
           res.json({
-               status: true,
+               success: true,
                message: "Successfully updated",
                data: updated
           })
      }).catch(err=>{
           res.json({
-               status: false,
+               success: false,
                message: err.message,
                errors: err.errors
           })

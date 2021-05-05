@@ -47,7 +47,7 @@ const signin = (req, res)=>{
         let isMatch = bcrypt.compareSync(password, admin.password);
         if(!isMatch)
             return res.status(401).json({
-                status: false,
+                success: false,
                 message: "Ceredentials did not match",
                 errors: {}
             })
@@ -56,7 +56,7 @@ const signin = (req, res)=>{
 
         // var decoded = jwt.verify(token, config.jwt.SECRET)
         return res.status(200).json({
-            status: true,
+            success: true,
             message: "Successfully signedin",
             token: token,
             data: admin

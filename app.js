@@ -40,12 +40,12 @@ app.use(bodyParser.json({limit: '50mb'}))
 app.use(passport.initialize());
 
 // Parse multi-part form data
-// app.use(multer().any())
+app.use(multer().any())
 
 // Default route
 app.get('/', (req,res)=>{
     res.json({
-        'name': 'Haatbazaar',
+        'name': 'Travel Right',
         'description': 'multi vendor ecommerce api',
         'version': '1.0',
         'base': '/api/v1'

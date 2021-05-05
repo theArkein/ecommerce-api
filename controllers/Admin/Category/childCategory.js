@@ -10,13 +10,13 @@ const list = (req, res)=>{
      ChildCategory.find()
      .then(categories=>{
           res.json({
-               status: true,
+               success: true,
                results: categories.length,
                data: categories
           })
      }).catch(err=>{
           res.json({
-               status: false,
+               success: false,
                message: "Something went wrong",
                error: err
           })
@@ -44,13 +44,13 @@ const create = (req, res)=>{
           })
           
           res.json({
-               status: true,
+               success: true,
                message: "Successfully created",
                created
           })
      }).catch(err=>{
           res.json({
-               status: false,
+               success: false,
                message: "Failed to create",
                error: err
           })
@@ -72,13 +72,13 @@ const edit = (req, res)=>{
      ChildCategory.findOneAndUpdate(filter, update)
      .then(updated=>{
           res.json({
-               status: true,
+               success: true,
                message: "Successfully updated",
                updated
           })
      }).catch(err=>{
           res.json({
-               status: false,
+               success: false,
                message: "Failed to update",
                error: err
           })
@@ -93,13 +93,13 @@ const removeOne = (req, res)=>{
                console.log(err)
           })
           res.json({
-               status: true,
+               success: true,
                message: "Successfully deleted",
                deleted
           })
      }).catch(err=>{
           res.json({
-               status: false,
+               success: false,
                message: "Something went wrong",
                deleted
           })

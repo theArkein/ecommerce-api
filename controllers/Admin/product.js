@@ -4,13 +4,13 @@ const list = (req, res)=>{
      Product.find()
      .then(products=>{
           return res.json({
-               status: true,
+               success: true,
                results: products.length,
                data: products
           })
      }).catch(err=>{
           return res.json({
-               status: true,
+               success: true,
                message: "Something went wrong",
                error: err
           })
@@ -23,16 +23,16 @@ const detail = (req, res)=>{
      .then(product=>{
           if(!product)
                return res.json({
-                    status: false,
+                    success: false,
                     message: "No product found"
                })
           return res.json({
-               status: true,
+               success: true,
                data: product
           })
      }).catch(err=>{
           return res.json({
-               status: true,
+               success: true,
                message: "Something went wrong",
                error: err
           })

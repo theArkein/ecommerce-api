@@ -37,8 +37,16 @@ router.post('/account/reset-password', UserAccount.resetPassword)
 
 
 // account details & update
-router.get('/account/profile/details', authorize([3]), UserAccount.profileDetails )
-router.put('/account/profile/update', authorize([3]), UserAccount.profileUpdate )
+router.get('/profile-details/info', authorize([3]), UserAccount.profileDetails.info )
+router.put('/profile-details/update', authorize([3]), UserAccount.profileDetails.update )
+
+// shipping details
+router.get('/shipping-address/info', authorize([3]), UserAccount.shippingAddress.all )
+router.get('/shipping-address/:id/info', authorize([3]), UserAccount.shippingAddress.one )
+router.post('/shipping-address/add', authorize([3]), UserAccount.shippingAddress.add )
+router.put('/shipping-address/:id/update', authorize([3]), UserAccount.shippingAddress.update )
+router.delete('/shipping-address/:id/remove', authorize([3]), UserAccount.shippingAddress.delete )
+
 
 // orders
 router.get('/order/list', authorize([3]), OrderController.list)

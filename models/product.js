@@ -20,12 +20,6 @@ const schema = new Schema({
         type: String,
         required: true,
     },
-    slug: {
-        type: String,
-        required: true,
-        unique: true,
-        index: true,
-    },
     vendor: {
         type: Schema.Types.ObjectId, ref: 'Vendor',
         required: true
@@ -40,10 +34,6 @@ const schema = new Schema({
         min: 0,
         max: 100,
     },
-    discountedPrice: {
-        type: Number,
-        default: this.price
-    },
     stock: {
         type: Number,
         default: null,
@@ -53,15 +43,14 @@ const schema = new Schema({
         type: Number,
         default: 0
     },
-    images: {
-        featured: {
-            path: String,
-            link: String
-        },
-        gallery: {
-            type: Schema.Types.Mixed
-        }
+    image: {
+        path: String,
+        link: String
     },
+    gallery: [{
+        path: String,
+        link: String
+    }],
     variants: {
         type: Schema.Types.Mixed
     },

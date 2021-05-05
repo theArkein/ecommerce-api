@@ -4,13 +4,13 @@ const list = (req, res)=>{
     User.find()
     .then(users=>{
          res.json({
-              status: true,
+              success: true,
               results: users.length,
               data: users
          })
     }).catch(err=>{
          res.json({
-              status: true,
+              success: true,
               message: "Something went wrong",
               error: err
          })
@@ -23,17 +23,17 @@ const detail = (req, res)=>{
     .then(user=>{
         if(!user)
         res.json({
-            status: false,
+            success: false,
             message: "No user found"
         })
          res.json({
-              status: true,
+              success: true,
               results: users.length,
               data: users
          })
     }).catch(err=>{
          res.json({
-              status: true,
+              success: true,
               message: "Something went wrong",
               error: err
          })

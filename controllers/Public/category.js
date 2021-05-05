@@ -22,13 +22,13 @@ const listMain = (req, res)=>{
      .populate(populateQuery)
      .then(categories=>{
           res.json({
-               status: true,
+               success: true,
                results: categories.length,
                data: categories
           })
      }).catch(err=>{
           res.json({
-               status: false,
+               success: false,
                message: "Something went wrong",
                error: err
           })
@@ -53,13 +53,13 @@ const listSub = (req, res)=>{
      .populate(populateQuery)
      .then(categories=>{
           res.json({
-               status: true,
+               success: true,
                results: categories.length,
                data: categories.children
           })
      }).catch(err=>{
           res.json({
-               status: false,
+               success: false,
                message: "Something went wrong",
                error: err
           })
@@ -84,13 +84,13 @@ const listChild = (req, res)=>{
      .populate(populateQuery)
      .then(categories=>{
           res.json({
-               status: true,
+               success: true,
                results: categories.length,
                data: categories.children
           })
      }).catch(err=>{
           res.json({
-               status: false,
+               success: false,
                message: "Something went wrong",
                error: err
           })

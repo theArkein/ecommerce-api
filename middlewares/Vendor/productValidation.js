@@ -5,10 +5,12 @@ const create = (data)=>{
         name: Joi.string().required(),
         shortname: Joi.string().required(),
         price: Joi.number().required(),
+        discount: Joi.number().min(0).max(100).required(),
         sku: Joi.string().required(),
         mainCategory: Joi.string().required(),
         subCategory: Joi.string().required(),
-        childCategory: Joi.string().required()
+        childCategory: Joi.string().required(),
+        image: Joi.string().required(),
     }).options({abortEarly : false, allowUnknown: true})
 
     let validation = schema.validate(data)

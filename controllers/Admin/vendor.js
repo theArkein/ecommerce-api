@@ -4,13 +4,13 @@ const list = (req, res)=>{
     Vendor.find()
     .then(vendors=>{
          res.json({
-              status: true,
+              success: true,
               results: vendors.length,
               data: vendors
          })
     }).catch(err=>{
          res.json({
-              status: true,
+              success: true,
               message: "Something went wrong",
               error: err
          })
@@ -25,17 +25,17 @@ const detail = (req, res)=>{
     .then(vendor=>{
         if(!vendor)
         res.json({
-            status: false,
+            success: false,
             message: "No vendor found"
         })
          res.json({
-              status: true,
+              success: true,
               results: vendors.length,
               data: vendors
          })
     }).catch(err=>{
          res.json({
-              status: true,
+              success: true,
               message: "Something went wrong",
               error: err
          })

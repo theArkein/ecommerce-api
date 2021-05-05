@@ -4,7 +4,9 @@ const slugify = require('slugify')
 const Product = require('@models/product')
 const Vendor = require('@models/vendor')
 
-const productValidation = require('@middlewares/Vendor/productValidation')
+const saveImage = require("@config/saveImage")
+
+const productValidation = require('@middlewares/Vendor/productValidation');
 
 const list = (req, res)=>{
      let filterQuery = {vendor: req.user.id}
@@ -15,13 +17,13 @@ const list = (req, res)=>{
      .populate('childCategory', 'name slug')
      .then(products=>{
           return res.json({
-               status: true,
+               success: true,
                results: products.length,
                data: products
           })
      }).catch(err=>{
           return res.json({
-               status: true,
+               success: true,
                message: "Something went wrong",
                error: err
           })
@@ -37,21 +39,21 @@ const detail = (req, res)=>{
      .then(product=>{
           if(!product)
                return res.json({
-                    status: false,
+                    success: false,
                     results: "No product found"
                })
           if(product.vendor != req.user.id)
                return res.json({
-                    status: false,
+                    success: false,
                     results: "Vendor not authorized for this product"
                })
           return res.json({
-               status: true,
+               success: true,
                data: product
           })
      }).catch(err=>{
           return res.json({
-               status: true,
+               success: true,
                message: "Something went wrong",
                error: err
           })
@@ -59,43 +61,46 @@ const detail = (req, res)=>{
 }
 
 const create = (req, res)=>{
-     let errors = productValidation.create(req.body)
-     if(errors)
-          return res.status(400).json({
-               success: false,
-               message: "Validation failed",
-               errors
-          })
+     // let errors = productValidation.create(req.body)
+     // if(errors)
+     //      return res.status(400).json({
+     //           success: false,
+     //           message: "Validation failed",
+     //           errors
+     //      })
+     res.json(req.body)
 
-     let product = {
-          name: req.body.name,
-          shortname: req.body.shortname,
-          slug: slugify(`${req.body.shortname}-${uniqid()}`, {lower: true}),
-          sku: req.body.sku,
-          vendor: req.user.id,
-          price: req.body.price,
-          discount: req.body.discount || 0,
-          discountedPrice: req.body.discount? req.body.price - req.body.discount/100 * req.body.price : req.body.price,
-          stock: req.body.stock,
-          publish: req.body.publish || true,
-          status: req.body.status || 1,
-          mainCategory: req.body.mainCategory,
-          subCategory: req.body.subCategory,
-          childCategory: req.body.childCategory,
-          // images: {
-          //      featured: {
-          //           path: null,
-          //           link: null
-          //      },
-          //      gallery: {
-          //           paths: [],
-          //           links: []
-          //      }
-          // },
-          // variantTypes: {
-          //      types: (Array.isArray(req.body.variants))?req.body.variants : [ req.body.variants ]
-          // },
-     }
+     saveImage(req.body.image, `images/product/122/${uniqid()}${uniqid()}.png`)
+
+     // let product = {
+     //      name: req.body.name,
+     //      shortname: req.body.shortname,
+     //      slug: slugify(`${req.body.shortname}-${uniqid()}`, {lower: true}),
+     //      sku: req.body.sku,
+     //      vendor: req.user.id,
+     //      price: req.body.price,
+     //      discount: req.body.discount || 0,
+     //      discountedPrice: req.body.discount? req.body.price - req.body.discount/100 * req.body.price : req.body.price,
+     //      stock: req.body.stock,
+     //      publish: req.body.publish || true,
+     //      success: req.body.status || 1,
+     //      mainCategory: req.body.mainCategory,
+     //      subCategory: req.body.subCategory,
+     //      childCategory: req.body.childCategory,
+     //      // images: {
+     //      //      featured: {
+     //      //           path: null,
+     //      //           link: null
+     //      //      },
+     //      //      gallery: {
+     //      //           paths: [],
+     //      //           links: []
+     //      //      }
+     //      // },
+     //      // variantTypes: {
+     //      //      types: (Array.isArray(req.body.variants))?req.body.variants : [ req.body.variants ]
+     //      // },
+     // }
 
 
      // Format variants in one object form
@@ -105,7 +110,6 @@ const create = (req, res)=>{
      //           price: req.body[`${variant}Price`]
      //      }
      // });
-     let images = req.files
      
      // Save images paths
      // if(images.length){
@@ -138,24 +142,24 @@ const create = (req, res)=>{
      // if(req.body.galleryImageLink)
      //      product.images.gallery.links = req.body.galleryImageLink || undefined
 
-     let newProduct = new Product(product)
-     console.log(newProduct)
+     // let newProduct = new Product(product)
+     // console.log(newProduct)
 
-     newProduct.save().then(created=>{
-          Vendor.findByIdAndUpdate(newProduct.vendor, { $push: { products: created._id } })
-          .then(console.log("Product added to vendor"))
-          return res.json({
-               status: true,
-               message: "Successfully created",
-               data: created
-          })
-     }).catch(err=>{
-          return res.json({
-               status: false,
-               message: err.message,
-               errors: err.errors
-          })
-     })
+     // newProduct.save().then(created=>{
+     //      Vendor.findByIdAndUpdate(newProduct.vendor, { $push: { products: created._id } })
+     //      .then(console.log("Product added to vendor"))
+     //      return res.json({
+     //           success: true,
+     //           message: "Successfully created",
+     //           data: created
+     //      })
+     // }).catch(err=>{
+     //      return res.json({
+     //           success: false,
+     //           message: err.message,
+     //           errors: err.errors
+     //      })
+     // })
 }
 
 const edit = (req, res)=>{
@@ -174,7 +178,7 @@ const edit = (req, res)=>{
           price: req.body.price,
           stock: req.body.stock,
           publish: req.body.publish || true,
-          status: req.body.status || 1,
+          success: req.body.status || 1,
           mainCategory: req.body.mainCategory,
           subCategory: req.body.subCategory,
           childCategory: req.body.childCategory,
@@ -241,24 +245,24 @@ const edit = (req, res)=>{
      .then(product=>{
           if(!product)
                return res.json({
-                    status: false,
+                    success: false,
                     message: "No product found"
                }) 
           if(product.vendor != req.user.id)
                return res.json({
-                    status: false,
+                    success: false,
                     message: "Vendor not authorized for this product"
                }) 
           Product.findByIdAndUpdate(product._id, update).then(updated=>{
                return res.json({
-                    status: true,
+                    success: true,
                     message: "Successfully updated",
                     data: updated
                })
           })
      }).catch(err=>{
           res.json({
-               status: false,
+               success: false,
                message: err.message,
                errors: err.errors
           })
@@ -271,12 +275,12 @@ const remove = (req, res)=>{
      .then(product=>{
           if(!product)
                return res.json({
-                    status: false,
+                    success: false,
                     message: "No product found"
                })    
           if(product.vendor != req.user.id)
                return res.json({
-                    status: false,
+                    success: false,
                     message: "Vendor not authorized for this product"
                })          
           Product.findByIdAndDelete(product._id).then(deleted=>{
@@ -288,14 +292,14 @@ const remove = (req, res)=>{
                })
 
                return res.json({
-                    status: true,
+                    success: true,
                     message: "Successfully deleted",
                     deleted
                })
           })
      }).catch(err=>{
           return res.json({
-               status: false,
+               success: false,
                message: err.message,
                errors: err.errors
           })

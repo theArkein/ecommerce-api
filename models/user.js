@@ -27,7 +27,7 @@ const schema = new Schema({
         type: Schema.Types.ObjectId, 
         ref: 'Product'
     }],
-    cartList: [{
+    cartlist: [{
         type: Schema.Types.ObjectId, 
         ref: 'Product'
     }],
@@ -42,7 +42,7 @@ const schema = new Schema({
         },
         email: {
             type: Schema.Types.String,
-            default: null,
+            immutable: true
         },
         phone: {
             type: Schema.Types.Number,
@@ -61,40 +61,8 @@ const schema = new Schema({
             default: null
         }
     },
-    shippingDetails: {
-        fullname: {
-            type: Schema.Types.String,
-            default: null
-        },
-        phone: {
-            type: Schema.Types.Number,
-            default: null
-        },
-        region: {
-            type: Schema.Types.String,
-            default: null
-        },
-        city: {
-            type: Schema.Types.String,
-            default: null
-        },
-        zone: {
-            type: Schema.Types.String,
-            default: null
-        },
-        address: {
-            type: Schema.Types.String,
-            default: null
-        }
-    },
-    billingDetails:{
+    billingAddress:{
 
-    },
-    status: {
-        type: Number,
-        default: 1,
-        min: 1,
-        max: 3
     },
     verified: {
         type: Schema.Types.Boolean,

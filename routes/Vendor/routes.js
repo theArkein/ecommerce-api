@@ -16,8 +16,8 @@ router.post('/auth/signup', VendorAuthController.signup)
 // products
 router.get('/product/list', authorize([2]), ProductController.list)
 router.get('/product/:slug/detail', authorize([2]), ProductController.detail)
-router.post('/product/create', authorize([2]), multer('product'), ProductController.create)
-router.put('/product/:slug/edit', authorize([2]), multer('product'), ProductController.edit)
+router.post('/product/create', authorize([2]), ProductController.create)
+router.put('/product/:slug/edit', authorize([2]), ProductController.edit)
 router.delete('/product/:slug/delete', authorize([2]), ProductController.remove)
 
 // orders

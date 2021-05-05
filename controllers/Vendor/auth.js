@@ -28,7 +28,7 @@ const signin = (req, res)=>{
         let isMatch = bcrypt.compareSync(password, vendor.password);
         if(!isMatch)
             return res.status(401).json({
-                status: false,
+                success: false,
                 message: "Ceredentials did not match",
                 errors: {}
             })
@@ -37,7 +37,7 @@ const signin = (req, res)=>{
 
         // const decoded = jwt.verify(token, config.jwt.SECRET)
         return res.status(200).json({
-            status: true,
+            success: true,
             message: "Successfully signedin",
             token: token,
             data: vendor
@@ -82,12 +82,12 @@ const signup = (req, res)=>{
         console.log(err.code)
         if(err.code==11000)
             return res.json({
-                status: false,
+                success: false,
                 message: `${Object.keys(err.keyValue)[0]} must be unique`,
         })
 
         return res.json({
-             status: false,
+             success: false,
              message: err.message,
              errors: err.errors
         })

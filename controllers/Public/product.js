@@ -14,13 +14,13 @@ const list = (req, res)=>{
      .populate('childCategory', 'name slug')
      .then(products=>{
           return res.json({
-               status: true,
+               success: true,
                results: products.length,
                data: products
           })
      }).catch(err=>{
           return res.json({
-               status: true,
+               success: true,
                message: "Something went wrong",
                error: err
           })
@@ -35,17 +35,17 @@ const detail = (req, res)=>{
      .then(product=>{
           if(!product)
                return res.json({
-                    status: false,
+                    success: false,
                     message: "No product found"
                })
           Product.findByIdAndUpdate(product._id, { $inc: { viewCounts: 1 }}).exec()
           return res.json({
-               status: true,
+               success: true,
                data: product
           })
      }).catch(err=>{
           return res.json({
-               status: true,
+               success: true,
                message: "Something went wrong",
                error: err
           })
@@ -75,13 +75,13 @@ const listByVendor = (req, res)=>{
      .then(vendor=>{
           console.log(vendor)
           res.json({
-               status: true,
+               success: true,
                results: vendor.products.length,
                data: vendor.products
           })
      }).catch(err=>{
           res.json({
-               status: true,
+               success: true,
                message: "Something went wrong",
                error: err
           })
@@ -101,13 +101,13 @@ const listByMainCategory = (req, res)=>{
           .populate('childCategory', 'name slug')
           .then(products=>{
                res.json({
-                    status: true,
+                    success: true,
                     results: products.length,
                     data: products
                })
           }).catch(err=>{
                res.json({
-                    status: false,
+                    success: false,
                     message: "Something went wrong",
                     error: err
                })
@@ -128,13 +128,13 @@ const listBySubCategory = (req, res)=>{
           .populate('childCategory', 'name slug')
           .then(products=>{
                res.json({
-                    status: true,
+                    success: true,
                     results: products.length,
                     data: products
                })
           }).catch(err=>{
                res.json({
-                    status: false,
+                    success: false,
                     message: "Something went wrong",
                     error: err
                })
@@ -155,13 +155,13 @@ const listByChildCategory = (req, res)=>{
           .populate('childCategory', 'name slug')
           .then(products=>{
                res.json({
-                    status: true,
+                    success: true,
                     results: products.length,
                     data: products
                })
           }).catch(err=>{
                res.json({
-                    status: false,
+                    success: false,
                     message: "Something went wrong",
                     error: err
                })
@@ -179,13 +179,13 @@ const listLatest = (req, res)=>{
      .limit(18)
      .then(products=>{
           return res.json({
-               status: true,
+               success: true,
                results: products.length,
                data: products
           })
      }).catch(err=>{
           return res.json({
-               status: true,
+               success: true,
                message: "Something went wrong",
                error: err
           })
@@ -202,13 +202,13 @@ const listMostViewed = (req, res)=>{
      .limit(18)
      .then(products=>{
           return res.json({
-               status: true,
+               success: true,
                results: products.length,
                data: products
           })
      }).catch(err=>{
           return res.json({
-               status: true,
+               success: true,
                message: "Something went wrong",
                error: err
           })
@@ -225,13 +225,13 @@ const listFlashDeal = (req, res)=>{
      .limit(18)
      .then(products=>{
           return res.json({
-               status: true,
+               success: true,
                results: products.length,
                data: products
           })
      }).catch(err=>{
           return res.json({
-               status: true,
+               success: true,
                message: "Something went wrong",
                error: err
           })

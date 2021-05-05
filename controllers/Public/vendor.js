@@ -6,13 +6,13 @@ const list = (req, res)=>{
      .select(selectQuery)
      .then(vendors=>{
           res.json({
-               status: true,
+               success: true,
                results: vendors.length,
                data: vendors
           })
      }).catch(err=>{
           res.json({
-               status: true,
+               success: true,
                message: "Something went wrong",
                error: err
           })
