@@ -1,12 +1,14 @@
 const uniqid = require('uniqid');
 const slugify = require('slugify')
-
+const fs = require('fs')
 const Product = require('@models/product')
 const Vendor = require('@models/vendor')
 
 const saveImage = require("@config/saveImage")
 
 const productValidation = require('@middlewares/Vendor/productValidation');
+const Review = require('../../models/review');
+const { populate } = require('../../models/review');
 
 const list = (req, res)=>{
      let filterQuery = {vendor: req.user.id}
@@ -162,10 +164,16 @@ const remove = (req,res)=>{
           vendor: req.user.id
      }
      Product.findOneAndDelete(filterQuery).then(deleted=>{
+          console.log(deleted)
           if(!deleted)
                return res.json({
                     success: false,
                     message: "No such product found"
+               })
+          Review.deleteMany({product: deleted.id}).exec()
+          fs.rmdir(`images/product/${deleted.slug}`, (err)=>{
+               if(err)
+                    console.log("Couln't delete product images")
                })
           return res.json({
                success: true,

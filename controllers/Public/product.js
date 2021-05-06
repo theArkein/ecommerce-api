@@ -4,6 +4,7 @@ const MainCategory = require('@models/mainCategory')
 const SubCategory = require('@models/subCategory')
 const ChildCategory = require('@models/childCategory')
 const WebSetting = require('@models/siteSetting')
+const Review = require('../../models/review')
 
 
 const list = (req, res)=>{
@@ -29,9 +30,15 @@ const list = (req, res)=>{
 const detail = (req, res)=>{
      let filterQuery = {slug: req.params.slug, publish: true}
      Product.findOne(filterQuery)
-     .populate('mainCategory', 'name slug icon')
-     .populate('subCategory', 'name slug')
-     .populate('childCategory', 'name slug')
+     .populate('mainCategory subCategory childCategory', 'name slug icon')
+     .populate({
+          path: 'reviews',
+          select: '-product',
+          populate: {
+               path: 'reviewer',
+               select: 'profileDetails.firstname profileDetails.lastname'
+          }
+     })
      .then(product=>{
           if(!product)
                return res.json({
@@ -45,8 +52,8 @@ const detail = (req, res)=>{
           })
      }).catch(err=>{
           return res.json({
-               success: true,
-               message: "Something went wrong",
+               success: false,
+               message: "Something went wrong n",
                error: err
           })
      })
@@ -81,7 +88,7 @@ const listByVendor = (req, res)=>{
           })
      }).catch(err=>{
           res.json({
-               success: true,
+               success: false,
                message: "Something went wrong",
                error: err
           })
@@ -185,7 +192,7 @@ const listLatest = (req, res)=>{
           })
      }).catch(err=>{
           return res.json({
-               success: true,
+               success: false,
                message: "Something went wrong",
                error: err
           })
@@ -208,7 +215,7 @@ const listMostViewed = (req, res)=>{
           })
      }).catch(err=>{
           return res.json({
-               success: true,
+               success: false,
                message: "Something went wrong",
                error: err
           })
@@ -231,7 +238,7 @@ const listFlashDeal = (req, res)=>{
           })
      }).catch(err=>{
           return res.json({
-               success: true,
+               success: false,
                message: "Something went wrong",
                error: err
           })

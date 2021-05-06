@@ -9,6 +9,7 @@ const OrderController = require('@controllers/User/order')
 const authorize = require('@middlewares/authorize')
 
 const UserAccount = require('@controllers/User/account')
+const ReviewController = require('@controllers/User/review')
 
 // authentication
 router.post('/auth/signin', UserAuthController.signin)
@@ -56,6 +57,12 @@ router.put('/cart/update', authorize([3]), UserAccount.cartUpdate)
 router.get('/order/list', authorize([3]), OrderController.list)
 router.get('/order/:orderId/detail', authorize([3]), OrderController.detail)
 router.post('/order/create', authorize([3]), OrderController.create)
+
+// reviews
+router.get('/review/list', authorize([3]), ReviewController.list)
+router.post('/review/add', authorize([3]), ReviewController.add)
+router.delete('/review/:id/delete', authorize([3]), ReviewController.remove)
+
 
 module.exports = router
 

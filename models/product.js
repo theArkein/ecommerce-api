@@ -67,6 +67,9 @@ const schema = new Schema({
         type: Schema.Types.ObjectId, ref: 'ChildCategory',
         required: true
     },
+    reviews: [{
+        type: Schema.Types.ObjectId, ref: 'Review'
+    }],
     publish: {
          type: Boolean,
          default: true
