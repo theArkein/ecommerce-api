@@ -300,6 +300,97 @@ const shippingAddressDelete = (req, res)=>{
 }
 
 
+// wishlist
+
+const wishlistInfo = (req, res)=>{
+    User.findById(req.user.id)
+    .populate({
+        path: 'wishlist',
+        select: 'name shortname slug sku vendor price discount image stock'
+    })
+    .then(user=>{
+        return res.json({
+            success: true,
+            data: user.wishlist
+        })
+    }).catch(err=>{
+        return res.json({
+            success: false,
+            message: "Somehting went wrong",
+            error: err.errors
+        })
+    })
+}
+
+const wishlistUpdate= (req, res)=>{
+    let errors = userValidation.wishlistUpdate(req.body)
+    if(errors)
+        return res.status(400).json({
+            success: false,
+            message: "Validation failed",
+            errors
+        })
+
+    let update = req.body
+    User.findByIdAndUpdate(req.user.id, {wishlist: update}).then(user=>{
+        return res.json({
+            success: true,
+            data: update
+        })
+    }).catch(err=>{
+        return res.json({
+            success: false,
+            message: "Somehting went wrong",
+            error: err.errors
+        })
+    })
+}
+
+const cartInfo = (req, res)=>{
+
+    User.findById(req.user.id)
+    .populate({
+        path: 'cartlist.product',
+        select: 'name shortname slug sku vendor price discount image stock'
+    })
+    .then(user=>{
+        return res.json({
+            success: true,
+            data: user.cartlist
+        })
+    }).catch(err=>{
+        return res.json({
+            success: false,
+            message: "Somehting went wrong",
+            error: err.errors
+        })
+    })
+}
+
+const cartUpdate = (req, res)=>{
+    let errors = userValidation.cartUpdate(req.body)
+    if(errors)
+        return res.status(400).json({
+            success: false,
+            message: "Validation failed",
+            errors
+        })
+        
+    let update = req.body
+    User.findByIdAndUpdate(req.user.id, {cartlist: update}).then(user=>{
+        return res.json({
+            success: true,
+            data: update
+        })
+    }).catch(err=>{
+        return res.json({
+            success: false,
+            message: "Somehting went wrong",
+            error: err.errors
+        })
+    })
+}
+
 module.exports = {
     verify,
     forgotPassword,
@@ -314,5 +405,9 @@ module.exports = {
         add: shippingAddressAdd,
         update: shippingAddressUpdate,
         delete: shippingAddressDelete,
-    }
+    },
+    wishlistInfo,
+    wishlistUpdate,
+    cartInfo,
+    cartUpdate
 }

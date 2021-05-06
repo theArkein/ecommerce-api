@@ -28,8 +28,14 @@ const schema = new Schema({
         ref: 'Product'
     }],
     cartlist: [{
-        type: Schema.Types.ObjectId, 
-        ref: 'Product'
+        product: {
+            type: Schema.Types.ObjectId, 
+            ref: 'Product'
+        },
+        quantity: {
+            type: Schema.Types.Number,
+            default: 1
+        }
     }],
     profileDetails:{
         firstname: {

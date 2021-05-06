@@ -24,9 +24,6 @@ router.get('/auth/facebook', passport.authenticate('facebook', {scope: ['email',
 router.get('/auth/facebook/return', passport.authenticate('facebook', {session : false}), UserAuthController.facebook)
 router.post('/auth/facebook/token', passport.authenticate('facebook-token'), UserAuthController.facebookToken)
 
-
-
-
 // Account Verification
 router.get('/account/verify', UserAccount.verify )
 
@@ -47,6 +44,13 @@ router.post('/shipping-address/add', authorize([3]), UserAccount.shippingAddress
 router.put('/shipping-address/:id/update', authorize([3]), UserAccount.shippingAddress.update )
 router.delete('/shipping-address/:id/remove', authorize([3]), UserAccount.shippingAddress.delete )
 
+// wishlist
+router.get('/wishlist', authorize([3]), UserAccount.wishlistInfo)
+router.put('/wishlist/update', authorize([3]), UserAccount.wishlistUpdate)
+
+// cart
+router.get('/cart', authorize([3]), UserAccount.cartInfo)
+router.put('/cart/update', authorize([3]), UserAccount.cartUpdate)
 
 // orders
 router.get('/order/list', authorize([3]), OrderController.list)

@@ -61,108 +61,6 @@ const detail = (req, res)=>{
 }
 
 const create = (req, res)=>{
-     // let errors = productValidation.create(req.body)
-     // if(errors)
-     //      return res.status(400).json({
-     //           success: false,
-     //           message: "Validation failed",
-     //           errors
-     //      })
-     res.json(req.body)
-
-     saveImage(req.body.image, `images/product/122/${uniqid()}${uniqid()}.png`)
-
-     // let product = {
-     //      name: req.body.name,
-     //      shortname: req.body.shortname,
-     //      slug: slugify(`${req.body.shortname}-${uniqid()}`, {lower: true}),
-     //      sku: req.body.sku,
-     //      vendor: req.user.id,
-     //      price: req.body.price,
-     //      discount: req.body.discount || 0,
-     //      discountedPrice: req.body.discount? req.body.price - req.body.discount/100 * req.body.price : req.body.price,
-     //      stock: req.body.stock,
-     //      publish: req.body.publish || true,
-     //      success: req.body.status || 1,
-     //      mainCategory: req.body.mainCategory,
-     //      subCategory: req.body.subCategory,
-     //      childCategory: req.body.childCategory,
-     //      // images: {
-     //      //      featured: {
-     //      //           path: null,
-     //      //           link: null
-     //      //      },
-     //      //      gallery: {
-     //      //           paths: [],
-     //      //           links: []
-     //      //      }
-     //      // },
-     //      // variantTypes: {
-     //      //      types: (Array.isArray(req.body.variants))?req.body.variants : [ req.body.variants ]
-     //      // },
-     // }
-
-
-     // Format variants in one object form
-     // product.variantsTypes.forEach(variant => {
-     //      product.variants[`${variant}`] = {
-     //           types: req.body[`${variant}Type`],
-     //           price: req.body[`${variant}Price`]
-     //      }
-     // });
-     
-     // Save images paths
-     // if(images.length){
-     //      // save featuredImage path if provided
-     //      if(images[0].fieldname == "featuredImage"){
-     //           product.images.featured.path = images[0].filename
-     //           // save galleryImage paths if provided and featured image Exits
-     //           if(images.length>=2){
-     //                for(let i=1; i<images.length; i++){
-     //                     product.images.gallery.paths.push(images[i].filename)
-     //                }
-     //           } else {
-     //                product.images.gallery.paths = undefined
-     //           }
-     //      }else {
-     //           // save galleryImage paths if provided and featured image doesnot Exits
-     //           if(images.length>=2){
-     //                for(let i=0; i<images.length; i++){
-     //                     product.images.gallery.paths.push(images[i].filename)
-     //                }
-     //           } else {
-     //                product.images.gallery.paths = undefined
-     //           }
-     //      }
-     // }
-
-     // if(req.body.featuredImageLink)
-     //      product.images.featured.link = req.body.featuredImageLink
-
-     // if(req.body.galleryImageLink)
-     //      product.images.gallery.links = req.body.galleryImageLink || undefined
-
-     // let newProduct = new Product(product)
-     // console.log(newProduct)
-
-     // newProduct.save().then(created=>{
-     //      Vendor.findByIdAndUpdate(newProduct.vendor, { $push: { products: created._id } })
-     //      .then(console.log("Product added to vendor"))
-     //      return res.json({
-     //           success: true,
-     //           message: "Successfully created",
-     //           data: created
-     //      })
-     // }).catch(err=>{
-     //      return res.json({
-     //           success: false,
-     //           message: err.message,
-     //           errors: err.errors
-     //      })
-     // })
-}
-
-const edit = (req, res)=>{
      let errors = productValidation.create(req.body)
      if(errors)
           return res.status(400).json({
@@ -171,131 +69,32 @@ const edit = (req, res)=>{
                errors
           })
 
-     let update = {
-          name: req.body.name,
-          shortName: req.body.shortName,
-          sku: req.body.sku,
-          price: req.body.price,
-          stock: req.body.stock,
-          publish: req.body.publish || true,
-          success: req.body.status || 1,
-          mainCategory: req.body.mainCategory,
-          subCategory: req.body.subCategory,
-          childCategory: req.body.childCategory,
-          // images: {
-          //      featured: {
-          //           path: undefined,
-          //           link: undefined
-          //      },
-          //      gallery: {
-          //           paths: [],
-          //           links: []
-          //      }
-          // },
-          // variants: {
-          //      types: req.body.variants
-          // }
-     }
-     // Format variants in one object form
-     // product.variants.types.forEach(variant => {
-     //      console.log(variant)
-     //      product.variants[`${variant}`] = {
-     //           types: req.body[`${variant}Type`],
-     //           price: req.body[`${variant}Price`]
-     //      }
-     // });
-     // let images = req.files
-     
-     // Save images paths if images provided
-     // if(images.length){
-     //      // save featuredImage path if provided
-     //      if(images[0].fieldname == "featuredImage"){
-     //           product.images.featured.path = images[0].filename
-     //           // save galleryImage paths if provided and featured image Exits
-     //           if(images.length>=2){
-     //                for(let i=1; i<images.length; i++){
-     //                     product.images.gallery.paths.push(images[i].filename)
-     //                }
-     //           } else {
-     //                product.images.gallery.paths = undefined
-     //           }
-     //      }else {
-     //           // save galleryImage paths if provided and featured image doesnot Exits
-     //           if(images.length>=2){
-     //                for(let i=0; i<images.length; i++){
-     //                     product.images.gallery.paths.push(images[i].filename)
-     //                }
-     //           } else {
-     //                product.images.gallery.paths = undefined
-     //           }
-     //      }
-     // }
+     let product = req.body
+     product.slug = `${slugify(req.body.shortname, {lower: true})}-${uniqid()}`
+     product.vendor = req.user.id
 
-     // if(req.body.featuredImageLink)
-     //      product.images.featured.link = req.body.featuredImageLink
+     // save image file
+     let image = `images/product/${product.slug}/${uniqid()}${uniqid()}.png`
+     saveImage(req.body.image, image)
+     product.image = image
 
-     // if(req.body.galleryImageLink)
-     //      product.images.gallery.links = req.body.galleryImageLink || undefined
-
-     console.log("Update Product")
-
-     let filterQuery = {slug: req.params.slug}
-
-     Product.findOne(filterQuery)
-     .then(product=>{
-          if(!product)
-               return res.json({
-                    success: false,
-                    message: "No product found"
-               }) 
-          if(product.vendor != req.user.id)
-               return res.json({
-                    success: false,
-                    message: "Vendor not authorized for this product"
-               }) 
-          Product.findByIdAndUpdate(product._id, update).then(updated=>{
-               return res.json({
-                    success: true,
-                    message: "Successfully updated",
-                    data: updated
-               })
-          })
-     }).catch(err=>{
-          res.json({
-               success: false,
-               message: err.message,
-               errors: err.errors
-          })
+     // save galley image files
+     let gallery = product.gallery.map(item=>{
+          let image = `images/product/${product.slug}/${uniqid()}${uniqid()}.png`
+          saveImage(item, image)
+          return image
      })
-}
+     product.gallery = gallery
 
-const remove = (req, res)=>{
-     let filterQuery = {slug: req.params.slug}
-     Product.findOne(filterQuery)
-     .then(product=>{
-          if(!product)
-               return res.json({
-                    success: false,
-                    message: "No product found"
-               })    
-          if(product.vendor != req.user.id)
-               return res.json({
-                    success: false,
-                    message: "Vendor not authorized for this product"
-               })          
-          Product.findByIdAndDelete(product._id).then(deleted=>{
-               
-               Vendor.findByIdAndUpdate(deleted.vendor, { $pull: { products: deleted._id } }).then(data=>{
-                    console.log("Removed from vendor products")
-               }).catch(err=>{
-                    console.log(err)
-               })
+     product = new Product(product)
 
-               return res.json({
-                    success: true,
-                    message: "Successfully deleted",
-                    deleted
-               })
+     product.save().then(created=>{
+          Vendor.findByIdAndUpdate(product.vendor, { $push: { products: created._id } })
+          .then(console.log("Product added to vendor"))
+          return res.json({
+               success: true,
+               message: "Successfully created",
+               data: created
           })
      }).catch(err=>{
           return res.json({
@@ -306,11 +105,79 @@ const remove = (req, res)=>{
      })
 }
 
+const edit = (req, res)=>{
+
+     let errors = productValidation.update(req.body)
+
+     if(errors)
+          return res.status(400).json({
+               success: false,
+               message: "Validation failed",
+               errors
+          })
+
+     let product = req.body
+     let slug = req.params.slug.split('-')
+     let slugId = slug[slug.length - 1]
+     product.slug = `${slugify(req.body.shortname, {lower: true})}-${slugId}`
+
+     // save image file
+     if(product.image){
+          let image = `images/product/${product.slug}/${uniqid()}${uniqid()}.png`
+          saveImage(req.body.image, image)
+          product.image = image
+     }
+
+     // save galley image files
+     if(product.gallery){
+          let gallery = product.gallery.map(item=>{
+               let image = `images/product/${product.slug}/${uniqid()}${uniqid()}.png`
+               saveImage(item, image)
+               return image
+          })
+          product.gallery = gallery
+     }
+     let filterQuery = {
+          slug: req.params.slug,
+          vendor: req.user.id
+     }
+     Product.findOneAndUpdate(filterQuery, product).then(updated=>{
+          if(!updated)
+               return res.json({
+                    success: false,
+                    message: "No such product found"
+               })
+          return res.json({
+               success: true,
+               message: "Successfully Updated",
+               data: updated
+          })
+     })
+
+}
+
+const remove = (req,res)=>{
+     let filterQuery = {
+          slug: req.params.slug,
+          vendor: req.user.id
+     }
+     Product.findOneAndDelete(filterQuery).then(deleted=>{
+          if(!deleted)
+               return res.json({
+                    success: false,
+                    message: "No such product found"
+               })
+          return res.json({
+               success: true,
+               message: "Successfully deleted"
+          })
+     })
+}
 
 module.exports = {
      list,
      detail,
      create,
      edit,
-     remove,
+     remove
 }

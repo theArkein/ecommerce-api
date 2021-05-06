@@ -45,7 +45,7 @@ const profileUpdate = (data)=>{
         phone: Joi.string().required(),
         address: Joi.string().required(),
         profilePicture: Joi.string().allow(null)
-    }).options({abortEarly : false, allowUnknown: false})
+    }).options({abortEarly : false})
 
     let validation = schema.validate(data)
     if(!validation.error)
@@ -65,7 +65,7 @@ const shippingAddressAdd = (data)=>{
         city: Joi.string().required(),
         zone: Joi.string().required(0),
         address: Joi.string().required(),
-    }).options({abortEarly : false, allowUnknown: false})
+    }).options({abortEarly : false})
 
     let validation = schema.validate(data)
     if(!validation.error)
@@ -86,7 +86,34 @@ const shippingAddressUpdate = (data)=>{
         zone: Joi.string().required(0),
         address: Joi.string().required(),
         isDefault: Joi.boolean()
-    }).options({abortEarly : false, allowUnknown: false})
+    }).options({abortEarly : false})
+
+    let validation = schema.validate(data)
+    if(!validation.error)
+        return null
+    let errors = validation.error.details.map(error=>{
+        return {message: error.message, field: error.path[0]}
+    })
+    return errors 
+}
+
+const wishlistUpdate = (data)=>{
+    const schema = Joi.array().options({abortEarly : false})
+
+    let validation = schema.validate(data)
+    if(!validation.error)
+        return null
+    let errors = validation.error.details.map(error=>{
+        return {message: error.message, field: error.path[0]}
+    })
+    return errors 
+}
+
+const cartUpdate = (data)=>{
+    const schema = Joi.array().items({
+        product: Joi.string().required(),
+        quantity: Joi.number().min(1)
+    }).options({abortEarly : false})
 
     let validation = schema.validate(data)
     if(!validation.error)
@@ -102,5 +129,7 @@ module.exports = {
     signup,
     profileUpdate,
     shippingAddressAdd,
-    shippingAddressUpdate
+    shippingAddressUpdate,
+    wishlistUpdate,
+    cartUpdate
 }

@@ -1,3 +1,4 @@
+const { required } = require('joi');
 var mongoose = require('mongoose')
 const { Schema } = mongoose;
 
@@ -18,7 +19,7 @@ const schema = new Schema({
     },
     sku: {
         type: String,
-        required: true,
+        default: null
     },
     vendor: {
         type: Schema.Types.ObjectId, ref: 'Vendor',
@@ -44,13 +45,13 @@ const schema = new Schema({
         default: 0
     },
     image: {
-        path: String,
-        link: String
+        type: Schema.Types.String,
+        required: true
     },
-    gallery: [{
-        path: String,
-        link: String
-    }],
+    gallery: [],
+    brand: {
+        type: Schema.Types.String
+    },
     variants: {
         type: Schema.Types.Mixed
     },
@@ -70,12 +71,6 @@ const schema = new Schema({
          type: Boolean,
          default: true
     },
-    status: {
-        type: Number,
-        default: 1,
-        max: 3,
-        min: 1,
-   }
 }, {timestamps: true});
 
 const Product = mongoose.model('Product', schema);
