@@ -74,7 +74,12 @@ const schema = new Schema({
          type: Boolean,
          default: true
     },
+    tags: {
+        type: String
+    }
 }, {timestamps: true});
+
+schema.index({"$**": "text"})
 
 const Product = mongoose.model('Product', schema);
 

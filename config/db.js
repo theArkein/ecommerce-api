@@ -7,10 +7,4 @@ var db = ()=>{
     .catch(err => console.log(err));
 }
 
-let keys = { createdAt: 1 };
-let options = { 
-    expireAfterSeconds: 20, 
-    partialFilterExpression: { status: 1 }
-};
-
 module.exports = db

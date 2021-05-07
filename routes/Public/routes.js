@@ -20,12 +20,13 @@ router.get('/product/category/main/:slug/list', ProductController.listByMainCate
 router.get('/product/category/sub/:slug/list', ProductController.listBySubCategory)
 router.get('/product/category/child/:slug/list', ProductController.listByChildCategory)
 
+// Product search
+router.get('/product/search', ProductController.search)
+
 // Feature products
 router.get('/product/latest/list', ProductController.listLatest)
 router.get('/product/most-viewed/list', ProductController.listMostViewed)
 router.get('/product/flash-deal/list', ProductController.listFlashDeal)
-// router.get('/product/featured-category/list', ProductController.listFeaturedCategory)
-// router.get('/product/recommended-category/list', ProductController.listRecommendedCategory)
 
 // Vendor
 router.get('/vendor/list', VendorController.list)

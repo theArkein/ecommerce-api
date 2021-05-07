@@ -302,6 +302,14 @@ const listRecommendedCategory = (req, res)=>{
     })
 }
 
+const search = (req, res)=>{
+     console.log(req.query.query)
+     const query = { $text: { $search: req.query.query } };
+     Product.find(query).then(data=>{
+          return res.json(data)
+     })
+}
+
 module.exports = {
      list,
      detail,
@@ -314,4 +322,5 @@ module.exports = {
      listFlashDeal,
      listFeaturedCategory,
      listRecommendedCategory,
+     search
 }

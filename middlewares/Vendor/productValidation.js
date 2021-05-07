@@ -14,7 +14,8 @@ const create = (data)=>{
         childCategory: Joi.string().required(),
         image: Joi.string().required(),
         gallery: Joi.array(),
-        publish: Joi.boolean()
+        publish: Joi.boolean(),
+        tags: Joi.string()
     }).options({abortEarly : false})
 
     let validation = schema.validate(data)
@@ -40,7 +41,8 @@ const update = (data)=>{
         childCategory: Joi.string().required(),
         image: Joi.string(),
         gallery: Joi.array(),
-        publish: Joi.boolean()
+        publish: Joi.boolean(),
+        tags: Joi.string(),
     }).options({abortEarly : false})
 
     let validation = schema.validate(data)
