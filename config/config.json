@@ -1,5 +1,6 @@
 {
     "host": "http://localhost:5500",
+    "production": "https://haatbazaar.herokuapp.com",
     "base": "/api/v1",
     "bcrypt": {
         "saltRounds": 10

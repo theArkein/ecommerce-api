@@ -4,9 +4,9 @@ const Joi = require("joi")
 const add = (data)=>{
     const schema = Joi.object({
         comment: Joi.string().required(),
-        parentComment: Joi.string(),
+        parentComment: Joi.string().default(null),
         product: Joi.string().when('parentComment', {
-            is: undefined,
+            is: null,
             then: Joi.string().required()
           }),
     }).options({abortEarly : false})
@@ -22,7 +22,7 @@ const add = (data)=>{
 
 const update = (data)=>{
     const schema = Joi.object({
-        comment: Joi.string()
+        comment: Joi.string().required()
     }).options({abortEarly : false})
 
     let validation = schema.validate(data)

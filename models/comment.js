@@ -19,7 +19,7 @@ const schema = new Schema({
     parentComment: {
         type: Schema.Types.ObjectId,
         ref: 'Comment',
-        default: false
+        default: null
     },
     subComments: [{
         type: Schema.Types.ObjectId,
@@ -27,6 +27,18 @@ const schema = new Schema({
     }]
 
 }, {timestamps: true});
+
+function autoPopulateSubs(next) {
+    this
+    .populate('subComments')
+    .populate('commentor', 'profileDetails.firstname profileDetails.lastname')
+    next();
+}
+  
+schema
+.pre('findOne', autoPopulateSubs)
+.pre('find', autoPopulateSubs);
+  
 
 const Comment = mongoose.model('Comment', schema);
 

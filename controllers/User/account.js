@@ -145,7 +145,7 @@ const profileDetailsUpdate = (req, res)=>{
         })
 
     if(profileDetails.profilePicture){
-        let profilePicture = `images/user/profile/${uniqid()}${uniqid()}.png`
+        let profilePicture = `${process.env.HOST}/images/user/profile/${uniqid()}${uniqid()}.png`
         saveImage(profileDetails.profilePicture, profilePicture)
         profileDetails.profilePicture = profilePicture
     }

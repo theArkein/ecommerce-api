@@ -69,13 +69,13 @@ router.post('/order/create', authorize([3]), OrderController.create)
 // reviews
 router.get('/review/list', authorize([3]), ReviewController.list)
 router.post('/review/add', authorize([3]), ReviewController.add)
-router.delete('/review/:id/delete', authorize([3]), ReviewController.remove)
+router.delete('/review/delete/:id', authorize([3]), ReviewController.remove)
 
 // comments
 router.get('/comment/list', authorize([3]), CommentController.list)
 router.post('/comment/add', authorize([3]), CommentController.add)
-router.post('/comment/add', authorize([3]), CommentController.update)
-router.delete('/comment/:id/delete', authorize([3]), CommentController.remove)
+router.put('/comment/update/:id', authorize([3]), CommentController.update)
+router.delete('/comment/delete/:id', authorize([3]), CommentController.remove)
 
 
 module.exports = router

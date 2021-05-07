@@ -4,12 +4,14 @@ const CommentValidation = require("@middlewares/User/comment")
 
 const list = (req, res)=>{
     let filterQuery = {
-        commentor: req.user.id
+        commentor: req.user.id,
+        parentComment: null
     }
-    Comment.find(filterQuery).then(commentor=>{
+    Comment.find(filterQuery)
+    .then(comment=>{
         return res.json({
             success: true,
-            data: commentor
+            data: comment
         })
     }).catch(err=>{
         return res.json({
@@ -32,6 +34,7 @@ const add = (req, res)=>{
     let comment = new Comment(req.body)
     comment.commentor = req.user.id
 
+    console.log(comment)
     if(comment.parentComment){
         Comment.findByIdAndUpdate(comment.parentComment, {$push: {subComments: comment.id}}).then(updated=>{
             if(!updated){
@@ -89,12 +92,8 @@ const update = (req, res)=>{
             message: "Validation failed",
             errors
         })
-
-    let comment = new Comment(req.body)
     
-    let update = {
-        comment: req.body
-    }
+    let update = req.body
     Comment.findByIdAndUpdate(req.params.id, update).then(updated=>{
         if(!updated){
             return res.json({
@@ -141,6 +140,7 @@ remove = (req, res)=>{
             deleted.subComments.forEach(item=>{
                 Comment.findByIdAndDelete(item).exec()
             })
+            console.log("subComments deleted")
         }
 
         return res.json({
