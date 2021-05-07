@@ -27,7 +27,7 @@ const schema = new Schema({
         type: Schema.Types.ObjectId, 
         ref: 'Product'
     }],
-    cartlist: [{
+    cart: [{
         product: {
             type: Schema.Types.ObjectId, 
             ref: 'Product'

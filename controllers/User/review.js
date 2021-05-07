@@ -1,6 +1,7 @@
 const Product = require("@models/product")
 const Review = require("@models/review")
 const Order = require("@models/order")
+const ReviewValidation = require("@middlewares/User/review")
 
 const list = (req, res)=>{
     let filterQuery = {
@@ -21,6 +22,13 @@ const list = (req, res)=>{
 }
 
 const add = (req, res)=>{
+    let errors = ReviewValidation.add(req.body)
+    if(errors)
+        return res.status(400).json({
+            success: false,
+            message: "Validation failed",
+            errors
+        })
 
     let review = new Review(req.body)
     review.reviewer = req.user.id
