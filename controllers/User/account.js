@@ -147,7 +147,7 @@ const profileDetailsUpdate = (req, res)=>{
     if(profileDetails.profilePicture){
         let profilePicture = `images/user/profile/${uniqid()}${uniqid()}.png`
         saveImage(profileDetails.profilePicture, profilePicture)
-        profileDetails.profilePicture = `${process.env.HOST}/${profilePicture}`
+        profileDetails.profilePicture = profilePicture
     }
     let update = {
         "profileDetails.firstname": profileDetails.firstname,
