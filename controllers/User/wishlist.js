@@ -1,5 +1,5 @@
 const User = require('@models/user')
-const userValidation = require("@middlewares/user/userValidation")
+const userValidation = require("@middlewares/User/userValidation")
 
 const info = (req, res)=>{
     User.findById(req.user.id)
