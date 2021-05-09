@@ -14,11 +14,11 @@ router.get('/category/:sub/child/list', CategoryController.listChild)
 
 // Product
 router.get('/product/list', ProductController.list)
-router.get('/product/:slug/detail', ProductController.detail)
-router.get('/product/vendor/:slug/list', ProductController.listByVendor)
-router.get('/product/category/main/:slug/list', ProductController.listByMainCategory)
-router.get('/product/category/sub/:slug/list', ProductController.listBySubCategory)
-router.get('/product/category/child/:slug/list', ProductController.listByChildCategory)
+router.get('/product/:id/detail', ProductController.detail)
+router.get('/product/vendor/:id/list', ProductController.listByVendor)
+router.get('/product/category/main/:id/list', ProductController.listByMainCategory)
+router.get('/product/category/sub/:id/list', ProductController.listBySubCategory)
+router.get('/product/category/child/:id/list', ProductController.listByChildCategory)
 
 // Product search
 router.get('/product/search', ProductController.search)

@@ -5,20 +5,17 @@ const SubCategory = require('@models/subCategory')
 const ChildCategory = require('@models/childCategory')
 const WebSetting = require('@models/siteSetting')
 const Review = require('../../models/review')
+const paginateOption = require("@config/paginateOption")
 
 
 const list = (req, res)=>{
      let filterQuery = {publish: true}
-     Product.find()
-     .populate('mainCategory', 'name slug icon')
-     .populate('subCategory', 'name slug')
-     .populate('childCategory', 'name slug')
-     .then(products=>{
-          return res.json({
-               success: true,
-               results: products.length,
-               data: products
-          })
+     let options = paginateOption(req.query.page, req.query.limit)
+     Product.paginate(filterQuery, options)
+     .then(response=>{
+          response.results  = response.data.length
+          response.success = true
+          return res.json(response)
      }).catch(err=>{
           return res.json({
                success: true,
@@ -28,14 +25,21 @@ const list = (req, res)=>{
      })
 }
 const detail = (req, res)=>{
-     let filterQuery = {slug: req.params.slug, publish: true}
+     let filterQuery = {_id: req.params.id, publish: true}
      Product.findOne(filterQuery)
      .populate('mainCategory subCategory childCategory', 'name slug icon')
+     // .populate('reviews reviews.reviewer comments comments.commenter', 'profileDetails.firstname profileDetails.lastname')
      .populate({
           path: 'reviews',
-          select: '-product',
           populate: {
                path: 'reviewer',
+               select: 'profileDetails.firstname profileDetails.lastname'
+          }
+     })
+     .populate({
+          path: 'comments',
+          populate: {
+               path: 'commenter',
                select: 'profileDetails.firstname profileDetails.lastname'
           }
      })
@@ -59,33 +63,13 @@ const detail = (req, res)=>{
      })
 }
 const listByVendor = (req, res)=>{
-     let filterQuery = {slug: req.params.slug}
-     let selectQuery = 'products'
-     Vendor.findOne(filterQuery)
-     .select(selectQuery)
-     .populate({
-          path: 'products',
-          populate: {
-               path: 'mainCategory',
-               select: 'name slug icon'
-          },
-          populate: {
-               path: 'subCategory',
-               select: 'name slug'
-          },
-          populate: {
-               path: 'childCategory',
-               select: 'name slug'
-          }
-
-     })
-     .then(vendor=>{
-          console.log(vendor)
-          res.json({
-               success: true,
-               results: vendor.products.length,
-               data: vendor.products
-          })
+     let filterQuery = {publish: true, vendor: req.params.id}
+     let options = paginateOption(req.query.page, req.query.limit)
+     Product.paginate(filterQuery, options)
+     .then(response=>{
+          response.results  = response.data.length
+          response.success = true
+          return res.json(response)
      }).catch(err=>{
           res.json({
                success: false,
@@ -95,103 +79,69 @@ const listByVendor = (req, res)=>{
      })
 }
 const listByMainCategory = (req, res)=>{
-     MainCategory.findOne({slug: req.params.slug}).then(category=>{
-          if(!category)
-               return res.json({
-                    success: false,
-                    message: "no such category found"
-               })
-          let filterQuery = {mainCategory: category._id, publish: true}
-          Product.find(filterQuery)
-          .populate('mainCategory', 'name slug icon')
-          .populate('subCategory', 'name slug')
-          .populate('childCategory', 'name slug')
-          .then(products=>{
-               res.json({
-                    success: true,
-                    results: products.length,
-                    data: products
-               })
-          }).catch(err=>{
-               res.json({
-                    success: false,
-                    message: "Something went wrong",
-                    error: err
-               })
+     let filterQuery = {publish: true, mainCategory: req.params.id}
+     let options = paginateOption(req.query.page, req.query.limit)
+
+     Product.paginate(filterQuery, options)
+     .then(response=>{
+          response.results  = response.data.length
+          response.success = true
+          return res.json(response)
+     }).catch(err=>{
+          res.json({
+               success: false,
+               message: "Something went wrong",
+               error: err
           })
      })
 }
 const listBySubCategory = (req, res)=>{
-     SubCategory.findOne({slug: req.params.slug}).then(category=>{
-          if(!category)
-               return res.json({
-                    success: false,
-                    message: "no such category found"
-               })
-          let filterQuery = {subCategory: category._id, publish: true}
-          Product.find(filterQuery)
-          .populate('mainCategory', 'name slug icon')
-          .populate('subCategory', 'name slug')
-          .populate('childCategory', 'name slug')
-          .then(products=>{
-               res.json({
-                    success: true,
-                    results: products.length,
-                    data: products
-               })
-          }).catch(err=>{
-               res.json({
-                    success: false,
-                    message: "Something went wrong",
-                    error: err
-               })
+     let filterQuery = {publish: true, subCategory: req.params.id}
+     let options = paginateOption(req.query.page, req.query.limit)
+
+     Product.paginate(filterQuery, options)
+     .then(response=>{
+          response.results  = response.data.length
+          response.success = true
+          return res.json(response)
+     }).catch(err=>{
+          res.json({
+               success: false,
+               message: "Something went wrong",
+               error: err
           })
      })
 }
 const listByChildCategory = (req, res)=>{
-     ChildCategory.findOne({slug: req.params.slug}).then(category=>{
-          if(!category)
-               return res.json({
-                    success: false,
-                    message: "no such category found"
-               })
-          let filterQuery = {childCategory: category._id, publish: true}
-          Product.find(filterQuery)
-          .populate('mainCategory', 'name slug icon')
-          .populate('subCategory', 'name slug')
-          .populate('childCategory', 'name slug')
-          .then(products=>{
-               res.json({
-                    success: true,
-                    results: products.length,
-                    data: products
-               })
-          }).catch(err=>{
-               res.json({
-                    success: false,
-                    message: "Something went wrong",
-                    error: err
-               })
+     let filterQuery = {publish: true, childCategory: req.params.id}
+     let options = paginateOption(req.query.page, req.query.limit)
+
+     Product.paginate(filterQuery, options)
+     .then(response=>{
+          response.results  = response.data.length
+          response.success = true
+          return res.json(response)
+     }).catch(err=>{
+          res.json({
+               success: false,
+               message: "Something went wrong",
+               error: err
           })
      })
 }
 
 const listLatest = (req, res)=>{
      let filterQuery = {publish: true}
-     Product.find(filterQuery)
-     .populate('mainCategory', 'name slug icon')
-     .populate('subCategory', 'name slug')
-     .populate('childCategory', 'name slug')
-     .sort({createdAt: -1})
-     .limit(18)
-     .then(products=>{
-          return res.json({
-               success: true,
-               results: products.length,
-               data: products
-          })
+     let options = paginateOption(req.query.page, req.query.limit)
+     options.sort = { createdAt: -1}
+
+     Product.paginate(filterQuery, options)
+     .then(response=>{
+          response.results  = response.data.length
+          response.success = true
+          return res.json(response)
      }).catch(err=>{
-          return res.json({
+          res.json({
                success: false,
                message: "Something went wrong",
                error: err
@@ -201,20 +151,16 @@ const listLatest = (req, res)=>{
 
 const listMostViewed = (req, res)=>{
      let filterQuery = {publish: true}
-     Product.find(filterQuery)
-     .populate('mainCategory', 'name slug icon')
-     .populate('subCategory', 'name slug')
-     .populate('childCategory', 'name slug')
-     .sort({viewCounts: -1})
-     .limit(18)
-     .then(products=>{
-          return res.json({
-               success: true,
-               results: products.length,
-               data: products
-          })
+     let options = paginateOption(req.query.page, req.query.limit)
+     options.sort = { viewCounts: -1}
+
+     Product.paginate(filterQuery, options)
+     .then(response=>{
+          response.results  = response.data.length
+          response.success = true
+          return res.json(response)
      }).catch(err=>{
-          return res.json({
+          res.json({
                success: false,
                message: "Something went wrong",
                error: err
@@ -224,20 +170,16 @@ const listMostViewed = (req, res)=>{
 
 const listFlashDeal = (req, res)=>{
      let filterQuery = {publish: true}
-     Product.find(filterQuery)
-     .populate('mainCategory', 'name slug icon')
-     .populate('subCategory', 'name slug')
-     .populate('childCategory', 'name slug')
-     .sort({discountedPrice: 1})
-     .limit(18)
-     .then(products=>{
-          return res.json({
-               success: true,
-               results: products.length,
-               data: products
-          })
+     let options = paginateOption(req.query.page, req.query.limit)
+     options.sort = { discountedPrice: -1}
+
+     Product.paginate(filterQuery, options)
+     .then(response=>{
+          response.results  = response.data.length
+          response.success = true
+          return res.json(response)
      }).catch(err=>{
-          return res.json({
+          res.json({
                success: false,
                message: "Something went wrong",
                error: err
@@ -303,10 +245,24 @@ const listRecommendedCategory = (req, res)=>{
 }
 
 const search = (req, res)=>{
-     console.log(req.query.query)
-     const query = { $text: { $search: req.query.query } };
-     Product.find(query).then(data=>{
-          return res.json(data)
+     let filterQuery = { $text: { $search: req.query.query }}
+
+     if(req.query.mainCategory)
+          filterQuery.mainCategory = req.query.mainCategory
+
+     let options = paginateOption(req.query.page, req.query.limit)
+
+     Product.paginate(filterQuery, options)
+     .then(response=>{
+          response.results  = response.data.length
+          response.success = true
+          return res.json(response)
+     }).catch(err=>{
+          res.json({
+               success: false,
+               message: "Something went wrong",
+               error: err
+          })
      })
 }
 

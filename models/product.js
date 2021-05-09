@@ -1,6 +1,7 @@
-const { required } = require('joi');
 var mongoose = require('mongoose')
 const { Schema } = mongoose;
+
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const schema = new Schema({
     name: {
@@ -70,6 +71,9 @@ const schema = new Schema({
     reviews: [{
         type: Schema.Types.ObjectId, ref: 'Review'
     }],
+    comments: [{
+        type: Schema.Types.ObjectId, ref: 'Comment'
+    }],
     publish: {
          type: Boolean,
          default: true
@@ -80,6 +84,7 @@ const schema = new Schema({
 }, {timestamps: true});
 
 schema.index({"$**": "text"})
+schema.plugin(mongoosePaginate);
 
 const Product = mongoose.model('Product', schema);
 
