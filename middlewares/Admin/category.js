@@ -7,7 +7,8 @@ const mainCategoryCreate = (data)=>{
             .max(30)
             .required(),
         icon: Joi.string()
-        .required()
+        .required(),
+        publish: Joi.boolean()
     
     }).options({abortEarly : false})
 
@@ -25,7 +26,9 @@ const mainCategoryEdit = (data)=>{
         name: Joi.string()
             .min(3)
             .max(30)
-            .required()
+            .required(),
+        icon: Joi.string(),
+        publish: Joi.boolean().required()
     
     }).options({abortEarly : false})
 

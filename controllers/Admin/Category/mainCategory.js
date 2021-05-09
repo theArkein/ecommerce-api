@@ -1,10 +1,13 @@
+const uniqid = require('uniqid')
+const slugify = require('slugify')
+
 const MainCategory = require('@models/mainCategory')
 const SubCategory = require('@models/subCategory')
 const ChildCategory = require('@models/childCategory')
 
 const validate = require('@middlewares/Admin/category')
 
-const slugify = require('slugify')
+const saveImage = require('@config/saveImage')
 
 const list = (req, res)=>{
      
@@ -38,14 +41,14 @@ const create = (req, res)=>{
             errors
         })
 
-     let {name} = req.body
+     let {name, icon, publish} = req.body
      let slug = slugify(name, {lower: true})
 
-     let icon = null
-     if(req.files.length)
-          icon = "images/" + req.files[0].filename
+     let categoryIcon = `images/category/{uniqid()}${uniqid()}.png`
+     saveImage(icon , categoryIcon)
+     icon = categoryIcon
 
-     let category = new MainCategory({name, slug, icon})
+     let category = new MainCategory({name, slug, icon, publish})
      console.log(category)
      category.save().then(created=>{
           res.json({
@@ -72,17 +75,19 @@ const edit = (req, res)=>{
             errors
         })
 
-     let {name} = req.body
-     console.log(req.body)
+     let {name, icon, publish} = req.body
      let slug = slugify(name, {lower: true})
-     let category = {name, slug}
-     
-     if(req.files.length)
-          category.icon = "images/" + req.files[0].filename
+     let category = {name, slug, publish}
+     let categoryIcon = null
 
-     let filter = {slugL: req.params.slugs} 
-     let update = category
-     MainCategory.findOneAndUpdate(filter, update)
+     if(icon){
+          categoryIcon = `images/category/${uniqid()}${uniqid()}.png`
+          saveImage(icon , categoryIcon)
+          category.icon = categoryIcon
+     }
+
+     let filter = {slug: req.params.slug} 
+     MainCategory.findOneAndUpdate(filter, category)
      .then(updated=>{
           if(!updated)
                res.json({

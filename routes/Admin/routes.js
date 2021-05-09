@@ -33,8 +33,8 @@ router.use(authorize([1]))
 
 // Main Category
 router.get('/category/main/list', MainCategoryController.list)
-router.post('/category/main/create',  multer('category'), MainCategoryController.create)
-router.put('/category/main/:slug/edit', multer('category'), MainCategoryController.edit)
+router.post('/category/main/create', MainCategoryController.create)
+router.put('/category/main/:slug/edit', MainCategoryController.edit)
 router.delete('/category/main/:slug/remove', MainCategoryController.removeOne)
 router.delete('/category/main/removeAll', MainCategoryController.removeAll)
 
