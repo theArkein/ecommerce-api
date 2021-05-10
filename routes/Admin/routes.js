@@ -56,6 +56,9 @@ router.delete('/category/child/removeAll', ChildCategoryController.removeAll)
 router.get('/product/list', ProductController.list)
 router.get('/product/:slug/detail', ProductController.detail)
 
+router.get('/product/:id/approve', ProductController.approve )
+router.get('/product/:id/suspend', ProductController.suspend )
+
 // vendor
 router.get('/vendor/list', VendorController.list)
 router.get('/vendor/:slug/detail', VendorController.detail)

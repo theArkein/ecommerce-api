@@ -9,7 +9,7 @@ const paginateOption = require("@config/paginateOption")
 
 
 const list = (req, res)=>{
-     let filterQuery = {publish: true}
+     let filterQuery = {publish: true, status: 2}
      let options = paginateOption(req.query.page, req.query.limit)
      Product.paginate(filterQuery, options)
      .then(response=>{
@@ -25,7 +25,7 @@ const list = (req, res)=>{
      })
 }
 const detail = (req, res)=>{
-     let filterQuery = {_id: req.params.id, publish: true}
+     let filterQuery = {_id: req.params.id, publish: true, status: 2}
      Product.findOne(filterQuery)
      .populate('mainCategory subCategory childCategory', 'name slug icon')
      // .populate('reviews reviews.reviewer comments comments.commenter', 'profileDetails.firstname profileDetails.lastname')
@@ -63,7 +63,7 @@ const detail = (req, res)=>{
      })
 }
 const listByVendor = (req, res)=>{
-     let filterQuery = {publish: true, vendor: req.params.id}
+     let filterQuery = {publish: true,status: 2, vendor: req.params.id}
      let options = paginateOption(req.query.page, req.query.limit)
      Product.paginate(filterQuery, options)
      .then(response=>{
@@ -79,7 +79,7 @@ const listByVendor = (req, res)=>{
      })
 }
 const listByMainCategory = (req, res)=>{
-     let filterQuery = {publish: true, mainCategory: req.params.id}
+     let filterQuery = {publish: true, status: 2, mainCategory: req.params.id}
      let options = paginateOption(req.query.page, req.query.limit)
 
      Product.paginate(filterQuery, options)
@@ -96,7 +96,7 @@ const listByMainCategory = (req, res)=>{
      })
 }
 const listBySubCategory = (req, res)=>{
-     let filterQuery = {publish: true, subCategory: req.params.id}
+     let filterQuery = {publish: true, status: 2, subCategory: req.params.id}
      let options = paginateOption(req.query.page, req.query.limit)
 
      Product.paginate(filterQuery, options)
@@ -113,7 +113,7 @@ const listBySubCategory = (req, res)=>{
      })
 }
 const listByChildCategory = (req, res)=>{
-     let filterQuery = {publish: true, childCategory: req.params.id}
+     let filterQuery = {publish: true, status: 2, childCategory: req.params.id}
      let options = paginateOption(req.query.page, req.query.limit)
 
      Product.paginate(filterQuery, options)
@@ -131,7 +131,7 @@ const listByChildCategory = (req, res)=>{
 }
 
 const listLatest = (req, res)=>{
-     let filterQuery = {publish: true}
+     let filterQuery = {publish: true, status: 2}
      let options = paginateOption(req.query.page, req.query.limit)
      options.sort = { createdAt: -1}
 
@@ -150,7 +150,7 @@ const listLatest = (req, res)=>{
 }
 
 const listMostViewed = (req, res)=>{
-     let filterQuery = {publish: true}
+     let filterQuery = {publish: true, status: 2}
      let options = paginateOption(req.query.page, req.query.limit)
      options.sort = { viewCounts: -1}
 
@@ -169,7 +169,7 @@ const listMostViewed = (req, res)=>{
 }
 
 const listFlashDeal = (req, res)=>{
-     let filterQuery = {publish: true}
+     let filterQuery = {publish: true, status: 2}
      let options = paginateOption(req.query.page, req.query.limit)
      options.sort = { discountedPrice: -1}
 
@@ -201,6 +201,7 @@ const listFeaturedCategory = (req, res)=>{
               if(item.active && item.category){
                    let filterQuery = {
                         publish: true,
+                        status: 2,
                         mainCategory: item.category
                    }
                     let products = await Product.find(filterQuery)
@@ -228,6 +229,7 @@ const listRecommendedCategory = (req, res)=>{
               if(item.active && item.category){
                    let filterQuery = {
                         publish: true,
+                        status: 2,
                         mainCategory: item.category
                    }
                     let products = await Product.find(filterQuery)
@@ -245,7 +247,7 @@ const listRecommendedCategory = (req, res)=>{
 }
 
 const search = (req, res)=>{
-     let filterQuery = { $text: { $search: req.query.query }}
+     let filterQuery = { $text: { $search: req.query.query }, publish:true, status: 2}
 
      if(req.query.mainCategory)
           filterQuery.mainCategory = req.query.mainCategory

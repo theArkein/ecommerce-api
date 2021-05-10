@@ -75,8 +75,14 @@ const schema = new Schema({
         type: Schema.Types.ObjectId, ref: 'Comment'
     }],
     publish: {
-         type: Boolean,
+         type: Schema.Types.Boolean,
          default: true
+    },
+    status: {
+        type: Schema.Types.Number,
+        default: 1, // 1 pending , 2 approved, 3 suspended
+        min: 1,
+        max: 3
     },
     tags: {
         type: String

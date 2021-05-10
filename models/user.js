@@ -72,7 +72,7 @@ const schema = new Schema({
     },
     accountStatus: {
         type: Schema.Types.Number,
-        default: 0,
+        default: 0, // 1 verified , 2 suspended
         min: 0,
         max: 2
     },

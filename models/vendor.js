@@ -26,8 +26,8 @@ const schema = new Schema({
     }],
     accountStatus: {
         type: Number,
-        min: 0, // 0 Not verified, 1 verified , 2 approved, 3 suspended
-        max: 4,
+        min: 0, // 1 pending , 2 approved, 3 suspended
+        max: 3,
         default: 0
     },
     passwordResetOTP: {
