@@ -52,7 +52,7 @@ const signin = (req, res)=>{
                 errors: {}
             })
 
-        const token = jwt.sign({ id: vendor._id, vendorType: 2 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
+        const token = jwt.sign({ id: vendor._id, userType: 2 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
 
         // const decoded = jwt.verify(token, config.jwt.SECRET)
         return res.status(200).json({
