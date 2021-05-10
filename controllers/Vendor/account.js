@@ -5,6 +5,7 @@ const sendOTP = require('@config/sendOTP')
 const bcrypt = require('bcrypt')
 
 const Vendor = require('@models/vendor')
+const vendorAccountValidate = require("@middlewares/Vendor/account")
 
 const verify = (req, res)=>{
     let token = req.query.token
@@ -79,17 +80,16 @@ const forgotPassword = (req, res)=>{
     })
 }
 const resetPassword = (req, res)=>{
-    let {password, confirmPassword, otp} = req.body
-    if(!password || !confirmPassword || !otp)
-        return res.json({
+    let {password, otp} = req.body
+
+    let errors = vendorAccountValidate.passwordReset(req.body)
+    if(errors)
+        return res.status(400).json({
             success: false,
-            message: "All fields are required",
+            message: "Validation failed",
+            errors
         })
-    if(password != confirmPassword)
-        return res.json({
-            success: false,
-            message: "'password' and 'confirm password' should be exact match",
-        })
+
     let filterQuery = {passwordResetOTP: otp}
     Vendor.findOne(filterQuery).then(vendor=>{
         if(!vendor)
@@ -99,8 +99,11 @@ const resetPassword = (req, res)=>{
             })
             
         var hashedPassword = bcrypt.hashSync(password, config.bcrypt.saltRounds)
-        Vendor.findByIdAndUpdate(vendor._id, {password: hashedPassword}).then(updated=>{
-            return res.json(vendor)
+        Vendor.findByIdAndUpdate(vendor._id, {password: hashedPassword, passwordResetOTP: null}).then(updated=>{
+            return res.json({
+                success: true,
+                message: "Reset password successfull"
+            })
         })
     }).catch(err=>{
         res.json({

@@ -29,6 +29,10 @@ const schema = new Schema({
         min: 0, // 0 Not verified, 1 verified , 2 approved, 3 suspended
         max: 4,
         default: 0
+    },
+    passwordResetOTP: {
+        type: String,
+        index: true,
     }
 }, {timestamps: true});
 

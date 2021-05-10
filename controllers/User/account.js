@@ -8,6 +8,7 @@ const deleteImage = require('@config/deleteImage')
 const userValidation = require('@middlewares/User/userValidation')
 
 const User = require('@models/user')
+
 const verify = (req, res)=>{
     let token = req.query.token
     if(!token)
@@ -82,18 +83,18 @@ const forgotPassword = (req, res)=>{
         })
     })
 }
+
 const resetPassword = (req, res)=>{
     let {password, confirmPassword, otp} = req.body
-    if(!password || !confirmPassword || !otp)
-        return res.json({
+    
+    let errors = userValidation.passwordReset(req.body)
+    if(errors)
+        return res.status(400).json({
             success: false,
-            message: "All fields are required",
+            message: "Validation failed",
+            errors
         })
-    if(password != confirmPassword)
-        return res.json({
-            success: false,
-            message: "'password' and 'confirm password' should be exact match",
-        })
+
     let filterQuery = {passwordResetOTP: otp}
     User.findOne(filterQuery).then(user=>{
         if(!user)
@@ -103,7 +104,7 @@ const resetPassword = (req, res)=>{
             })
             
         var hashedPassword = bcrypt.hashSync(password, config.bcrypt.saltRounds)
-        User.findByIdAndUpdate(user._id, {password: hashedPassword}).then(updated=>{
+        User.findByIdAndUpdate(user._id, {password: hashedPassword, passwordResetOTP: null}).then(updated=>{
             return res.json(user)
         })
     }).catch(err=>{

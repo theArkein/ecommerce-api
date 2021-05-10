@@ -15,6 +15,8 @@ router.post('/auth/signup', VendorAuthController.signup)
 
 // Account 
 router.get('/account/verify', VendorAccountController.verify )
+router.post('/account/forgot-password', VendorAccountController.forgotPassword)
+router.post('/account/reset-password', VendorAccountController.resetPassword)
 
 
 // products
