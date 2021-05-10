@@ -27,7 +27,7 @@ const signup = (data)=>{
         .pattern(new RegExp('^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,30}$'))
         .required(),
         confirmPassword: Joi.ref('password')
-    }).options({abortEarly : false, allowUnknown: true})
+    }).options({abortEarly : false})
 
     let validation = schema.validate(data)
     if(!validation.error)

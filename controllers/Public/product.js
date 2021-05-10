@@ -249,7 +249,11 @@ const search = (req, res)=>{
 
      if(req.query.mainCategory)
           filterQuery.mainCategory = req.query.mainCategory
-
+     if(req.query.subCategory)
+          filterQuery.subCategory = req.query.subCategory
+     if(req.query.childCategory)
+          filterQuery.childCategory = req.query.childCategory
+          
      let options = paginateOption(req.query.page, req.query.limit)
 
      Product.paginate(filterQuery, options)

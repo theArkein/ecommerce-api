@@ -4,11 +4,12 @@ const slugify = require('slugify')
 
 const Vendor = require('@models/vendor')
 const config = require("@config/config.json")
+const sendVerificationToken = require("@config/sendVerificationToken")
 const vendorValidate = require("@middlewares/Vendor/vendorValidation")
 
 const signin = (req, res)=>{
     console.log("Vendor Signin")
-    let {username, password} = req.body
+    let {email, password} = req.body
     
     let errors = vendorValidate.signin(req.body)
     if(errors)
@@ -18,7 +19,7 @@ const signin = (req, res)=>{
             errors
         })
 
-    Vendor.findOne({username}).then(vendor=>{
+    Vendor.findOne({email}).then(vendor=>{
         console.log(vendor)
         if(!vendor)
             return res.status(400).json({
@@ -32,8 +33,26 @@ const signin = (req, res)=>{
                 message: "Ceredentials did not match",
                 errors: {}
             })
+        if(vendor.accountStatus==0)
+            return res.status(401).json({
+                success: false,
+                message: "Account not verified. Please verify first",
+                errors: {}
+            })
+        if(vendor.accountStatus==1)
+            return res.status(401).json({
+                success: false,
+                message: "Account not approved yet. Please contact admin",
+                errors: {}
+            })
+        if(vendor.accountStatus==3)
+            return res.status(401).json({
+                success: false,
+                message: "Account suspended. Please contact admin",
+                errors: {}
+            })
 
-        const token = jwt.sign({ id: vendor._id, userType: 2 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
+        const token = jwt.sign({ id: vendor._id, vendorType: 2 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
 
         // const decoded = jwt.verify(token, config.jwt.SECRET)
         return res.status(200).json({
@@ -61,37 +80,27 @@ const signup = (req, res)=>{
             message: "Validation failed",
             errors
         })
-    const slug = slugify(req.body.username)
     let newVendor = {
         email: req.body.email,
         password: req.body.password,
-        username: req.body.username,
-        name: req.body.name,
-        slug,
     }
     let vendor = new Vendor(newVendor)
-    console.log(vendor)
-    vendor.save().then((vendor)=>{
-        return res.json({
-            success: true,
-            message: "Successfully Added",
-            data: vendor
-        })
+    const token = jwt.sign({ id: vendor._id, userType: 2 }, config.jwt.SECRET, { expiresIn: 5*60*1000 })
 
-    }).catch(err=>{
-        console.log(err.code)
-        if(err.code==11000)
+    Vendor.findOne({email: vendor.email}).then(registered=>{
+        if(registered)
             return res.json({
                 success: false,
-                message: `${Object.keys(err.keyValue)[0]} must be unique`,
+                message: "Already registered with this email"
+            })
+        vendor.save().then((vendor)=>{
+            sendVerificationToken(2, vendor.email, token)
+            return res.json({
+                success: true,
+                message: "Successfully registered, verification needed"
+            })
         })
-
-        return res.json({
-             success: false,
-             message: err.message,
-             errors: err.errors
-        })
-   })  
+    })  
 }
 
 module.exports = {

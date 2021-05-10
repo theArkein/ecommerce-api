@@ -16,21 +16,6 @@ const schema = new Schema({
         type: String, 
         required: true 
     },
-    username: { 
-        type: String, 
-        index: true,
-        required: true 
-    },
-    name: {
-        type: String, 
-        required: true 
-    },
-    slug: {
-        type: String,
-        required: true,
-        unique: true,
-        index: true,
-   },
     products: [{
         type: Schema.Types.ObjectId, 
         ref: 'Product'
@@ -39,11 +24,15 @@ const schema = new Schema({
         type: Schema.Types.ObjectId, 
         ref: 'Order'
     }],
-    date: {
-        type: Date, 
-        default: Date.now 
-    },
+    accountStatus: {
+        type: Number,
+        min: 0, // 0 Not verified, 1 verified , 2 approved, 3 suspended
+        max: 4,
+        default: 1
+    }
 }, {timestamps: true});
+
+schema.index({createdAt: 1}, {expireAfterSeconds: 5*60, partialFilterExpression : {accountStatus: 0}});
 
 schema.pre('save', function(next) {
     // only hash the password if it has been modified (or is new)
@@ -53,6 +42,6 @@ schema.pre('save', function(next) {
     next()
 });
 
-
 const Vendor = mongoose.model('Vendor', schema);
+
 module.exports = Vendor

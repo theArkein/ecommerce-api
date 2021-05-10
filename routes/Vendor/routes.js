@@ -5,13 +5,17 @@ const authorize = require('@middlewares/authorize')
 const multer = require('@middlewares/multer')
 
 const VendorAuthController = require('@controllers/Vendor/auth')
-const VendorController = require('@controllers/Vendor/vendor')
+const VendorAccountController = require('@controllers/Vendor/account')
 const ProductController = require('@controllers/Vendor/product')
 const OrderController = require('@controllers/Vendor/order')
 
 // authorization
 router.post('/auth/signin', VendorAuthController.signin)
 router.post('/auth/signup', VendorAuthController.signup)
+
+// Account 
+router.get('/account/verify', VendorAccountController.verify )
+
 
 // products
 router.get('/product/list', authorize([2]), ProductController.list)

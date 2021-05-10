@@ -82,7 +82,7 @@ const signup = (req, res)=>{
                 message: "Already registered with this email"
             })
         user.save().then((user)=>{
-            sendVerificationToken(user.email, token)
+            sendVerificationToken(3, user.email, token)
             console.log(user)
             return res.json({
                 success: true,

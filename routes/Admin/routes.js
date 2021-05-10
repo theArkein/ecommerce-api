@@ -60,6 +60,9 @@ router.get('/product/:slug/detail', ProductController.detail)
 router.get('/vendor/list', VendorController.list)
 router.get('/vendor/:slug/detail', VendorController.detail)
 
+router.get('/vendor/:id/account/approve', VendorController.approve )
+router.get('/vendor/:id/account/suspend', VendorController.suspend )
+
 // user
 router.get('/user/list', UserController.list)
 router.get('/user/:slug/detail', UserController.detail)

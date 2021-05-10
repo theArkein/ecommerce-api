@@ -1,5 +1,7 @@
+const jwt = require('jsonwebtoken')
+const config = require('@config/config')
+const sendEmail = require("@config/sendEmail")
 const Vendor = require('@models/vendor')
-
 const list = (req, res)=>{
     Vendor.find()
     .then(vendors=>{
@@ -42,8 +44,53 @@ const detail = (req, res)=>{
     })
 }
 
+const approve = (req, res)=>{
+     let vendorId = req.params.id
+     Vendor.findByIdAndUpdate(vendorId, {accountStatus: 2}).then(updated=>{
+         if(!updated){
+             return res.status(400).json({
+                 success: false,
+                 message: "Vendor doesnot exists or deleted",
+             })
+         }
+         sendEmail("Travel Right Account approved", "Your account is approved by admin. Start adding products and selling", updated.email)
+         return res.json({
+             success:true,
+             message: "Vendor successfully approved"
+         })
+     }).catch(err=>{
+         return res.json({
+             success:false,
+             message: "Something went wrong"
+         })
+     })
+ }
+ 
+ const suspend = (req, res)=>{
+    let vendorId = req.params.id
+    Vendor.findByIdAndUpdate(vendorId, {accountStatus: 3}).then(updated=>{
+        if(!updated){
+            return res.status(400).json({
+                success: false,
+                message: "Vendor doesnot exists or deleted",
+            })
+        }
+        sendEmail("Travel Right Account suspended", "Your account is suspended by admin.", updated.email)
+        return res.json({
+            success:true,
+            message: "Vendor successfully suspended"
+        })
+    }).catch(err=>{
+        return res.json({
+            success:false,
+            message: "Something went wrong"
+        })
+    })
+}
 
 module.exports = {
     list,
-    detail
+    detail,
+    approve,
+    suspend
 }
