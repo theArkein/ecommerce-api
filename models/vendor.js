@@ -28,7 +28,7 @@ const schema = new Schema({
         type: Number,
         min: 0, // 0 Not verified, 1 verified , 2 approved, 3 suspended
         max: 4,
-        default: 1
+        default: 0
     }
 }, {timestamps: true});
 
