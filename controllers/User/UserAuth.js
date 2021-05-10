@@ -32,10 +32,17 @@ const signin = (req, res)=>{
                 message: "Ceredentials did not match",
                 errors: {}
             })
-        if(!user.verified)
+        if(!user.accountStatus)
             return res.status(401).json({
                 success: false,
                 message: "Please verify your account first",
+                errors: {}
+            })
+
+        if(user.accountStatus == 2)
+            return res.status(401).json({
+                success: false,
+                message: "Your account is suspended",
                 errors: {}
             })
 

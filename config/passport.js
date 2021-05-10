@@ -54,7 +54,7 @@ passport.use(
                                    profilePictureExternal: profile.photos[0].value
                               },
                               email: profile.emails[0].value,
-                              verified: true
+                              accountStatus: 1
                          }).save().then((user) =>{
                               return done(null, user);
                          });
@@ -97,7 +97,7 @@ passport.use(new GoogleOauthTokenStrategy({
                                    profilePictureExternal: profile.photos[0].value
                               },
                               email: profile.emails[0].value,
-                              verified: true
+                              accountStatus: 1
                          }).save().then((user) =>{
                               return done(null, user);
                          });
@@ -142,7 +142,7 @@ passport.use(
                                         profilePictureExternal: profile.photos[0].value
                                    },
                                    email: profile.emails[0].value,
-                                   verified: true
+                                   accountStatus: 1
                               }).save().then((newUser) =>{
                                    done(null, newUser);
                               });
@@ -182,7 +182,7 @@ passport.use(new FacebookTokenStrategy({
                                    profilePictureExternal: profile.photos[0].value
                               },
                               email: profile.emails[0].value,
-                              verified: true
+                              accountStatus: 1
                          }).save().then((newUser) =>{
                               done(null, newUser);
                          });

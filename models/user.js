@@ -70,9 +70,11 @@ const schema = new Schema({
     billingAddress:{
 
     },
-    verified: {
-        type: Schema.Types.Boolean,
-        default: false
+    accountStatus: {
+        type: Schema.Types.Number,
+        default: 0,
+        min: 0,
+        max: 2
     },
     passwordResetOTP: {
         type: String,
@@ -82,7 +84,7 @@ const schema = new Schema({
     }
 }, {timestamps: true});
 
-schema.index({createdAt: 1}, {expireAfterSeconds: 5*60, partialFilterExpression : {verified: false}});
+schema.index({createdAt: 1}, {expireAfterSeconds: 5*60, partialFilterExpression : {accountStatus: 0}});
 
 schema.pre('save', function(next) {
     // only hash the password if it has been modified (or is new)

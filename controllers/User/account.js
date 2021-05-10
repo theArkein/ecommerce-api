@@ -26,24 +26,24 @@ const verify = (req, res)=>{
             message: "Invalid signature, token expired or malfunctioned",
         })
     }
+    console.log(decoded)
 
-    User.findById(decoded.id).then(user=>{
-        if(!user){
+    User.findByIdAndUpdate(decoded.id, {accountStatus: 1}).then(updated=>{
+        console.log(updated)
+        if(!updated){
             return res.status(400).json({
                 success: false,
                 message: "User doesnot exists or deleted",
             })
         }
-        User.findByIdAndUpdate(user._id, {verified: true}).then(updated=>{
-            return res.json({
-                success:true,
-                message: "Account successfully verified"
-            })
-        }).catch(err=>{
-            return res.json({
-                success:false,
-                message: "Something went wrong"
-            })
+        return res.json({
+            success:true,
+            message: "Account successfully verified"
+        })
+    }).catch(err=>{
+        return res.json({
+            success:false,
+            message: "Something went wrong"
         })
     })
 }
@@ -56,30 +56,28 @@ const forgotPassword = (req, res)=>{
             message: "No email provided"
         })
     let filterQuery = {email}
-    User.findOne(filterQuery).then(user=>{
+    const OTP = uniqid.process()
+    User.findByIdAndUpdate(user._id, {passwordResetOTP: OTP}).then(user=>{
         if(!user)
             return res.json({
                 success: false,
                 message: "No user found with such email"
             })
-        const OTP = uniqid.process()
-        User.findByIdAndUpdate(user._id, {passwordResetOTP: OTP}).then(user=>{
-            sendOTP(email, OTP)
-            setTimeout(()=>{
-                User.findByIdAndUpdate(user._id, {passwordResetOTP: null}).then(user=>{
-                    console.log("OTP cleared for user: ", user._id)
-                })
-            }, 5*60*1000)
-            return res.json({
-                success: true,
-                message: "OTP sent to reset password"
+        sendOTP(email, OTP)
+        setTimeout(()=>{
+            User.findByIdAndUpdate(user._id, {passwordResetOTP: null}).then(user=>{
+                console.log("OTP cleared for user: ", user._id)
             })
-        }).catch(err=>{
-            return res.json({
-                success: false,
-                message: "Something went wrong",
-                err
-            })
+        }, 5*60*1000)
+        return res.json({
+            success: true,
+            message: "OTP sent to reset password"
+        })
+    }).catch(err=>{
+        return res.json({
+            success: false,
+            message: "Something went wrong",
+            err
         })
     })
 }
