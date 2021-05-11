@@ -5,7 +5,7 @@ const CategoryController = require('@controllers/Public/category')
 const ProductController = require('@controllers/Public/product')
 const VendorController = require('@controllers/Public/vendor')
 const SiteController = require('@controllers/Public/siteSetting')
-const ProductEnquiryController = require('@controllers/public/productEnquiry')
+const ProductEnquiryController = require('@controllers/Public/productEnquiry')
 
 
 // Category

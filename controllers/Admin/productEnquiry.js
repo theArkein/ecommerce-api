@@ -1,4 +1,4 @@
-const ProductEnquiry = require("../../models/productEnquiry")
+const ProductEnquiry = require("@models/productEnquiry")
 
 const list = (req, res)=>{
     ProductEnquiry.find().then(products=>{

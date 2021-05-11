@@ -1,5 +1,5 @@
-const productEnquiryValidation = require("@middlewares/public/productEnquiry")
-const ProductEnquiry = require("../../models/productEnquiry")
+const productEnquiryValidation = require("@middlewares/Public/productEnquiry")
+const ProductEnquiry = require("@models/productEnquiry")
 
 const add = (req, res)=>{
     let errors = productEnquiryValidation.add(req.body)
