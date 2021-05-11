@@ -11,6 +11,8 @@ const VendorController = require('@controllers/Admin/vendor')
 const UserController = require('@controllers/Admin/user')
 const ProductController = require('@controllers/Admin/product')
 const OrderController = require('@controllers/Admin/order')
+const ProductEnquiryController = require('@controllers/Admin/productEnquiry.js')
+
 
 const SiteSetting = {
     featuredCategory: require('@controllers/Admin/SiteSetting/featuredCategory'),
@@ -73,6 +75,9 @@ router.get('/user/:slug/detail', UserController.detail)
 // order
 router.get('/order/list', OrderController.list)
 router.get('/order/:orderId/detail', OrderController.detail)
+
+// product enquiry
+router.get('/product-enquiry/list', ProductEnquiryController.list)
 
 // site setting
 

@@ -5,6 +5,7 @@ const CategoryController = require('@controllers/Public/category')
 const ProductController = require('@controllers/Public/product')
 const VendorController = require('@controllers/Public/vendor')
 const SiteController = require('@controllers/Public/siteSetting')
+const ProductEnquiryController = require('@controllers/public/productEnquiry')
 
 
 // Category
@@ -23,7 +24,7 @@ router.get('/product/category/child/:id/list', ProductController.listByChildCate
 // Product search
 router.get('/product/search', ProductController.search)
 
-// Feature products
+// Featured products
 router.get('/product/latest/list', ProductController.listLatest)
 router.get('/product/most-viewed/list', ProductController.listMostViewed)
 router.get('/product/flash-deal/list', ProductController.listFlashDeal)
@@ -36,6 +37,7 @@ router.get('/site/banner', SiteController.banner)
 router.get('/site/slider', SiteController.slider)
 router.get('/site/recommended', SiteController.recommended)
 
-
+// product enquiry
+router.post('/product-enquiry/add', ProductEnquiryController.add)
 
 module.exports = router
