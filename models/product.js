@@ -53,8 +53,68 @@ const schema = new Schema({
     brand: {
         type: Schema.Types.String
     },
-    variants: {
-        type: Schema.Types.Mixed
+    description: {
+        type: Schema.Types.String,
+        default: null
+    },
+    paymentOption: {
+        cod: {
+            type: Schema.Types.Boolean,
+            default: true
+        }
+    },
+    delivery: {
+        type: [
+            {
+                title: {
+                    type: Schema.Types.String,
+                    required: true
+                },
+                description: {
+                    type: Schema.Types.String,
+                    required: true
+                },
+                charge: {
+                    type: Schema.Types.Number,
+                    required: true,
+                    default: null
+                }
+            }
+        ],
+        default: null
+    },
+    return: {
+        type: {
+            title: {
+                type: Schema.Types.String,
+                required: true
+            },
+            description: {
+                type: Schema.Types.String,
+                required: true
+            }
+        },
+        default: null
+    },
+    warranty: {
+        type: {
+            title: {
+                type: Schema.Types.String,
+                required: true
+            },
+            description: {
+                type: Schema.Types.String,
+                required: true
+            }
+        },
+        default: null
+    },
+    variant: {
+        type: {
+            types: Schema.Types.Array,
+            variants: Schema.Types.Mixed
+        },
+        default: null
     },
     mainCategory: {
         type: Schema.Types.ObjectId, ref: 'MainCategory',
