@@ -7,8 +7,7 @@ const Vendor = require('@models/vendor')
 const saveImage = require("@config/saveImage")
 
 const productValidation = require('@middlewares/Vendor/productValidation');
-const Review = require('../../models/review');
-const { populate } = require('../../models/review');
+const Review = require('@models/review');
 
 const list = (req, res)=>{
      let filterQuery = {vendor: req.user.id}

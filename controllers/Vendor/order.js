@@ -43,7 +43,7 @@ const detail = (req, res)=>{
 }
 
 const edit = (req, res)=>{
-     let id = req.params.id
+     let id = req.params.orderId
      Order.findByIdAndUpdate(id).then(updated=>{
           res.json({
                success: true,
@@ -59,8 +59,134 @@ const edit = (req, res)=>{
      })
 }
 
+const cancel = (req, res)=>{
+     let id = req.params.orderId
+     let filterQuery = {orderId: id, status: {$nin: [2, 4, 5]} }
+     Order.findOneAndUpdate(filterQuery, {status: 1}).then(updated=>{
+          if(!updated){
+               return res.json({
+                    success: false,
+                    message: "This order cannot be declined"
+               })
+          }
+          return res.json({
+               success: true,
+               message: "Order successfully declined",
+               data: updated
+          })
+     }).catch(err=>{
+          return res.json({
+               success: false,
+               message: err.message,
+               errors: err.errors
+          })
+     })
+}
+
+const decline = (req, res)=>{
+     let id = req.params.orderId
+     let filterQuery = {orderId: id, status: {$nin: [1, 4, 5]} }
+     Order.findOneAndUpdate(filterQuery, {status: 2}).then(updated=>{
+          if(!updated){
+               return res.json({
+                    success: false,
+                    message: "This order cannot be declined"
+               })
+          }
+          return res.json({
+               success: true,
+               message: "Order successfully declined",
+               data: updated
+          })
+     }).catch(err=>{
+          return es.json({
+               success: false,
+               message: err.message,
+               errors: err.errors
+          })
+     })
+}
+
+const ship = (req, res)=>{
+     let id = req.params.orderId
+     let filterQuery = {orderId: id, status: 0} 
+     Order.findOneAndUpdate(filterQuery, {status: 3}).then(updated=>{
+          if(!updated){
+               return res.json({
+                    success: false,
+                    message: "This order cannot be shipped",
+               })
+          }
+          return res.json({
+               success: true,
+               message: "Order successfully shipped",
+               data: updated
+          })
+     }).catch(err=>{
+          return res.json({
+               success: false,
+               message: err.message,
+               errors: err.errors
+          })
+     })
+}
+
+const complete = (req, res)=>{
+     let id = req.params.orderId
+     let filterQuery = {orderId: id, status: 3} 
+     Order.findOneAndUpdate(filterQuery, {status: 4}).then(updated=>{
+          if(!updated){
+               return res.json({
+                    success: false,
+                    message: "This order cannot be completed"
+               })
+          }
+          return res.json({
+               success: true,
+               message: "Order successfully completed",
+               data: updated
+          })
+     }).catch(err=>{
+          return res.json({
+               success: false,
+               message: err.message,
+               errors: err.errors
+          })
+     })
+}
+
+const refund = (req, res)=>{
+     let id = req.params.orderId
+     let filterQuery = {orderId: id, status: 4} 
+     Order.findOneAndUpdate(filterQuery, {status: 5}).then(updated=>{
+          if(!updated){
+               return res.json({
+                    success: false,
+                    message: "This order cannot be refunded"
+               })
+          }
+          return res.json({
+               success: true,
+               message: "Order successfully refunded",
+               data: updated
+          })
+     }).catch(err=>{
+          return res.json({
+               success: false,
+               message: err.message,
+               errors: err.errors
+          })
+     })
+}
+
 module.exports = {
      list,
      detail,
-     edit
+     edit,
+     cancel,
+     decline,
+     ship,
+     complete,
+     refund
+
 }

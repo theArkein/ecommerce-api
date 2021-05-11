@@ -30,7 +30,7 @@ const schema = new Schema({
         country: {type: String},
         postalCode: {type: Number}
     },  
-    status: {type: Number, default: 0},
+    status: {type: Number, default: 0, min: 0, max: 5} // pending, canceled, declined, shipped, completed, refunded
 }, {timestamps: true});
 
 const Order = mongoose.model('Order', schema);

@@ -8,10 +8,15 @@ const VendorAuthController = require('@controllers/Vendor/auth')
 const VendorAccountController = require('@controllers/Vendor/account')
 const ProductController = require('@controllers/Vendor/product')
 const OrderController = require('@controllers/Vendor/order')
+const StatisticsController = require('@controllers/Vendor/statistics')
+
 
 // authorization
 router.post('/auth/signin', VendorAuthController.signin)
 router.post('/auth/signup', VendorAuthController.signup)
+
+// statistics
+router.get('/statistics', authorize([2]), StatisticsController.statistics)
 
 // Account 
 router.get('/account/verify', VendorAccountController.verify )
@@ -29,5 +34,10 @@ router.delete('/product/:slug/delete', authorize([2]), ProductController.remove)
 // orders
 router.get('/order/list', authorize([2]), OrderController.list)
 router.get('/order/:orderId/detail', authorize([2]), OrderController.detail)
+router.put('/order/:orderId/cancel', authorize([2]), OrderController.cancel)
+router.put('/order/:orderId/decline', authorize([2]), OrderController.decline)
+router.put('/order/:orderId/ship', authorize([2]), OrderController.ship)
+router.put('/order/:orderId/complete', authorize([2]), OrderController.complete)
+router.put('/order/:orderId/refund', authorize([2]), OrderController.refund)
 
 module.exports = router
