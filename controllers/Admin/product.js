@@ -4,6 +4,7 @@ const sendEmail = require('@config/sendEmail')
 
 const list = (req, res)=>{
      Product.find()
+     .populate('mainCategory childCategory subCategory')
      .then(products=>{
           return res.json({
                success: true,
