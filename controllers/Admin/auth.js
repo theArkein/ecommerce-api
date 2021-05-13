@@ -1,35 +1,15 @@
 var Admin = require('@models/admin')
 var bcrypt = require('bcrypt')
 var jwt = require('jsonwebtoken')
-var Joi = require('joi')
+const authValidation = require('@middlewares/Admin/auth')
 const config = require("@config/config.json")
 
-const validateSignIn = (data)=>{
-    const schema = Joi.object({
-        username: Joi.string()
-            .alphanum()
-            .min(3)
-            .max(30)
-            .required(),
-        password: Joi.string()
-        .required()
-    
-    }).options({abortEarly : false})
-
-    let validation = schema.validate(data)
-    if(!validation.error)
-        return null
-    let errors = validation.error.details.map(error=>{
-        return {message: error.message, field: error.path[0]}
-    })
-    return errors   
-}
 
 const signin = (req, res)=>{
     console.log("Admin Signin")
     let {username, password} = req.body
     
-    let errors = validateSignIn(req.body)
+    let errors = authValidation.signin(req.body)
     if(errors)
         return res.status(400).json({
             success: false,
@@ -73,6 +53,15 @@ const signin = (req, res)=>{
 
 const signup = (req, res)=>{
     console.log("Admin Signup")
+
+    let errors = authValidation.signup(req.body)
+    if(errors)
+        return res.status(400).json({
+            success: false,
+            message: "Validation failed",
+            errors
+        })
+
     let admin = new Admin(req.body)
     admin.save().then((admin)=>{
         return res.json({
@@ -84,7 +73,7 @@ const signup = (req, res)=>{
     }).catch(err=>{
         return res.json({
             success: false,
-            message: "Something went wrong",
+            message: (err.code == 11000 )? "Username already exists" : "Something went wrong",
             errors: err
         })
     })  

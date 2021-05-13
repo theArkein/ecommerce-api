@@ -13,6 +13,9 @@ const schema = new Schema({
          unique: true,
          index: true,
     },
+    icon: {
+         type: String
+    },
     publish: {
           type: Boolean,
           default: true

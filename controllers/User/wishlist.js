@@ -4,7 +4,7 @@ const userValidation = require("@middlewares/User/userValidation")
 const info = (req, res)=>{
     User.findById(req.user.id)
     .populate({
-        path: 'wishlist',
+        path: "wishlist",
         select: 'name shortname slug sku vendor price discount image stock'
     })
     .then(user=>{

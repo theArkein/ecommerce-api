@@ -32,6 +32,7 @@ router.get('/product/flash-deal/list', ProductController.listFlashDeal)
 // Vendor
 router.get('/vendor/list', VendorController.list)
 
+
 // Site
 router.get('/site/banner', SiteController.banner)
 router.get('/site/slider', SiteController.slider)

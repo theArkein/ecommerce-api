@@ -1,4 +1,8 @@
 const Order = require('@models/order')
+const User = require('@models/user')
+
+const sendEmail = require('@config/sendEmail')
+
 
 const list = (req, res)=>{
      let filterQuery = {vendor: req.user.id}
@@ -69,6 +73,9 @@ const cancel = (req, res)=>{
                     message: "This order cannot be declined"
                })
           }
+          User.findById(updated.user).then(user=>{
+               sendEmail("Travel Right", `Your order with id: ${id} has been cancelled`, user.email)
+          })
           return res.json({
                success: true,
                message: "Order successfully declined",
@@ -93,6 +100,9 @@ const decline = (req, res)=>{
                     message: "This order cannot be declined"
                })
           }
+          User.findById(updated.user).then(user=>{
+               sendEmail("Travel Right", `Your order with id: ${id} has been declined`, user.email)
+          })
           return res.json({
                success: true,
                message: "Order successfully declined",
@@ -117,6 +127,9 @@ const ship = (req, res)=>{
                     message: "This order cannot be shipped",
                })
           }
+          User.findById(updated.user).then(user=>{
+               sendEmail("Travel Right", `Your order with id: ${id} has been shipped`, user.email)
+          })
           return res.json({
                success: true,
                message: "Order successfully shipped",
@@ -141,6 +154,9 @@ const complete = (req, res)=>{
                     message: "This order cannot be completed"
                })
           }
+          User.findById(updated.user).then(user=>{
+               sendEmail("Travel Right", `Your order with id: ${id} has been completed`, user.email)
+          })
           return res.json({
                success: true,
                message: "Order successfully completed",
@@ -165,6 +181,9 @@ const refund = (req, res)=>{
                     message: "This order cannot be refunded"
                })
           }
+          User.findById(updated.user).then(user=>{
+               sendEmail("Travel Right", `Your order with id: ${id} has been refunded`, user.email)
+          })
           return res.json({
                success: true,
                message: "Order successfully refunded",

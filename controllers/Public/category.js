@@ -7,14 +7,14 @@ const slugify = require('slugify')
 // main
 const listMain = (req, res)=>{
      let filterQuery = {publish: true}
-     let selectQuery = 'name slug'
+     let selectQuery = 'name slug icon'
      let populateQuery = { 
           path: 'children', 
           match: { publish: true }, 
-          select: 'name slug', 
+          select: 'name slug icon', 
           populate: { path: 'children' , 
           match: { publish: true }, 
-          select: 'name slug'}
+          select: 'name slug icon'}
      }
 
      MainCategory.find(filterQuery)
@@ -41,11 +41,11 @@ const listSub = (req, res)=>{
           publish: true,
           slug: req.params.main
      }
-     let selectQuery = 'name slug'
+     let selectQuery = 'name slug icon'
      let populateQuery = { 
           path: 'children', 
           match: { publish: true }, 
-          select: 'name slug'
+          select: 'name slug icon'
      }
      
      MainCategory.findOne(filterQuery)
@@ -72,11 +72,11 @@ const listChild = (req, res)=>{
           publish: true,
           slug: req.params.sub
      }
-     let selectQuery = 'name slug'
+     let selectQuery = 'name slug icon'
      let populateQuery = { 
           path: 'children', 
           match: { publish: true }, 
-          select: 'name slug'
+          select: 'name slug icon'
      }
 
      SubCategory.findOne(filterQuery)

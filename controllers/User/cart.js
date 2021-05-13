@@ -4,7 +4,7 @@ const userValidation = require("@middlewares/User/userValidation")
 const info = (req, res)=>{
     User.findById(req.user.id)
     .populate({
-        path: 'cartlist.product',
+        path: "cart.product",
         select: 'name shortname slug sku vendor price discount image stock'
     })
     .then(user=>{
@@ -22,48 +22,70 @@ const info = (req, res)=>{
 }
 
 const addItem = (req, res)=>{
-    let item = req.params.id
-    let filterQuery = {
-        _id: req.user.id,
-        "cart.product":  item
-    }
-    User.findOneAndUpdate(filterQuery, {$inc: {"cart.$.quantity": 1}}).then(user=>{
-        if(!user){
-            let cartItem = {
-                product: item,
-                quantity: 1
-            }
-            User.findByIdAndUpdate(req.user.id, {$push: {cart: cartItem}}).then(user=>{
-                return res.json({
-                    success: true,
-                    message: "Successfully added"
-                })
-            })
-        }
-        return res.json({
-            success: true,
-            message: "Successfully added"
-        })
-    }).catch(err=>{
-        return res.json({
-            success: false,
-            message: "Somehting went wrong",
-            error: err.errors
-        })
-    })
-}
-
-const update= (req, res)=>{
-    let errors = userValidation.cartUpdate(req.body)
+    let errors = userValidation.addItemToCart(req.body)
     if(errors)
         return res.status(400).json({
             success: false,
             message: "Validation failed",
             errors
         })
-        
-    let update = req.body
-    User.findByIdAndUpdate(req.user.id, {cart: update}).then(user=>{
+
+    let filterQuery = {
+        _id: req.user.id,
+        "cart.product": req.body.product
+    }
+    User.findOne(filterQuery).then(result=>{
+        if(result){
+            return res.json({
+                success: false,
+                message: "Product already exists in cart"
+            })
+        }
+        User.findOneAndUpdate({_id: req.user.id}, {$push : {cart: req.body} }).then(updated=>{
+            console.log(updated)
+            if(!updated){
+                return res.json({
+                    success: false,
+                    message: "Failed to add"
+                })
+            }
+            return res.json({
+                success: true,
+                message: "Successfully added"
+            })
+        }).catch(err=>{
+            return res.json({
+                success: false,
+                message: "Somehting went wrong",
+                error: err.errors
+            })
+        })
+    })
+
+    
+}
+
+const updateItem = (req, res)=>{
+    let errors = userValidation.updateItemInCart(req.body)
+    if(errors)
+        return res.status(400).json({
+            success: false,
+            message: "Validation failed",
+            errors
+        })
+
+    let filterQuery = {
+        _id: req.user.id,
+        "cart._id": req.params.id
+    }
+    User.findOneAndUpdate(filterQuery, {$set : {"cart.$.quantity": req.body.quantity} }).then(updated=>{
+        console.log(updated)
+        if(!updated){
+            return res.json({
+                success: false,
+                message: "Cart does not have such product"
+            })
+        }
         return res.json({
             success: true,
             message: "Successfully updated"
@@ -81,9 +103,9 @@ const deleteItem = (req, res)=>{
     let item = req.params.id
     let filterQuery = {
         _id: req.user.id,
-        "cart.product": item
+        "cart._id": item
     }
-    User.findOneAndUpdate(filterQuery, {$pull : {cart: {product: item}} }).then(deleted=>{
+    User.findOneAndUpdate(filterQuery, {$pull : {cart: {_id: item}} }).then(deleted=>{
         console.log(deleted)
         if(!deleted){
             return res.json({
@@ -104,9 +126,10 @@ const deleteItem = (req, res)=>{
     })
 }
 
+
 module.exports = {
     info,
     addItem,
-    update,
+    updateItem,
     deleteItem
 }

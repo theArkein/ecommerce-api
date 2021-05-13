@@ -28,7 +28,6 @@ const detail = (req, res)=>{
      let filterQuery = {_id: req.params.id, publish: true, status: 2}
      Product.findOne(filterQuery)
      .populate('mainCategory subCategory childCategory', 'name slug icon')
-     // .populate('reviews reviews.reviewer comments comments.commenter', 'profileDetails.firstname profileDetails.lastname')
      .populate({
           path: 'reviews',
           populate: {

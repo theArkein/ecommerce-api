@@ -56,6 +56,19 @@ const authenticate = (req, res, next)=>{
                     message: "User doesnot exists. (Deleted)",
                 })
             }
+            if(vendor.accountStatus==3)
+                return res.status(401).json({
+                    success: false,
+                    message: "Account suspended. Please contact admin",
+                    errors: {}
+                })
+            if(vendor.accountStatus!=2)
+                return res.status(401).json({
+                    success: false,
+                    message: "Something went wrong with your account, contact admin",
+                    errors: {}
+                })
+
             next()
         })
     }else if(req.user.userType == 1){

@@ -25,8 +25,9 @@ const signup = (data)=>{
             .required(),
         password: Joi.string()
         .pattern(new RegExp('^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,30}$'))
+        .message({'string.pattern.base':"Password doesn't match strong pattern"})
         .required(),
-        confirmPassword: Joi.ref('password')
+        confirmPassword: Joi.string().required().valid(Joi.ref('password'))
     }).options({abortEarly : false})
 
     let validation = schema.validate(data)
@@ -129,10 +130,24 @@ const wishlistUpdate = (data)=>{
     return errors 
 }
 
-const cartUpdate = (data)=>{
-    const schema = Joi.array().items({
+const addItemToCart = (data)=>{
+    const schema = Joi.object({
         product: Joi.string().required(),
-        quantity: Joi.number().min(1)
+        quantity: Joi.number().min(1).required()
+    }).options({abortEarly : false})
+
+    let validation = schema.validate(data)
+    if(!validation.error)
+        return null
+    let errors = validation.error.details.map(error=>{
+        return {message: error.message, field: error.path[0]}
+    })
+    return errors 
+}
+
+const updateItemInCart = (data)=>{
+    const schema = Joi.object({
+        quantity: Joi.number().min(1).required()
     }).options({abortEarly : false})
 
     let validation = schema.validate(data)
@@ -152,5 +167,6 @@ module.exports = {
     shippingAddressAdd,
     shippingAddressUpdate,
     wishlistUpdate,
-    cartUpdate
+    addItemToCart,
+    updateItemInCart
 }

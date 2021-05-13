@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const config = require("@config/config.json")
 const userValidation = require('@middlewares/User/userValidation')
-const slugify= require('slugify')
 const sendVerificationToken = require('@config/sendVerificationToken')
 
 const signin = (req, res)=>{

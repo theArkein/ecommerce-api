@@ -5,6 +5,8 @@ const Product = require('@models/product')
 const Vendor = require('@models/vendor')
 
 const saveImage = require("@config/saveImage")
+const deleteImage = require("@config/deleteImage")
+
 
 const productValidation = require('@middlewares/Vendor/productValidation');
 const Review = require('@models/review');
@@ -14,8 +16,8 @@ const list = (req, res)=>{
 
      Product.find(filterQuery)
      .populate('mainCategory', 'name slug icon')
-     .populate('subCategory', 'name slug')
-     .populate('childCategory', 'name slug')
+     .populate('subCategory', 'name slug icon')
+     .populate('childCategory', 'name slug icon')
      .then(products=>{
           return res.json({
                success: true,
@@ -32,11 +34,11 @@ const list = (req, res)=>{
 }
 
 const detail = (req, res)=>{
-     let filterQuery = {slug: req.params.slug}
+     let filterQuery = {_id: req.params.id}
      Product.findOne(filterQuery)
      .populate('mainCategory', 'name slug icon')
-     .populate('subCategory', 'name slug')
-     .populate('childCategory', 'name slug')
+     .populate('subCategory', 'name slug icon')
+     .populate('childCategory', 'name slug icon')
      .then(product=>{
           if(!product)
                return res.json({
@@ -70,24 +72,25 @@ const create = (req, res)=>{
                errors
           })
 
-     let product = req.body
-     product.slug = `${slugify(req.body.shortname, {lower: true})}-${uniqid()}`
+     let product = new Product(req.body)
+
+     product.slug = `${slugify(req.body.shortname, {lower: true})}`
      product.vendor = req.user.id
 
+
      // save image file
-     let image = `images/product/${product.slug}/${uniqid()}${uniqid()}.png`
+     let image = `images/product/${product._id}/${uniqid()}.png`
      saveImage(req.body.image, image)
      product.image = image
 
      // save galley image files
      let gallery = product.gallery.map(item=>{
-          let image = `images/product/${product.slug}/${uniqid()}${uniqid()}.png`
+          let image = `images/product/${product._id}/${uniqid()}.png`
           saveImage(item, image)
           return image
      })
      product.gallery = gallery
 
-     product = new Product(product)
 
      product.save().then(created=>{
           Vendor.findByIdAndUpdate(product.vendor, { $push: { products: created._id } })
@@ -118,13 +121,12 @@ const edit = (req, res)=>{
           })
 
      let product = req.body
-     let slug = req.params.slug.split('-')
-     let slugId = slug[slug.length - 1]
-     product.slug = `${slugify(req.body.shortname, {lower: true})}-${slugId}`
+     product.slug = `${slugify(req.body.shortname, {lower: true})}`
+     let id = req.params.id
 
      // save image file
      if(product.image){
-          let image = `images/product/${product.slug}/${uniqid()}${uniqid()}.png`
+          let image = `images/product/${id}/${uniqid()}.png`
           saveImage(req.body.image, image)
           product.image = image
      }
@@ -132,14 +134,14 @@ const edit = (req, res)=>{
      // save galley image files
      if(product.gallery){
           let gallery = product.gallery.map(item=>{
-               let image = `images/product/${product.slug}/${uniqid()}${uniqid()}.png`
+               let image = `images/product/${id}/${uniqid()}.png`
                saveImage(item, image)
                return image
           })
           product.gallery = gallery
      }
      let filterQuery = {
-          slug: req.params.slug,
+          _id: id,
           vendor: req.user.id
      }
      Product.findOneAndUpdate(filterQuery, product).then(updated=>{
@@ -148,6 +150,14 @@ const edit = (req, res)=>{
                     success: false,
                     message: "No such product found"
                })
+          if(product.image){
+               deleteImage(updated.image)
+          }
+          if(product.gallery){
+               updated.gallery.forEach(item=>{
+                    deleteImage(item)
+               })
+          }
           return res.json({
                success: true,
                message: "Successfully Updated",
@@ -159,7 +169,7 @@ const edit = (req, res)=>{
 
 const remove = (req,res)=>{
      let filterQuery = {
-          slug: req.params.slug,
+          _id: req.params.id,
           vendor: req.user.id
      }
      Product.findOneAndDelete(filterQuery).then(deleted=>{
@@ -169,10 +179,10 @@ const remove = (req,res)=>{
                     success: false,
                     message: "No such product found"
                })
-          Review.deleteMany({product: deleted.id}).exec()
-          fs.rmdir(`images/product/${deleted.slug}`, (err)=>{
+          Review.deleteMany({product: deleted._id}).exec()
+          fs.rm(`images/product/${deleted._id}`, {recursive: true}, (err)=>{
                if(err)
-                    console.log("Couln't delete product images")
+                    console.log(err)
                })
           return res.json({
                success: true,

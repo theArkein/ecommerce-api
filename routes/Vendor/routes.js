@@ -26,10 +26,10 @@ router.post('/account/reset-password', VendorAccountController.resetPassword)
 
 // products
 router.get('/product/list', authorize([2]), ProductController.list)
-router.get('/product/:slug/detail', authorize([2]), ProductController.detail)
+router.get('/product/:id/detail', authorize([2]), ProductController.detail)
 router.post('/product/create', authorize([2]), ProductController.create)
-router.put('/product/:slug/edit', authorize([2]), ProductController.edit)
-router.delete('/product/:slug/delete', authorize([2]), ProductController.remove)
+router.put('/product/:id/edit', authorize([2]), ProductController.edit)
+router.delete('/product/:id/delete', authorize([2]), ProductController.remove)
 
 // orders
 router.get('/order/list', authorize([2]), OrderController.list)

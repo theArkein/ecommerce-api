@@ -2,12 +2,10 @@ var Joi = require('joi')
 
 const signin = (data)=>{
     const schema = Joi.object({
-        email: Joi.string()
-            .required(),
-        password: Joi.string()
-        .required()
+        username: Joi.string().required(),
+        password: Joi.string().required()
     
-    }).options({abortEarly : false})
+    }).options({abortEarly : false, allowUnknown: true})
 
     let validation = schema.validate(data)
     if(!validation.error)
@@ -20,9 +18,7 @@ const signin = (data)=>{
 
 const signup = (data)=>{
     const schema = Joi.object({
-        email: Joi.string()
-            .email()
-            .required(),
+        username: Joi.string().required(),
         password: Joi.string()
         .pattern(new RegExp('^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,30}$'))
         .message({'string.pattern.base':"Password doesn't match strong pattern"})
@@ -31,7 +27,6 @@ const signup = (data)=>{
     }).options({abortEarly : false})
 
     let validation = schema.validate(data)
-    console.log(validation.error)
     if(!validation.error)
         return null
     let errors = validation.error.details.map(error=>{
@@ -39,7 +34,7 @@ const signup = (data)=>{
     })
     return errors 
 }
- 
+
 module.exports = {
     signin,
     signup

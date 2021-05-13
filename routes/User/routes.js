@@ -57,9 +57,9 @@ router.delete('/wishlist/delete/:id', authorize([3]), WishlistController.deleteI
 
 // cart
 router.get('/cart', authorize([3]), CartController.info)
-router.post('/cart/add/:id', authorize([3]), CartController.addItem)
-router.put('/cart/update', authorize([3]), CartController.update)
-router.delete('/cart/delete/:id', authorize([3]), CartController.deleteItem)
+router.post('/cart/addItem', authorize([3]), CartController.addItem)
+router.put('/cart/updateItem/:id', authorize([3]), CartController.updateItem)
+router.delete('/cart/deleteItem/:id', authorize([3]), CartController.deleteItem)
 
 // orders
 router.get('/order/list', authorize([3]), OrderController.list)

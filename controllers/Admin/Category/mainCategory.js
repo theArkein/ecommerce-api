@@ -1,6 +1,5 @@
-const uniqid = require('uniqid')
+const fs = require('fs')
 const slugify = require('slugify')
-
 const MainCategory = require('@models/mainCategory')
 const SubCategory = require('@models/subCategory')
 const ChildCategory = require('@models/childCategory')
@@ -8,6 +7,8 @@ const ChildCategory = require('@models/childCategory')
 const validate = require('@middlewares/Admin/category')
 
 const saveImage = require('@config/saveImage')
+const deleteImage = require('@config/deleteImage')
+
 
 const list = (req, res)=>{
      
@@ -43,24 +44,25 @@ const create = (req, res)=>{
 
      let {name, icon, publish} = req.body
      let slug = slugify(name, {lower: true})
+     let category = new MainCategory({name, slug, publish})
 
-     let categoryIcon = `images/category/{uniqid()}${uniqid()}.png`
-     saveImage(icon , categoryIcon)
-     icon = categoryIcon
+     let categoryIcon = `images/main-category/icons/${slug}.png`
+     category.icon = categoryIcon
 
-     let category = new MainCategory({name, slug, icon, publish})
-     console.log(category)
      category.save().then(created=>{
-          res.json({
+          // save image
+          saveImage(icon , categoryIcon)
+
+          return res.json({
                success: true,
                message: "Successfully created",
                created
           })
      }).catch(err=>{
-          res.json({
+          return res.json({
                success: false,
-               message: err.message,
-               errors: err.errors
+               message: (err.code == 11000 )? "Category with such name already exists" : "Somehting went wrong",
+               errors: err.err
           })
      })
 }
@@ -81,38 +83,48 @@ const edit = (req, res)=>{
      let categoryIcon = null
 
      if(icon){
-          categoryIcon = `images/category/${uniqid()}${uniqid()}.png`
-          saveImage(icon , categoryIcon)
+          categoryIcon = `images/main-category/icons/${slug}.png`
           category.icon = categoryIcon
      }
 
-     let filter = {slug: req.params.slug} 
-     MainCategory.findOneAndUpdate(filter, category)
+     let filterQuery = {_id: req.params.id} 
+     MainCategory.findOneAndUpdate(filterQuery, category)
      .then(updated=>{
           if(!updated)
-               res.json({
+               return res.json({
                     success: false,
                     message: "No such category found"
                })
+          
+          // save new image and delete previous image
+          if(icon) {
+               saveImage(icon , categoryIcon)
+               deleteImage(updated.icon)
+          }
 
-          res.json({
+          return res.json({
                success: true,
                message: "Successfully updated"
           })
      }).catch(err=>{
-          res.json({
+          return res.json({
                success: false,
-               message: err.message,
-               errors: err.errors
+               message: (err.code == 11000 )? "Category with such name already exists" : "Somehting went wrong",
+               errors: err.err
           })
      })
 }
 
 const removeOne = (req, res)=>{
-     let filter = {slug: req.params.slug}
-     MainCategory.findOneAndDelete(filter)
-     .then(deleted=>{          
-          console.log(deleted)
+     let filterQuery = {_id: req.params.id}
+     MainCategory.findOneAndDelete(filterQuery)
+     .then(deleted=>{
+          if(!deleted)
+               return res.json({
+                    success: false,
+                    message: "No such category found"
+               })
+          deleteImage(deleted.icon)
           SubCategory.deleteMany({parent: deleted._id}).then(data=>{
                console.log("All Child Category Removed")
           }).catch(err=>{
@@ -125,16 +137,15 @@ const removeOne = (req, res)=>{
                console.log(err)
           })
           
-          res.json({
+          return res.json({
                success: true,
                message: "Successfully deleted",
-               deleted
           })
      }).catch(err=>{
-          res.json({
+          return res.json({
                success: false,
                message: "Something went wrong",
-               deleted
+               error: err.errors
           })
      })
 }
@@ -143,7 +154,15 @@ const removeAll = (req, res)=>{
      console.log("Remove All")
      MainCategory.deleteMany({}).then(data=>{
           console.log("All Categories Deleted")
-          res.json(data)
+          fs.rmdir('images/main-category/icons', (err)=>{
+               if(err){
+                    console.log(err)
+               }
+          })
+          return res.json({
+               success: true,
+               message: "All categories successfully deleted"
+          })
      }).catch(err=>{
           console.log(err)
      })
