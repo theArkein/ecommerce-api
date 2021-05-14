@@ -31,8 +31,8 @@ const create = (data)=>{
             variants: Joi.object().required()
         }),
         mainCategory: Joi.string().required(),
-        subCategory: Joi.string().required(),
-        childCategory: Joi.string().required(),
+        subCategory: Joi.string(),
+        childCategory: Joi.string(),
         image: Joi.string().required(),
         gallery: Joi.array(),
         publish: Joi.boolean(),

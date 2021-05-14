@@ -119,12 +119,10 @@ const schema = new Schema({
         required: true
     },
     subCategory: {
-        type: Schema.Types.ObjectId, ref: 'SubCategory',
-        required: true
+        type: Schema.Types.ObjectId, ref: 'SubCategory'
     },
     childCategory: {
-        type: Schema.Types.ObjectId, ref: 'ChildCategory',
-        required: true
+        type: Schema.Types.ObjectId, ref: 'ChildCategory'
     },
     reviews: [{
         type: Schema.Types.ObjectId, ref: 'Review'
