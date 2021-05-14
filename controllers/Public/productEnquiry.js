@@ -4,7 +4,7 @@ const ProductEnquiry = require("@models/productEnquiry")
 const add = (req, res)=>{
     let errors = productEnquiryValidation.add(req.body)
     if(errors)
-        return res.status(400).json({
+        return res.json({
             success: false,
             message: "Validation failed",
             errors

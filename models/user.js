@@ -51,7 +51,7 @@ const schema = new Schema({
             immutable: true
         },
         phone: {
-            type: Schema.Types.Number,
+            type: Schema.Types.String,
             default: null
         },
         address: {

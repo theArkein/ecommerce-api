@@ -31,8 +31,8 @@ const create = (data)=>{
             variants: Joi.object().required()
         }),
         mainCategory: Joi.string().required(),
-        subCategory: Joi.string(),
-        childCategory: Joi.string(),
+        subCategory: Joi.string().allow(null),
+        childCategory: Joi.string().allow(null),
         image: Joi.string().required(),
         gallery: Joi.array(),
         publish: Joi.boolean(),
@@ -78,8 +78,8 @@ const update = (data)=>{
             variants: Joi.object().required()
         }),
         mainCategory: Joi.string().required(),
-        subCategory: Joi.string().required(),
-        childCategory: Joi.string().required(),
+        subCategory: Joi.string().allow(null),
+        childCategory: Joi.string().allow(null),
         image: Joi.string(),
         gallery: Joi.array(),
         publish: Joi.boolean().required(),

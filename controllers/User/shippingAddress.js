@@ -46,7 +46,7 @@ const add = (req, res)=>{
 
     let errors = userValidation.shippingAddressAdd(req.body)
     if(errors)
-        return res.status(400).json({
+        return res.json({
             success: false,
             message: "Validation failed",
             errors
@@ -67,7 +67,7 @@ const add = (req, res)=>{
 const update = (req, res)=>{
     let errors = userValidation.shippingAddressUpdate(req.body)
     if(errors)
-        return res.status(400).json({
+        return res.json({
             success: false,
             message: "Validation failed",
             errors

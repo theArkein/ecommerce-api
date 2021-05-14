@@ -66,7 +66,7 @@ const detail = (req, res)=>{
 const create = (req, res)=>{
      let errors = productValidation.create(req.body)
      if(errors)
-          return res.status(400).json({
+          return res.json({
                success: false,
                message: "Validation failed",
                errors
@@ -114,7 +114,7 @@ const edit = (req, res)=>{
      let errors = productValidation.update(req.body)
 
      if(errors)
-          return res.status(400).json({
+          return res.json({
                success: false,
                message: "Validation failed",
                errors

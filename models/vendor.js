@@ -24,6 +24,32 @@ const schema = new Schema({
         type: Schema.Types.ObjectId, 
         ref: 'Order'
     }],
+    profileDetails: {
+        name: {
+            type: Schema.Types.String,
+            default: null
+        },
+        address: {
+            type: Schema.Types.String,
+            default: null
+        },
+        email: {
+            type: Schema.Types.String,
+            immutable: true
+        },
+        phone: {
+            type: Schema.Types.String,
+            default: null
+        },
+        description: {
+            type: Schema.Types.String,
+            default: null
+        },
+        profilePicture: {
+            type: Schema.Types.String,
+            default: null
+        }
+    },
     accountStatus: {
         type: Number,
         min: 0, // 1 pending , 2 approved, 3 suspended

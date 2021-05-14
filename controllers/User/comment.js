@@ -25,7 +25,7 @@ const list = (req, res)=>{
 const add = (req, res)=>{
     let errors = CommentValidation.add(req.body)
     if(errors)
-        return res.status(400).json({
+        return res.json({
             success: false,
             message: "Validation failed",
             errors
@@ -87,7 +87,7 @@ const add = (req, res)=>{
 const update = (req, res)=>{
     let errors = CommentValidation.update(req.body)
     if(errors)
-        return res.status(400).json({
+        return res.json({
             success: false,
             message: "Validation failed",
             errors

@@ -36,7 +36,7 @@ const create = (req, res)=>{
      // Validate request
      let errors = validate.mainCategoryCreate(req.body)
     if(errors)
-        return res.status(400).json({
+        return res.json({
             success: false,
             message: "Validation failed",
             errors
@@ -71,7 +71,7 @@ const edit = (req, res)=>{
      // Validate request
      let errors = validate.mainCategoryEdit(req.body)
      if(errors)
-        return res.status(400).json({
+        return res.json({
             success: false,
             message: "Validation failed",
             errors

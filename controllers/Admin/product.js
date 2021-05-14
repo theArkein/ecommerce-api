@@ -46,7 +46,7 @@ const approve = (req, res)=>{
      let productId = req.params.id
      Product.findByIdAndUpdate(productId, {status: 2}).then(updated=>{
          if(!updated){
-             return res.status(400).json({
+             return res.json({
                  success: false,
                  message: "Vendor doesnot exists or deleted",
              })
@@ -71,7 +71,7 @@ const approve = (req, res)=>{
     let productId = req.params.id
     Product.findByIdAndUpdate(productId, {status: 3}).then(updated=>{
         if(!updated){
-            return res.status(400).json({
+            return res.json({
                 success: false,
                 message: "Product doesnot exists or deleted",
             })

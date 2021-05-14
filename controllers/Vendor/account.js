@@ -7,6 +7,57 @@ const bcrypt = require('bcrypt')
 const Vendor = require('@models/vendor')
 const vendorAccountValidate = require("@middlewares/Vendor/account")
 
+const saveImage = require('@config/saveImage')
+const deleteImage = require('@config/deleteImage')
+
+const profile = (req, res)=>{
+    let id = req.user.id
+    Vendor.findById(id)
+    .then(vendor=>{
+        return res.json({
+            success: true,
+            data: vendor.profileDetails
+        })
+    })
+}
+
+const profileUpdate = (req, res)=>{
+    
+    let errors = vendorAccountValidate.profileUpdate(req.body)
+    if(errors)
+    return res.json({
+        success: false,
+        message: "Validation failed",
+        errors
+    })
+    
+    let id = req.user.id
+    // let profilePictureData = profilePicturePath = null
+    if(req.body.profilePicture){
+        var profilePicturePath = `images/vendors/${id}/${uniqid()}.png`
+        var profilePictureData = req.body.profilePicture
+        req.body.profilePicture = profilePicturePath
+        console.log(profilePicturePath)
+    }
+
+    let update = {
+        profileDetails: req.body
+    }
+
+    Vendor.findByIdAndUpdate(id, update).then(vendor=>{
+
+        // delete old and save new
+        saveImage(profilePictureData, profilePicturePath)
+        deleteImage(vendor.profileDetails.profilePicture)
+
+        return res.json({
+            success: true,
+            data: vendor
+        })
+
+    })
+}
+
 const verify = (req, res)=>{
     let token = req.query.token
     if(!token)
@@ -19,7 +70,7 @@ const verify = (req, res)=>{
         var decoded = jwt.verify(token, config.jwt.SECRET)
     }
     catch(err){
-        return res.status(400).json({
+        return res.json({
             success: false,
             message: "Invalid signature, token expired or malfunctioned",
         })
@@ -27,7 +78,7 @@ const verify = (req, res)=>{
 
     Vendor.findByIdAndUpdate(decoded.id, {accountStatus: 1}).then(updated=>{
         if(!updated){
-            return res.status(400).json({
+            return res.json({
                 success: false,
                 message: "Vendor doesnot exists or deleted",
             })
@@ -84,7 +135,7 @@ const resetPassword = (req, res)=>{
 
     let errors = vendorAccountValidate.passwordReset(req.body)
     if(errors)
-        return res.status(400).json({
+        return res.json({
             success: false,
             message: "Validation failed",
             errors
@@ -116,6 +167,8 @@ const resetPassword = (req, res)=>{
 
 
 module.exports = {
+    profile,
+    profileUpdate,
     verify,
     forgotPassword,
     resetPassword,

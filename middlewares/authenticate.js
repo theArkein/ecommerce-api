@@ -27,7 +27,7 @@ const authenticate = (req, res, next)=>{
         var decoded = jwt.verify(token, config.jwt.SECRET)
     }
     catch(err){
-        return res.status(400).json({
+        return res.json({
             success: false,
             message: "Invalid signature, token malfunctioned.",
         })
@@ -40,7 +40,7 @@ const authenticate = (req, res, next)=>{
         // check if authenticated user(customer) exists
         User.findById(req.user.id).then(user=>{
             if(!user){
-                return res.status(400).json({
+                return res.json({
                     success: false,
                     message: "User doesnot exists. (Deleted)",
                 })
@@ -51,19 +51,19 @@ const authenticate = (req, res, next)=>{
         // check if authenticated vendor exists
         Vendor.findById(req.user.id).then(vendor=>{
             if(!vendor){
-                return res.status(400).json({
+                return res.json({
                     success: false,
                     message: "User doesnot exists. (Deleted)",
                 })
             }
             if(vendor.accountStatus==3)
-                return res.status(401).json({
+                return res.json({
                     success: false,
                     message: "Account suspended. Please contact admin",
                     errors: {}
                 })
             if(vendor.accountStatus!=2)
-                return res.status(401).json({
+                return res.json({
                     success: false,
                     message: "Something went wrong with your account, contact admin",
                     errors: {}
@@ -75,7 +75,7 @@ const authenticate = (req, res, next)=>{
         // check if authenticated admin exists
         Admin.findById(req.user.id).then(admin=>{
             if(!admin){
-                return res.status(400).json({
+                return res.json({
                     success: false,
                     message: "User doesnot exists. (Deleted)",
                 })

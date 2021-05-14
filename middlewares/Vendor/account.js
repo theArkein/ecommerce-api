@@ -1,5 +1,23 @@
 var Joi = require('joi')
 
+const profileUpdate = (data)=>{
+    const schema = Joi.object({
+        name: Joi.string().required(),
+        phone: Joi.string().required(),
+        address: Joi.string().required(),
+        description: Joi.string().required(),
+        profilePicture: Joi.string().allow(null)
+    }).options({abortEarly : false})
+
+    let validation = schema.validate(data)
+    if(!validation.error)
+        return null
+    let errors = validation.error.details.map(error=>{
+        return {message: error.message, field: error.path[0]}
+    })
+    return errors 
+}
+
 const passwordReset = (data)=>{
     const schema = Joi.object({
         password: Joi.string()
@@ -21,5 +39,6 @@ const passwordReset = (data)=>{
 }
  
 module.exports = {
+    profileUpdate,
     passwordReset
 }

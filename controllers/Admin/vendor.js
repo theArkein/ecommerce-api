@@ -48,7 +48,7 @@ const approve = (req, res)=>{
      let vendorId = req.params.id
      Vendor.findByIdAndUpdate(vendorId, {accountStatus: 2}).then(updated=>{
          if(!updated){
-             return res.status(400).json({
+             return res.json({
                  success: false,
                  message: "Vendor doesnot exists or deleted",
              })
@@ -70,7 +70,7 @@ const approve = (req, res)=>{
     let vendorId = req.params.id
     Vendor.findByIdAndUpdate(vendorId, {accountStatus: 3}).then(updated=>{
         if(!updated){
-            return res.status(400).json({
+            return res.json({
                 success: false,
                 message: "Vendor doesnot exists or deleted",
             })

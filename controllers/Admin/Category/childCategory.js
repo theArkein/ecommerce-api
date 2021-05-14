@@ -32,7 +32,7 @@ const create = (req, res)=>{
      // Validate Request data
      let errors = validate.childCategoryCreate(req.body)
      if(errors)
-        return res.status(400).json({
+        return res.json({
             success: false,
             message: "Validation failed",
             errors
@@ -72,7 +72,7 @@ const edit = (req, res)=>{
      // Validate Request data
      let errors = validate.childCategoryEdit(req.body)
      if(errors)
-        return res.status(400).json({
+        return res.json({
             success: false,
             message: "Validation failed",
             errors

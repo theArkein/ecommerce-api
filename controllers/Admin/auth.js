@@ -11,7 +11,7 @@ const signin = (req, res)=>{
     
     let errors = authValidation.signin(req.body)
     if(errors)
-        return res.status(400).json({
+        return res.json({
             success: false,
             message: "Validation failed",
             errors
@@ -20,13 +20,13 @@ const signin = (req, res)=>{
     Admin.findOne({username}).then(admin=>{
         console.log(admin)
         if(!admin)
-            return res.status(400).json({
+            return res.json({
                 success: false,
                 message: "No accounts with such id",
             })
         let isMatch = bcrypt.compareSync(password, admin.password);
         if(!isMatch)
-            return res.status(401).json({
+            return res.json({
                 success: false,
                 message: "Ceredentials did not match",
                 errors: {}
@@ -35,14 +35,14 @@ const signin = (req, res)=>{
         var token = jwt.sign({ id: admin._id, userType: 1 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
 
         // var decoded = jwt.verify(token, config.jwt.SECRET)
-        return res.status(200).json({
+        return res.json({
             success: true,
             message: "Successfully signedin",
             token: token,
             data: admin
         })
     }).catch(err=>{
-        return res.status(500).json({
+        return res.json({
             success: false,
             message: "Something went wrong",
             errors: err
@@ -56,7 +56,7 @@ const signup = (req, res)=>{
 
     let errors = authValidation.signup(req.body)
     if(errors)
-        return res.status(400).json({
+        return res.json({
             success: false,
             message: "Validation failed",
             errors

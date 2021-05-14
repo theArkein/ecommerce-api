@@ -13,7 +13,7 @@ const signin = (req, res)=>{
     
     let errors = vendorValidate.signin(req.body)
     if(errors)
-        return res.status(400).json({
+        return res.json({
             success: false,
             message: "Validation failed",
             errors
@@ -22,31 +22,31 @@ const signin = (req, res)=>{
     Vendor.findOne({email}).then(vendor=>{
         console.log(vendor)
         if(!vendor)
-            return res.status(400).json({
+            return res.json({
                 success: false,
                 message: "No accounts with such id",
             })
         let isMatch = bcrypt.compareSync(password, vendor.password);
         if(!isMatch)
-            return res.status(401).json({
+            return res.json({
                 success: false,
                 message: "Ceredentials did not match",
                 errors: {}
             })
         if(vendor.accountStatus==0)
-            return res.status(401).json({
+            return res.json({
                 success: false,
                 message: "Account not verified. Please verify first",
                 errors: {}
             })
         if(vendor.accountStatus==1)
-            return res.status(401).json({
+            return res.json({
                 success: false,
                 message: "Account not approved yet. Please contact admin",
                 errors: {}
             })
         if(vendor.accountStatus==3)
-            return res.status(401).json({
+            return res.json({
                 success: false,
                 message: "Account suspended. Please contact admin",
                 errors: {}
@@ -55,14 +55,14 @@ const signin = (req, res)=>{
         const token = jwt.sign({ id: vendor._id, userType: 2 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
 
         // const decoded = jwt.verify(token, config.jwt.SECRET)
-        return res.status(200).json({
+        return res.json({
             success: true,
             message: "Successfully signedin",
             token: token,
             data: vendor
         })
     }).catch(err=>{
-        return res.status(500).json({
+        return res.json({
             success: false,
             message: "Something went wrong",
             errors: err
@@ -75,7 +75,7 @@ const signup = (req, res)=>{
     console.log("Vendor Signup")
     let errors = vendorValidate.signup(req.body)
     if(errors)
-        return res.status(400).json({
+        return res.json({
             success: false,
             message: "Validation failed",
             errors

@@ -24,7 +24,7 @@ const info = (req, res)=>{
 const addItem = (req, res)=>{
     let errors = userValidation.addItemToCart(req.body)
     if(errors)
-        return res.status(400).json({
+        return res.json({
             success: false,
             message: "Validation failed",
             errors
@@ -68,7 +68,7 @@ const addItem = (req, res)=>{
 const updateItem = (req, res)=>{
     let errors = userValidation.updateItemInCart(req.body)
     if(errors)
-        return res.status(400).json({
+        return res.json({
             success: false,
             message: "Validation failed",
             errors

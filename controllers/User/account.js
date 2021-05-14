@@ -21,7 +21,7 @@ const verify = (req, res)=>{
         var decoded = jwt.verify(token, config.jwt.SECRET)
     }
     catch(err){
-        return res.status(400).json({
+        return res.json({
             success: false,
             message: "Invalid signature, token expired or malfunctioned",
         })
@@ -31,7 +31,7 @@ const verify = (req, res)=>{
     User.findByIdAndUpdate(decoded.id, {accountStatus: 1}).then(updated=>{
         console.log(updated)
         if(!updated){
-            return res.status(400).json({
+            return res.json({
                 success: false,
                 message: "User doesnot exists or deleted",
             })
@@ -87,7 +87,7 @@ const resetPassword = (req, res)=>{
     
     let errors = userValidation.passwordReset(req.body)
     if(errors)
-        return res.status(400).json({
+        return res.json({
             success: false,
             message: "Validation failed",
             errors
@@ -137,7 +137,7 @@ const profileDetailsUpdate = (req, res)=>{
 
     let errors = userValidation.profileUpdate(profileDetails)
     if(errors)
-        return res.status(400).json({
+        return res.json({
             success: false,
             message: "Validation failed",
             errors

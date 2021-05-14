@@ -11,7 +11,7 @@ const signin = (req, res)=>{
     
     let errors = userValidation.signin(req.body)
     if(errors)
-        return res.status(400).json({
+        return res.json({
             success: false,
             message: "Validation failed",
             errors
@@ -20,49 +20,59 @@ const signin = (req, res)=>{
     User.findOne({email}).then(user=>{
         console.log(user)
         if(!user)
-            return res.status(400).json({
+            return res.json({
                 success: false,
                 message: "No accounts with such id",
             })
+        if(user.googleId || user.facebookId){
+            return res.json({
+                success: false,
+                message: "Please signin with google or facebook",
+                errors: {}
+            })
+        }
         let isMatch = bcrypt.compareSync(password, user.password);
         if(!isMatch)
-            return res.status(401).json({
+            return res.json({
                 success: false,
                 message: "Ceredentials did not match",
                 errors: {}
             })
         if(!user.accountStatus)
-            return res.status(401).json({
+            return res.json({
                 success: false,
                 message: "Please verify your account first",
                 errors: {}
             })
 
         if(user.accountStatus == 2)
-            return res.status(401).json({
+            return res.json({
                 success: false,
                 message: "Your account is suspended",
                 errors: {}
             })
 
         const token = jwt.sign({ id: user._id, userType: 3 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
-
-        return res.status(200).json({
-            success: true,
-            message: "Successfully signedin",
-            token: token,
-            data: {
-                profileDetails: user.profileDetails,
-                shippingAddress: user.shippingAddress,
-                wishlist: user.wishlist,
-                cartlist: user.cartlist
-            }
+        
+        User.findById(user._id)
+        .populate("wishlist cart.product", "name shortname discount price image")
+        .then(user=>{
+            return res.json({
+                success: true,
+                message: "Successfully signedin",
+                token: token,
+                data: {
+                    profileDetails: user.profileDetails,
+                    shippingAddress: user.shippingAddress,
+                    wishlist: user.wishlist,
+                    cart: user.cart
+                }
+            })
         })
     }).catch(err=>{
-        return res.status(500).json({
+        return res.json({
             success: false,
-            message: "Something went wrong",
-            errors: err
+            message: "Somehting went wrong"
         })
     })
 
@@ -72,7 +82,7 @@ const signup = (req, res)=>{
     console.log("User Signup")
     let errors = userValidation.signup(req.body)
     if(errors)
-        return res.status(400).json({
+        return res.json({
             success: false,
             message: "Validation failed",
             errors
@@ -108,22 +118,26 @@ const google = (req, res)=>{
     let user = req.user
     const token = jwt.sign({ id: user._id, userType: 3 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
 
-    return res.status(200).json({
-        success: true,
-        message: "Successfully signedin",
-        token: token,
-        data: {
-            profileDetails: user.profileDetails,
-            shippingAddress: user.shippingAddress,
-            wishlist: user.wishlist,
-            cartlist: user.cartlist
-        }
+    User.findById(user._id)
+    .populate("wishlist cart.product", "name shortname discount price image")
+    .then(user=>{
+        return res.json({
+            success: true,
+            message: "Successfully signedin",
+            token: token,
+            data: {
+                profileDetails: user.profileDetails,
+                shippingAddress: user.shippingAddress,
+                wishlist: user.wishlist,
+                cart: user.cart
+            }
+        })
     })
 }
 
 const googleToken = (req, res)=>{
     if(req.error)
-        return res.status(200).json({
+        return res.json({
             success: false,
             message: "Failed to sign in",
             error: req.error
@@ -132,16 +146,20 @@ const googleToken = (req, res)=>{
     let user = req.user
     const token = jwt.sign({ id: user._id, userType: 3 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
 
-    return res.status(200).json({
-        success: true,
-        message: "Successfully signedin",
-        token: token,
-        data: {
-            profileDetails: user.profileDetails,
-            shippingAddress: user.shippingAddress,
-            wishlist: user.wishlist,
-            cartlist: user.cartlist
-        }
+    User.findById(user._id)
+    .populate("wishlist cart.product", "name shortname discount price image")
+    .then(user=>{
+        return res.json({
+            success: true,
+            message: "Successfully signedin",
+            token: token,
+            data: {
+                profileDetails: user.profileDetails,
+                shippingAddress: user.shippingAddress,
+                wishlist: user.wishlist,
+                cart: user.cart
+            }
+        })
     })
 }
 
@@ -155,22 +173,26 @@ const facebook = (req, res)=>{
     let user = req.user
     const token = jwt.sign({ id: user._id, userType: 3 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
 
-    return res.status(200).json({
-        success: true,
-        message: "Successfully signedin",
-        token: token,
-        data: {
-            profileDetails: user.profileDetails,
-            shippingAddress: user.shippingAddress,
-            wishlist: user.wishlist,
-            cartlist: user.cartlist
-        }
+    User.findById(user._id)
+    .populate("wishlist cart.product", "name shortname discount price image")
+    .then(user=>{
+        return res.json({
+            success: true,
+            message: "Successfully signedin",
+            token: token,
+            data: {
+                profileDetails: user.profileDetails,
+                shippingAddress: user.shippingAddress,
+                wishlist: user.wishlist,
+                cart: user.cart
+            }
+        })
     })
 }
 
 const facebookToken = (req, res)=>{
     if(req.error)
-        return res.status(200).json({
+        return res.json({
             success: false,
             message: "Failed to sign in",
             error: req.error
@@ -179,16 +201,20 @@ const facebookToken = (req, res)=>{
     let user = req.user
     const token = jwt.sign({ id: user._id, userType: 3 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
 
-    return res.status(200).json({
-        success: true,
-        message: "Successfully signedin",
-        token: token,
-        data: {
-            profileDetails: user.profileDetails,
-            shippingAddress: user.shippingAddress,
-            wishlist: user.wishlist,
-            cartlist: user.cartlist
-        }
+    User.findById(user._id)
+    .populate("wishlist cart.product", "name shortname discount price image")
+    .then(user=>{
+        return res.json({
+            success: true,
+            message: "Successfully signedin",
+            token: token,
+            data: {
+                profileDetails: user.profileDetails,
+                shippingAddress: user.shippingAddress,
+                wishlist: user.wishlist,
+                cart: user.cart
+            }
+        })
     })
 }
 

@@ -24,7 +24,7 @@ const info = (req, res)=>{
 const update = (req, res)=>{
     let errors = recommendedCategoryValidation.update(req.body)
     if(errors)
-        return res.status(400).json({
+        return res.json({
             success: false,
             message: "Validation failed",
             errors
