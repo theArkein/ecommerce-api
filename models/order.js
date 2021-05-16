@@ -4,17 +4,19 @@ const { Schema } = mongoose;
 const schema = new Schema({
     orderId: {type: String},
     totalProducts: {type: Number},
+    totalQuantity: {type: Number},
     totalCost: {type: Number},
     orderedDate: {type: Date, default: Date.now},
     user: {type: Schema.Types.ObjectId, ref: 'User', required: true},
     vendor: {type: Schema.Types.ObjectId, ref: 'Vendor', required: true},
     products: [{
+        _id: false,
         product: {type: Schema.Types.ObjectId, ref: 'Product', required: true},
         quantity: {type: Number, required: true},
         unitCost: {type: Number, required: true},
         totalCost: {type: Number},
     }],
-    billingDetails: {
+    billingAddress: {
         name: {type: String},
         email: {type: String},
         phone: {type: Number},
@@ -22,7 +24,7 @@ const schema = new Schema({
         country: {type: String},
         postalCode: {type: Number}
     },
-    shippingDetails: {
+    shippingAddress: {
         name: {type: String},
         email: {type: String},
         phone: {type: Number},

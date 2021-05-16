@@ -20,10 +20,6 @@ const schema = new Schema({
         type: Schema.Types.ObjectId, 
         ref: 'Product'
     }],
-    orders: [{
-        type: Schema.Types.ObjectId, 
-        ref: 'Order'
-    }],
     profileDetails: {
         name: {
             type: Schema.Types.String,

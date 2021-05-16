@@ -1,5 +1,9 @@
 const Order = require('@models/order')
+const User = require('@models/user')
+
 const uniqid = require('uniqid');
+
+const OrderValidation = require('@middlewares/User/order')
 
 const list = (req, res)=>{
      let filterQuery = {user: req.user.id}
@@ -44,39 +48,74 @@ const detail = (req, res)=>{
 }
 
 const create = (req, res)=>{
-     let {vendor, products, shippingDetails, billingDetails} = req.body
-     let totalCost = 0
-     let totalProducts = 0
-     products.forEach(product => {
-          totalCost += product.totalCost
-          totalProducts += product.quantity
-     });
-     let order = {
-          orderId: uniqid(),
-          totalProducts,
-          totalCost,
-          user: req.user.id,
-          vendor,
-          products,
-          shippingDetails,
-          billingDetails
-     }
 
-     let newOrder = new Order(order)
-     console.log(newOrder)
-     newOrder.save().then(created=>{
-          res.json({
-               status: true,
-               message: "Successfully created",
-               data: created
-          })
-     }).catch(err=>{
-          res.json({
-               status: false,
-               message: err.message,
-               errors: err.errors
+     let errors = OrderValidation.create(req.body)
+     if(errors)
+        return res.json({
+            success: false,
+            message: "Validation failed",
+            errors
+        })
+
+     let {shippingAddress} = req.body
+     
+     User.findById(req.user.id)
+     .populate('cart.product')
+     .then(user=>{
+          let cart = user.cart
+          
+          let totalCost = 0
+          let totalProducts = 0
+          let totalQuantity = 0
+          let products = []
+          let vendor = cart[0].product.vendor
+          
+          cart.forEach(cartItem => {
+               let q = cartItem.quantity
+               let u = (cartItem.product.discount)? (cartItem.product.price - (cartItem.product.discount * cartItem.product.price)/100) : cartItem.product.price
+               let t = q * u
+               let p = cartItem.product._id
+
+               products.push({
+                    product: p,
+                    quantity: q,
+                    unitCost: u,
+                    totalCost: t
+               })
+               totalCost += t
+               totalQuantity += q
+               totalProducts++
+          });
+          
+          let order = {
+               orderId: uniqid(),
+               totalProducts,
+               totalQuantity,
+               totalCost,
+               user: req.user.id,
+               vendor,
+               products,
+               shippingAddress
+          }
+
+          let newOrder = new Order(order)
+
+          newOrder.save().then(created=>{
+               return res.json({
+                    status: true,
+                    message: "Successfully created",
+                    data: created
+               })
+          }).catch(err=>{
+               return res.json({
+                    status: false,
+                    message: err.message,
+                    errors: err.errors
+               })
           })
      })
+
+     
 }
 
 

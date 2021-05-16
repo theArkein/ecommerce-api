@@ -24,9 +24,11 @@ const list = (req, res)=>{
 
 const detail = (req, res)=>{
      let filterQuery = {
+          vendor: req.user.id,
           orderId : req.params.orderId,
      }
      Order.findOne(filterQuery)
+     .populate('products.product', 'name shortname image')
      .then(order=>{
           if(order.vendor!=req.user.id)
                return res.json({
@@ -39,7 +41,7 @@ const detail = (req, res)=>{
           })
      }).catch(err=>{
           return res.json({
-               success: true,
+               success: false,
                message: "Something went wrong",
                error: err
           })

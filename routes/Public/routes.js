@@ -4,7 +4,8 @@ const router = express.Router()
 const CategoryController = require('@controllers/Public/category')
 const ProductController = require('@controllers/Public/product')
 const VendorController = require('@controllers/Public/vendor')
-const SiteController = require('@controllers/Public/siteSetting')
+// const SiteController = require('@controllers/Public/siteSetting')
+const SiteController = require('@controllers/Public/site')
 const ProductEnquiryController = require('@controllers/Public/productEnquiry')
 
 
@@ -34,9 +35,11 @@ router.get('/vendor/list', VendorController.list)
 
 
 // Site
-router.get('/site/banner', SiteController.banner)
-router.get('/site/slider', SiteController.slider)
-router.get('/site/recommended', SiteController.recommended)
+router.get('/site/sliders', SiteController.sliders)
+
+// router.get('/site/banner', SiteController.banner)
+// router.get('/site/slider', SiteController.slider)
+// router.get('/site/recommended', SiteController.recommended)
 
 // product enquiry
 router.post('/product-enquiry/add', ProductEnquiryController.add)

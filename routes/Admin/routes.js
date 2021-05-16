@@ -22,6 +22,10 @@ const SiteSetting = {
     footer: require('@controllers/Admin/SiteSetting/footer'),
 }
 
+const SiteSliderController = require('@controllers/Admin/Site/slider')
+const SiteAdController = require('@controllers/Admin/Site/ad')
+
+
 const authorize = require('@middlewares/authorize')
 const multer  = require('@middlewares/multer')
 
@@ -79,11 +83,23 @@ router.get('/order/:orderId/detail', OrderController.detail)
 // product enquiry
 router.get('/product-enquiry/list', ProductEnquiryController.list)
 
-// site setting
 
-// site setting - featured category
-router.get('/site/setting/featured-category/info', SiteSetting.featuredCategory.info)
-router.put('/site/setting/featured-category/update', SiteSetting.featuredCategory.update)
+
+// site
+
+// sliders
+router.get('/site/sliders/featured', SiteSliderController.featuredSlidersInfo)
+router.put('/site/sliders/featured', SiteSliderController.featuredSlidersUpdate)
+router.get('/site/sliders/category', SiteSliderController.categorySlidersInfo)
+router.post('/site/sliders/category', SiteSliderController.categorySlidersAdd)
+router.put('/site/sliders/category/:id', SiteSliderController.categorySlidersUpdate)
+router.delete('/site/sliders/category/:id', SiteSliderController.categorySlidersDelete)
+
+// ads
+router.get('/site/ad', SiteAdController.adInfo)
+router.post('/site/ad', SiteAdController.adAdd)
+router.put('/site/ad/:id', SiteAdController.adUpdate)
+router.delete('/site/ad/:id', SiteAdController.adDelete)
 
 // site setting - recommended category
 router.get('/site/setting/recommended-category/info', SiteSetting.recommendedCategory.info)

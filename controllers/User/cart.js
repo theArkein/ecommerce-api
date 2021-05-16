@@ -1,4 +1,7 @@
 const User = require('@models/user')
+const Product = require('@models/product')
+const ObjectID = require('mongodb').ObjectID
+
 const userValidation = require("@middlewares/User/userValidation")
 
 const info = (req, res)=>{
@@ -21,7 +24,7 @@ const info = (req, res)=>{
     })
 }
 
-const addItem = (req, res)=>{
+const addIte = (req, res)=>{
     let errors = userValidation.addItemToCart(req.body)
     if(errors)
         return res.json({
@@ -34,7 +37,9 @@ const addItem = (req, res)=>{
         _id: req.user.id,
         "cart.product": req.body.product
     }
-    User.findOne(filterQuery).then(result=>{
+    User.findOne(filterQuery)
+    .populate('cart.product', 'vendor')
+    .then(result=>{
         if(result){
             return res.json({
                 success: false,
@@ -63,6 +68,98 @@ const addItem = (req, res)=>{
     })
 
     
+}
+
+const addItem = async (req, res)=>{
+    let errors = userValidation.addItemToCart(req.body)
+    if(errors)
+        return res.json({
+            success: false,
+            message: "Validation failed",
+            errors
+        })
+
+    let cart = new Promise((resolve, reject)=>{
+        User.findById(req.user.id)
+        .populate('cart.product', 'vendor')
+        .exec((err, data)=>{
+            if(err)
+                reject(err)
+            resolve(data.cart)
+        })
+    })
+    let product = new Promise((resolve, reject)=>{
+        Product.findById(req.body.product)
+        .select('vendor')
+        .exec((err, data)=>{
+            if(!data){
+                return res.json({
+                    success: false,
+                    message: "No such product"
+                })
+            }
+            if(err)
+                reject(err)
+            resolve(data)
+        })
+
+    })
+
+    let promiseResult = await Promise.all([cart, product])
+    cart = promiseResult[0]
+    product = promiseResult[1]
+    console.log(`${cart[0].product.vendor._id}` != `${product.vendor._id}`)
+    console.log(product.vendor._id)
+    if(cart.length){
+        if(`${cart[0].product.vendor._id}` != `${product.vendor._id}`){
+            return res.json({
+                success: false,
+                message: "Cart must have products from same vendor"
+            })
+        }
+    }
+        let filterQuery = {
+            _id: req.user.id,
+            "cart.product": req.body.product
+        }
+        let u = {
+            "cart.$.product": req.body.product,
+            $inc: {"cart.$.quantity": 1}
+        }
+        if(req.body.quantity){
+            u = {
+                "cart.$.product": req.body.product,
+                "cart.$.quantity": req.body.quantity
+            }
+        }
+        User.findOneAndUpdate(filterQuery, u)
+        .then(result=>{
+            if(result){
+                return res.json({
+                    success: false,
+                    message: "Product successfully added to cart"
+                })
+            }
+            User.findOneAndUpdate({_id: req.user.id}, {$push : {cart: req.body} }).then(updated=>{
+                console.log(updated)
+                if(!updated){
+                    return res.json({
+                        success: false,
+                        message: "Failed to add"
+                    })
+                }
+                return res.json({
+                    success: true,
+                    message: "Successfully added"
+                })
+            }).catch(err=>{
+                return res.json({
+                    success: false,
+                    message: "Somehting went wrong",
+                    error: err.errors
+                })
+            })
+        })
 }
 
 const updateItem = (req, res)=>{
