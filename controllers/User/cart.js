@@ -108,8 +108,6 @@ const addItem = async (req, res)=>{
     let promiseResult = await Promise.all([cart, product])
     cart = promiseResult[0]
     product = promiseResult[1]
-    console.log(`${cart[0].product.vendor._id}` != `${product.vendor._id}`)
-    console.log(product.vendor._id)
     if(cart.length){
         if(`${cart[0].product.vendor._id}` != `${product.vendor._id}`){
             return res.json({

@@ -13,6 +13,14 @@ const featuredSlidersInfo = (req, res)=>{
 }
 
 const featuredSlidersUpdate = (req, res)=>{
+    // let errors = authValidation.signup(req.body)
+    // if(errors)
+    //     return res.json({
+    //         success: false,
+    //         message: "Validation failed",
+    //         errors
+    //     })
+
     let update = {
         featuredSlider: req.body
     }
@@ -35,8 +43,9 @@ const categorySlidersInfo = (req, res)=>{
 }
 
 const categorySlidersAdd = (req, res)=>{
+
     let slider = req.body
-    slider.endpoint = `${config.production}${config.base}/public/product/category/main/60827c7d05e7260d69f10677/list`
+    slider.endpoint = `${config.production}${config.base}/public/product/category/main/${req.body}/list`
     let update = {
         $push: {
             categorySlider: slider

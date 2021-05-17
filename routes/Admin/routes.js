@@ -102,18 +102,18 @@ router.put('/site/ad/:id', SiteAdController.adUpdate)
 router.delete('/site/ad/:id', SiteAdController.adDelete)
 
 // site setting - recommended category
-router.get('/site/setting/recommended-category/info', SiteSetting.recommendedCategory.info)
-router.put('/site/setting/recommended-category/update', SiteSetting.recommendedCategory.update)
+// router.get('/site/setting/recommended-category/info', SiteSetting.recommendedCategory.info)
+// router.put('/site/setting/recommended-category/update', SiteSetting.recommendedCategory.update)
 
-// site setting - featured banner
-router.get('/site/setting/featured-banner/info', SiteSetting.featuredBanner.info)
-router.put('/site/setting/featured-banner/update', SiteSetting.featuredBanner.update)
+// // site setting - featured banner
+// router.get('/site/setting/featured-banner/info', SiteSetting.featuredBanner.info)
+// router.put('/site/setting/featured-banner/update', SiteSetting.featuredBanner.update)
 
-// site setting - featured ads
-router.get('/site/setting/featured-ads/info', SiteSetting.featuredAds.info)
-router.put('/site/setting/featured-ads/update', SiteSetting.featuredAds.update)
+// // site setting - featured ads
+// router.get('/site/setting/featured-ads/info', SiteSetting.featuredAds.info)
+// router.put('/site/setting/featured-ads/update', SiteSetting.featuredAds.update)
 
 // site setting - footer Links
-router.get('/site/setting/footer/info', SiteSetting.footer.info)
+// router.get('/site/setting/footer/info', SiteSetting.footer.info)
 
 module.exports = router
