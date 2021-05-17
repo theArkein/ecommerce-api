@@ -2,6 +2,7 @@ const Order = require('@models/order')
 const User = require('@models/user')
 
 const uniqid = require('uniqid');
+const sendEmail = require('@config/sendEmail')
 
 const OrderValidation = require('@middlewares/User/order')
 
@@ -12,6 +13,7 @@ const list = (req, res)=>{
           path: "products.product",
           select: 'name shortname slug sku vendor price discount image'
       })
+      .sort({createdAt: -1})
      .then(orders=>{
           return res.json({
                status: true,
@@ -122,9 +124,37 @@ const create = (req, res)=>{
      
 }
 
+const cancel = (req, res)=>{
+     let id = req.params.orderId
+     let filterQuery = {user: req.user.id, orderId: id, status: {$nin: [2, 4, 5]} }
+     Order.findOneAndUpdate(filterQuery, {status: 1}).then(updated=>{
+          if(!updated){
+               return res.json({
+                    success: false,
+                    message: "This order cannot be cancelled"
+               })
+          }
+          User.findById(updated.user).then(user=>{
+               sendEmail("Travel Right", `Your order with id: ${id} has been cancelled`, user.email)
+          })
+          return res.json({
+               success: true,
+               message: "Order successfully cancelled",
+               data: updated
+          })
+     }).catch(err=>{
+          return res.json({
+               success: false,
+               message: err.message,
+               errors: err.errors
+          })
+     })
+}
+
 
 module.exports = {
      list,
      detail,
      create,
+     cancel
 }

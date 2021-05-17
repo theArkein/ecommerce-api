@@ -49,30 +49,30 @@ const detail = (req, res)=>{
 }
 
 const edit = (req, res)=>{
-     let id = req.params.orderId
-     Order.findByIdAndUpdate(id).then(updated=>{
-          res.json({
-               success: true,
-               message: "Successfully updated",
-               data: updated
-          })
-     }).catch(err=>{
-          res.json({
-               success: false,
-               message: err.message,
-               errors: err.errors
-          })
-     })
+     // let id = req.params.orderId
+     // Order.findByIdAndUpdate(id).then(updated=>{
+     //      res.json({
+     //           success: true,
+     //           message: "Successfully updated",
+     //           data: updated
+     //      })
+     // }).catch(err=>{
+     //      res.json({
+     //           success: false,
+     //           message: err.message,
+     //           errors: err.errors
+     //      })
+     // })
 }
 
 const cancel = (req, res)=>{
      let id = req.params.orderId
-     let filterQuery = {orderId: id, status: {$nin: [2, 4, 5]} }
+     let filterQuery = {vendor: req.user.id, orderId: id, status: {$nin: [2, 4, 5]} }
      Order.findOneAndUpdate(filterQuery, {status: 1}).then(updated=>{
           if(!updated){
                return res.json({
                     success: false,
-                    message: "This order cannot be declined"
+                    message: "This order cannot be cancelled"
                })
           }
           User.findById(updated.user).then(user=>{
@@ -80,7 +80,7 @@ const cancel = (req, res)=>{
           })
           return res.json({
                success: true,
-               message: "Order successfully declined",
+               message: "Order successfully cancelled",
                data: updated
           })
      }).catch(err=>{
@@ -94,7 +94,7 @@ const cancel = (req, res)=>{
 
 const decline = (req, res)=>{
      let id = req.params.orderId
-     let filterQuery = {orderId: id, status: {$nin: [1, 4, 5]} }
+     let filterQuery = {vendor: req.user.id, orderId: id, status: {$nin: [1, 4, 5]} }
      Order.findOneAndUpdate(filterQuery, {status: 2}).then(updated=>{
           if(!updated){
                return res.json({
@@ -121,7 +121,7 @@ const decline = (req, res)=>{
 
 const ship = (req, res)=>{
      let id = req.params.orderId
-     let filterQuery = {orderId: id, status: 0} 
+     let filterQuery = {vendor: req.user.id, orderId: id, status: 0} 
      Order.findOneAndUpdate(filterQuery, {status: 3}).then(updated=>{
           if(!updated){
                return res.json({
@@ -148,7 +148,7 @@ const ship = (req, res)=>{
 
 const complete = (req, res)=>{
      let id = req.params.orderId
-     let filterQuery = {orderId: id, status: 3} 
+     let filterQuery = {vendor: req.user.id, orderId: id, status: 3} 
      Order.findOneAndUpdate(filterQuery, {status: 4}).then(updated=>{
           if(!updated){
                return res.json({
@@ -175,7 +175,7 @@ const complete = (req, res)=>{
 
 const refund = (req, res)=>{
      let id = req.params.orderId
-     let filterQuery = {orderId: id, status: 4} 
+     let filterQuery = {vendor: req.user.id, orderId: id, status: 4} 
      Order.findOneAndUpdate(filterQuery, {status: 5}).then(updated=>{
           if(!updated){
                return res.json({
