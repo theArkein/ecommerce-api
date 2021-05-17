@@ -5,17 +5,17 @@ const featuredUpdate = (data)=>{
        mostViewed: Joi.object({
            title: Joi.string().required(),
            order: Joi.number().required(),
-           publish: Joi.boolean.required()
+           publish: Joi.boolean().required()
        }).required(),
        latest: Joi.object({
         title: Joi.string().required(),
         order: Joi.number().required(),
-        publish: Joi.boolean.required()
+        publish: Joi.boolean().required()
         }).required(),
         falshDeal: Joi.object({
             title: Joi.string().required(),
             order: Joi.number().required(),
-            publish: Joi.boolean.required()
+            publish: Joi.boolean().required()
         }).required(),
     }).options({abortEarly : false})
 
@@ -33,7 +33,7 @@ const categoryAdd = (data)=>{
         title: Joi.string().required(),
         category: Joi.string().required(),
         order: Joi.number().required(),
-        publish: Joi.boolean.required()
+        publish: Joi.boolean().required()
     }).options({abortEarly : false})
 
     let validation = schema.validate(data)
@@ -50,7 +50,7 @@ const categoryUpdate = (data)=>{
         title: Joi.string().required(),
         category: Joi.string().required(),
         order: Joi.number().required(),
-        publish: Joi.boolean.required()
+        publish: Joi.boolean().required()
     }).options({abortEarly : false})
 
     let validation = schema.validate(data)
@@ -63,5 +63,7 @@ const categoryUpdate = (data)=>{
 }
 
 module.exports = {
-    // update
+    featuredUpdate,
+    categoryAdd, 
+    categoryUpdate
 }

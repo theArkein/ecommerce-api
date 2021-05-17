@@ -5,6 +5,8 @@ const config  = require('@config/config');
 
 const saveImage  = require('@config/saveImage');
 const deleteImage  = require('@config/deleteImage');
+const adValidation = require('@middlewares/Admin/Site/ad')
+
 
 
 const adInfo = (req, res)=>{
@@ -17,8 +19,15 @@ const adInfo = (req, res)=>{
 }
 
 const adAdd = (req, res)=>{
-    let ad = req.body
+    let errors = adValidation.add(req.body)
+    if(errors)
+        return res.json({
+            success: false,
+            message: "Validation failed",
+            errors
+        })
 
+    let ad = req.body
     let imageData = ad.image
     let imagePath = `images/ads/${uniqid()}.png`
     ad.image = imagePath
@@ -39,6 +48,14 @@ const adAdd = (req, res)=>{
 }
 
 const adUpdate = (req, res)=>{
+    let errors = adValidation.update(req.body)
+    if(errors)
+        return res.json({
+            success: false,
+            message: "Validation failed",
+            errors
+        })
+
     let adId = req.params.id
     let ad = req.body
 

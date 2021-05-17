@@ -2,6 +2,7 @@ const ObjectID = require('mongodb').ObjectID
 
 const Site = require("@models/site")
 const config  = require('@config/config');
+const sliderValidation = require('@middlewares/Admin/Site/slider')
 
 const featuredSlidersInfo = (req, res)=>{
     Site.findOne({}).then(site=>{
@@ -13,13 +14,13 @@ const featuredSlidersInfo = (req, res)=>{
 }
 
 const featuredSlidersUpdate = (req, res)=>{
-    // let errors = authValidation.signup(req.body)
-    // if(errors)
-    //     return res.json({
-    //         success: false,
-    //         message: "Validation failed",
-    //         errors
-    //     })
+    let errors = sliderValidation.featuredAdd(req.body)
+    if(errors)
+        return res.json({
+            success: false,
+            message: "Validation failed",
+            errors
+        })
 
     let update = {
         featuredSlider: req.body
@@ -43,6 +44,13 @@ const categorySlidersInfo = (req, res)=>{
 }
 
 const categorySlidersAdd = (req, res)=>{
+    let errors = sliderValidation.categoryAdd(req.body)
+    if(errors)
+        return res.json({
+            success: false,
+            message: "Validation failed",
+            errors
+        })
 
     let slider = req.body
     slider.endpoint = `${config.production}${config.base}/public/product/category/main/${req.body}/list`
@@ -60,6 +68,13 @@ const categorySlidersAdd = (req, res)=>{
 }
 
 const categorySlidersUpdate = (req, res)=>{
+    let errors = sliderValidation.categoryUpdate(req.body)
+    if(errors)
+        return res.json({
+            success: false,
+            message: "Validation failed",
+            errors
+        })
     let sliderId = req.params.id
     let slider = req.body
 

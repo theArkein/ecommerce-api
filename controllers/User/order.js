@@ -8,6 +8,10 @@ const OrderValidation = require('@middlewares/User/order')
 const list = (req, res)=>{
      let filterQuery = {user: req.user.id}
      Order.find(filterQuery)
+     .populate({
+          path: "products.product",
+          select: 'name shortname slug sku vendor price discount image'
+      })
      .then(orders=>{
           return res.json({
                status: true,
