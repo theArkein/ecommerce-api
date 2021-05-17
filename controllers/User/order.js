@@ -73,7 +73,12 @@ const create = (req, res)=>{
      .populate('cart.product')
      .then(user=>{
           let cart = user.cart
-          
+          if(!cart.length){
+               return res.json({
+                    success: false,
+                    message: "Cart is empty. Please add products first"
+               })
+          }
           let totalCost = 0
           let totalProducts = 0
           let totalQuantity = 0
@@ -111,6 +116,15 @@ const create = (req, res)=>{
           let newOrder = new Order(order)
 
           newOrder.save().then(created=>{
+               
+               User.findById(req.user.id).then(user=>{
+                    sendEmail("Travel Right", `Your order with id: ${newOrder.orderId} has been placed successfully`, user.email)
+               })
+
+               User.findOneAndUpdate(req.user.id, {cart: []}).then(user=>{
+                    console.log("Cart empty done")
+               })
+
                return res.json({
                     status: true,
                     message: "Successfully created",
