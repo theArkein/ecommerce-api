@@ -34,6 +34,10 @@ const detail = (req, res)=>{
           orderId : req.params.orderId
      }
      Order.findOne(filterQuery)
+     .populate({
+          path: "products.product",
+          select: 'name shortname slug sku vendor price discount image'
+      })
      .then(order=>{
           if(order.user!=req.user.id)
                return res.json({
