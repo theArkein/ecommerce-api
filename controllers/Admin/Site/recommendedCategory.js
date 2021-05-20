@@ -2,7 +2,7 @@ const ObjectID = require('mongodb').ObjectID
 const uniqId = require('uniqid')
 const Site = require("@models/site")
 const config  = require('@config/config');
-const recommendedCategoryValidation = require('@middlewares/Admin/Site/recommendedCategory')
+const recommendedCategoryValidation = require('@middlewares/Admin/Site/recommendedcategory')
 
 const saveImage = require('@config/saveImage')
 const deleteImage = require("@config/deleteImage")
