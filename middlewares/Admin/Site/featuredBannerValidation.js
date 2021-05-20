@@ -4,7 +4,7 @@ var Joi = require('joi')
 const update = (data)=>{
     const schema = Joi.object({
         large: Joi.object({
-            image: Joi.string().required(),
+            image: Joi.string(),
             title: Joi.string().required(),
             subTitle: Joi.string().allow(null).required(),
             btnText: Joi.string().required(),
@@ -12,7 +12,7 @@ const update = (data)=>{
             active: Joi.boolean()
         }).required(),
         small: Joi.array().items(Joi.object({
-          image: Joi.string().required(),
+          image: Joi.string(),
           title: Joi.string().required(),
           preTitle: Joi.string().allow(null).required(),
           postTitle: Joi.string().allow(null).required(),

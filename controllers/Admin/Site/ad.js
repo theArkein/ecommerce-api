@@ -60,18 +60,8 @@ const adUpdate = (req, res)=>{
     let ad = req.body
 
     let imageData = imagePath = null
-    if(ad.image){
-        imageData = ad.image
-        imagePath = `images/ads/${uniqid()}.png`
-        ad.image = imagePath
-    }
-    let filterQuery = {
-        "ads._id": new ObjectID(adId)
-    }
-
     let update = {
         $set: {
-            "ads.$.image": ad.image,
             "ads.$.title": ad.title,
             "ads.$.btnText": ad.btnText,
             "ads.$.link": ad.link,
@@ -79,10 +69,22 @@ const adUpdate = (req, res)=>{
             "ads.$.publish": ad.publish,
         }
     }
+    if(ad.image){
+        imageData = ad.image
+        imagePath = `images/ads/${uniqid()}.png`
+        update["ads.$.image"] = ad.image
+    }
+    let filterQuery = {
+        "ads._id": new ObjectID(adId)
+    }
+
     Site.findOneAndUpdate(filterQuery, update).then(site=>{
         if(ad.image){
             saveImage(imageData, imagePath)
-            deleteImage(site.ads[0].image)
+            site.ads.forEach(element => {
+                if(`${element._id}` == `${adId}`)
+                    deleteImage(element.image)
+            });
         }
         if(!site){
             return res.json({

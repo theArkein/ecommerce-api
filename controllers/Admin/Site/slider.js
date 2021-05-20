@@ -85,7 +85,12 @@ const categorySlidersUpdate = (req, res)=>{
 
     let update = {
         $set: {
-            "categorySlider.$.title": slider.title
+            "categorySlider.$.title": slider.title,
+            "categorySlider.$.category": slider.category,
+            "categorySlider.$.order": slider.order,
+            "categorySlider.$.publish": slider.publish,
+            "categorySlider.$.endpoint": `${config.production}${config.base}/public/product/category/main/${slider.category
+            }/list`
         }
     }
     Site.findOneAndUpdate(filterQuery, update).then(site=>{
@@ -97,7 +102,7 @@ const categorySlidersUpdate = (req, res)=>{
         }
         return res.json({
             success: true,
-            message: "Successfully added"
+            message: "Successfully updated"
         })
     })
 }

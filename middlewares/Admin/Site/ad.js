@@ -21,7 +21,7 @@ const add = (data)=>{
 
 const update = (data)=>{
     const schema = Joi.object({
-        image: Joi.string().required(),
+        image: Joi.string(),
         title: Joi.string().required(),
         btnText: Joi.string().required(),
         link: Joi.string().required(),

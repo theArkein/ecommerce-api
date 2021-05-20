@@ -8,11 +8,19 @@ const schema = new Schema({
                 type: Schema.Types.String,
                 default: null
             },
+            preTitle: {
+                type: Schema.Types.String,
+                default: null
+            },
             title: {
                 type: Schema.Types.String,
                 default: null
             },
             subTitle: {
+                type: Schema.Types.String,
+                default: null
+            },
+            price: {
                 type: Schema.Types.String,
                 default: null
             },
@@ -164,6 +172,33 @@ const schema = new Schema({
         category: {
             type: Schema.Types.ObjectId,
             ref: "mainCategory",
+            default: null
+        }, 
+        endpoint: {
+            type: Schema.Types.String,
+            default: null
+        }
+    }],
+    recommendedCategory: [{
+        title: {
+            type: Schema.Types.String,
+            default: null
+        },
+        publish: {
+            type: Schema.Types.Boolean,
+            default: null
+        },
+        order:  {
+            type: Schema.Types.Number,
+            default: null
+        },
+        category: {
+            type: Schema.Types.ObjectId,
+            ref: "mainCategory",
+            default: null
+        },
+        image: {
+            type: Schema.Types.String,
             default: null
         }, 
         endpoint: {

@@ -170,7 +170,7 @@ const listMostViewed = (req, res)=>{
 const listFlashDeal = (req, res)=>{
      let filterQuery = {publish: true, status: 2}
      let options = paginateOption(req.query.page, req.query.limit)
-     options.sort = { discountedPrice: -1}
+     options.sort = { discount: -1}
 
      Product.paginate(filterQuery, options)
      .then(response=>{

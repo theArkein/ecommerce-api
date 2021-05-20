@@ -1,15 +1,12 @@
-const Joi = require('joi')
+var Joi = require('joi')
 
-const updateLarge = (data)=>{
+const add = (data)=>{
     const schema = Joi.object({
-        image: Joi.string(),
-        preTitle: Joi.string(),
         title: Joi.string().required(),
-        subTitle: Joi.string(),
-        price: Joi.string(),
-        btnText: Joi.string().required(),
-        btnLink: Joi.string().required(),
-        publish: Joi.boolean()
+        category: Joi.string().required(),
+        order: Joi.number().required(),
+        image: Joi.string(),
+        publish: Joi.boolean().required()
     }).options({abortEarly : false})
 
     let validation = schema.validate(data)
@@ -21,16 +18,13 @@ const updateLarge = (data)=>{
     return errors   
 }
 
-const updateSmall = (data)=>{
+const update = (data)=>{
     const schema = Joi.object({
-        image: Joi.string(),
-        preTitle: Joi.string(),
         title: Joi.string().required(),
-        subTitle: Joi.string(),
-        price: Joi.string(),
-        link: Joi.string().required(),
+        category: Joi.string().required(),
         order: Joi.number().required(),
-        publish: Joi.boolean()
+        image: Joi.string(),
+        publish: Joi.boolean().required()
     }).options({abortEarly : false})
 
     let validation = schema.validate(data)
@@ -43,6 +37,6 @@ const updateSmall = (data)=>{
 }
 
 module.exports = {
-    updateLarge,
-    updateSmall
+    add, 
+    update
 }

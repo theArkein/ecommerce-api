@@ -91,9 +91,172 @@ const approve = (req, res)=>{
     })
 }
 
+const listByVendor = (req, res)=>{
+     let filterQuery = {vendor: req.params.id}
+     let options = paginateOption(req.query.page, req.query.limit)
+     Product.paginate(filterQuery, options)
+     .then(response=>{
+          response.results  = response.data.length
+          response.success = true
+          return res.json(response)
+     }).catch(err=>{
+          res.json({
+               success: false,
+               message: "Something went wrong",
+               error: err
+          })
+     })
+}
+
+const listByMainCategory = (req, res)=>{
+     let filterQuery = {mainCategory: req.params.id}
+     let options = paginateOption(req.query.page, req.query.limit)
+
+     Product.paginate(filterQuery, options)
+     .then(response=>{
+          response.results  = response.data.length
+          response.success = true
+          return res.json(response)
+     }).catch(err=>{
+          res.json({
+               success: false,
+               message: "Something went wrong",
+               error: err
+          })
+     })
+}
+
+const listBySubCategory = (req, res)=>{
+     let filterQuery = {subCategory: req.params.id}
+     let options = paginateOption(req.query.page, req.query.limit)
+
+     Product.paginate(filterQuery, options)
+     .then(response=>{
+          response.results  = response.data.length
+          response.success = true
+          return res.json(response)
+     }).catch(err=>{
+          res.json({
+               success: false,
+               message: "Something went wrong",
+               error: err
+          })
+     })
+}
+
+const listByChildCategory = (req, res)=>{
+     let filterQuery = {childCategory: req.params.id}
+     let options = paginateOption(req.query.page, req.query.limit)
+
+     Product.paginate(filterQuery, options)
+     .then(response=>{
+          response.results  = response.data.length
+          response.success = true
+          return res.json(response)
+     }).catch(err=>{
+          res.json({
+               success: false,
+               message: "Something went wrong",
+               error: err
+          })
+     })
+}
+
+const listLatest = (req, res)=>{
+     let filterQuery = {}
+     let options = paginateOption(req.query.page, req.query.limit)
+     options.sort = { createdAt: -1}
+
+     Product.paginate(filterQuery, options)
+     .then(response=>{
+          response.results  = response.data.length
+          response.success = true
+          return res.json(response)
+     }).catch(err=>{
+          res.json({
+               success: false,
+               message: "Something went wrong",
+               error: err
+          })
+     })
+}
+
+const listMostViewed = (req, res)=>{
+     let filterQuery = {}
+     let options = paginateOption(req.query.page, req.query.limit)
+     options.sort = { viewCounts: -1}
+
+     Product.paginate(filterQuery, options)
+     .then(response=>{
+          response.results  = response.data.length
+          response.success = true
+          return res.json(response)
+     }).catch(err=>{
+          res.json({
+               success: false,
+               message: "Something went wrong",
+               error: err
+          })
+     })
+}
+
+const listFlashDeal = (req, res)=>{
+     let filterQuery = {publish: true, status: 2}
+     let options = paginateOption(req.query.page, req.query.limit)
+     options.sort = { discount: -1}
+
+     Product.paginate(filterQuery, options)
+     .then(response=>{
+          response.results  = response.data.length
+          response.success = true
+          return res.json(response)
+     }).catch(err=>{
+          res.json({
+               success: false,
+               message: "Something went wrong",
+               error: err
+          })
+     })
+}
+
+
+const search = (req, res)=>{
+     let filterQuery = { $text: { $search: req.query.query }}
+
+     if(req.query.mainCategory)
+          filterQuery.mainCategory = req.query.mainCategory
+     if(req.query.subCategory)
+          filterQuery.subCategory = req.query.subCategory
+     if(req.query.childCategory)
+          filterQuery.childCategory = req.query.childCategory
+          
+     let options = paginateOption(req.query.page, req.query.limit)
+
+     Product.paginate(filterQuery, options)
+     .then(response=>{
+          response.results  = response.data.length
+          response.success = true
+          return res.json(response)
+     }).catch(err=>{
+          res.json({
+               success: false,
+               message: "Something went wrong",
+               error: err
+          })
+     })
+}
+
 module.exports = {
      list,
      detail,
      approve,
-     suspend
+     suspend,
+     listByVendor,
+     listByMainCategory,
+     listBySubCategory,
+     listByChildCategory,
+     listLatest,
+     listMostViewed,
+     listFlashDeal,
+     search,
 }

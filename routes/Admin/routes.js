@@ -14,20 +14,13 @@ const OrderController = require('@controllers/Admin/order')
 const ProductEnquiryController = require('@controllers/Admin/productEnquiry.js')
 
 
-const SiteSetting = {
-    featuredCategory: require('@controllers/Admin/SiteSetting/featuredCategory'),
-    recommendedCategory: require('@controllers/Admin/SiteSetting/recommendedCategory'),
-    featuredBanner: require('@controllers/Admin/SiteSetting/featuredBanner'),
-    featuredAds: require('@controllers/Admin/SiteSetting/featuredAds'),
-    footer: require('@controllers/Admin/SiteSetting/footer'),
-}
-
-const SiteSliderController = require('@controllers/Admin/Site/slider')
-const SiteAdController = require('@controllers/Admin/Site/ad')
+const SliderController = require('@controllers/Admin/Site/slider')
+const AdController = require('@controllers/Admin/Site/ad')
+const BannerController = require('@controllers/Admin/Site/banner')
+const RecommendedCategoryController = require('@controllers/Admin/Site/recommendedCategory')
 
 
 const authorize = require('@middlewares/authorize')
-const multer  = require('@middlewares/multer')
 
 
 // auth routes
@@ -59,18 +52,24 @@ router.delete('/category/child/:id/remove', ChildCategoryController.removeOne)
 router.delete('/category/child/removeAll', ChildCategoryController.removeAll)
 
 // product
-router.get('/product/list', ProductController.list)
-router.get('/product/:id/detail', ProductController.detail)
-
 router.get('/product/:id/approve', ProductController.approve )
 router.get('/product/:id/suspend', ProductController.suspend )
+router.get('/product/list', ProductController.list)
+router.get('/product/:id/detail', ProductController.detail)
+router.get('/product/vendor/:id/list', ProductController.listByVendor)
+router.get('/product/category/main/:id/list', ProductController.listByMainCategory)
+router.get('/product/category/sub/:id/list', ProductController.listBySubCategory)
+router.get('/product/category/child/:id/list', ProductController.listByChildCategory)
+router.get('/product/search', ProductController.search)
+router.get('/product/latest/list', ProductController.listLatest)
+router.get('/product/most-viewed/list', ProductController.listMostViewed)
+router.get('/product/flash-deal/list', ProductController.listFlashDeal)
 
 // vendor
 router.get('/vendor/list', VendorController.list)
 router.get('/vendor/:id/detail', VendorController.detail)
-
-router.get('/vendor/:id/account/approve', VendorController.approve )
-router.get('/vendor/:id/account/suspend', VendorController.suspend )
+router.get('/vendor/:id/account/approve', VendorController.approve)
+router.get('/vendor/:id/account/suspend', VendorController.suspend)
 
 // user
 router.get('/user/list', UserController.list)
@@ -82,36 +81,39 @@ router.get('/order/:orderId/detail', OrderController.detail)
 
 // product enquiry
 router.get('/product-enquiry/list', ProductEnquiryController.list)
-
-
+router.delete('/product-enquiry/:id/delete', ProductEnquiryController.remove)
 
 // site
 
 // sliders
-router.get('/site/sliders/featured', SiteSliderController.featuredSlidersInfo)
-router.put('/site/sliders/featured', SiteSliderController.featuredSlidersUpdate)
-router.get('/site/sliders/category', SiteSliderController.categorySlidersInfo)
-router.post('/site/sliders/category', SiteSliderController.categorySlidersAdd)
-router.put('/site/sliders/category/:id', SiteSliderController.categorySlidersUpdate)
-router.delete('/site/sliders/category/:id', SiteSliderController.categorySlidersDelete)
+router.get('/site/sliders/featured', SliderController.featuredSlidersInfo)
+router.put('/site/sliders/featured', SliderController.featuredSlidersUpdate)
+router.get('/site/sliders/category', SliderController.categorySlidersInfo)
+router.post('/site/sliders/category', SliderController.categorySlidersAdd)
+router.put('/site/sliders/category/:id', SliderController.categorySlidersUpdate)
+router.delete('/site/sliders/category/:id', SliderController.categorySlidersDelete)
 
 // ads
-router.get('/site/ad', SiteAdController.adInfo)
-router.post('/site/ad', SiteAdController.adAdd)
-router.put('/site/ad/:id', SiteAdController.adUpdate)
-router.delete('/site/ad/:id', SiteAdController.adDelete)
+router.get('/site/ad', AdController.adInfo)
+router.post('/site/ad', AdController.adAdd)
+router.put('/site/ad/:id', AdController.adUpdate)
+router.delete('/site/ad/:id', AdController.adDelete)
 
-// site setting - recommended category
-// router.get('/site/setting/recommended-category/info', SiteSetting.recommendedCategory.info)
-// router.put('/site/setting/recommended-category/update', SiteSetting.recommendedCategory.update)
+// banner
+router.get('/site/banner', BannerController.info)
 
-// // site setting - featured banner
-// router.get('/site/setting/featured-banner/info', SiteSetting.featuredBanner.info)
-// router.put('/site/setting/featured-banner/update', SiteSetting.featuredBanner.update)
+router.get('/site/banner/large', BannerController.largeInfo)
+router.put('/site/banner/large', BannerController.largeUpdate)
 
-// // site setting - featured ads
-// router.get('/site/setting/featured-ads/info', SiteSetting.featuredAds.info)
-// router.put('/site/setting/featured-ads/update', SiteSetting.featuredAds.update)
+router.get('/site/banner/small', BannerController.smallInfo)
+router.put('/site/banner/small/:id', BannerController.smallUpdate)
+
+// recommended category
+router.get('/site/recommended-category', RecommendedCategoryController.info)
+router.post('/site/recommended-category', RecommendedCategoryController.add)
+router.put('/site/recommended-category/:id', RecommendedCategoryController.updateOne)
+router.delete('/site/recommended-category/:id', RecommendedCategoryController.deleteOne)
+
 
 // site setting - footer Links
 // router.get('/site/setting/footer/info', SiteSetting.footer.info)
