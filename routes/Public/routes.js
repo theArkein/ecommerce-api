@@ -39,7 +39,7 @@ router.get('/site/sliders', SiteController.sliders)
 
 // router.get('/site/banner', SiteController.banner)
 // router.get('/site/slider', SiteController.slider)
-// router.get('/site/recommended', SiteController.recommended)
+router.get('/site/recommended', SiteController.recommended)
 
 // product enquiry
 router.post('/product-enquiry/add', ProductEnquiryController.add)

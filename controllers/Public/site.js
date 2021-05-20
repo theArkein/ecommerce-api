@@ -9,6 +9,17 @@ const sliders = (req, res)=>{
     })
 }
 
+const recommended = (req, res)=>{
+    Site.findOne({})
+    .populate('recommendedCategory.category', "name slug icon")
+    .then(site=>{
+        res.json({
+            recommended: site.recommendedCategory
+        })
+    })
+}
+
 module.exports = {
-    sliders
+    sliders,
+    recommended
 }

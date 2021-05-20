@@ -171,7 +171,7 @@ const schema = new Schema({
         },
         category: {
             type: Schema.Types.ObjectId,
-            ref: "mainCategory",
+            ref: "MainCategory",
             default: null
         }, 
         endpoint: {
@@ -194,7 +194,7 @@ const schema = new Schema({
         },
         category: {
             type: Schema.Types.ObjectId,
-            ref: "mainCategory",
+            ref: "MainCategory",
             default: null
         },
         image: {
