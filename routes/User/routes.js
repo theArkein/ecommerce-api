@@ -34,8 +34,9 @@ router.get('/account/verify', UserAccount.verify )
 
 
 // reset password
-router.post('/account/forgot-password', UserAccount.forgotPassword)
-router.post('/account/reset-password', UserAccount.resetPassword)
+router.post('/account/forgot-password',authorize([3]), UserAccount.forgotPassword)
+router.post('/account/reset-password',authorize([3]), UserAccount.resetPassword)
+router.post('/account/change-password',authorize([3]), UserAccount.changePassword)
 
 
 // account details & update

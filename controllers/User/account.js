@@ -49,21 +49,10 @@ const verify = (req, res)=>{
 }
 
 const forgotPassword = (req, res)=>{
-    let {email} = req.body
-    if(!email)
-        return res.json({
-            success: false,
-            message: "No email provided"
-        })
-    let filterQuery = {email}
+    let filterQuery = {_id: req.user.id}
     const OTP = uniqid.process()
     User.findOneAndUpdate(filterQuery, {passwordResetOTP: OTP}).then(user=>{
-        if(!user)
-            return res.json({
-                success: false,
-                message: "No user found with such email"
-            })
-        sendOTP(email, OTP)
+        sendOTP(user.email, OTP)
         setTimeout(()=>{
             User.findByIdAndUpdate(user._id, {passwordResetOTP: null}).then(user=>{
                 console.log("OTP cleared for user: ", user._id)
@@ -83,7 +72,7 @@ const forgotPassword = (req, res)=>{
 }
 
 const resetPassword = (req, res)=>{
-    let {email, password, confirmPassword, otp} = req.body
+    let {password, confirmPassword, otp} = req.body
     
     let errors = userValidation.passwordReset(req.body)
     if(errors)
@@ -93,7 +82,7 @@ const resetPassword = (req, res)=>{
             errors
         })
 
-    let filterQuery = {email}
+    let filterQuery = {_id: req.user.id}
     User.findOne(filterQuery).then(user=>{
         if(!user)
             return res.json({
@@ -108,14 +97,60 @@ const resetPassword = (req, res)=>{
         }
         var hashedPassword = bcrypt.hashSync(password, config.bcrypt.saltRounds)
         User.findByIdAndUpdate(user._id, {password: hashedPassword, passwordResetOTP: null}).then(updated=>{
-            return res.json(user)
+            return res.json({
+                success: true,
+                message: "Password successfully resetted"
+            })
         })
     }).catch(err=>{
-        res.json({
+        return res.json({
             success: false,
-            message: "Somethign went wrong",
-            err
+            message: "Something went wrong"
         })
+    })
+}
+
+const changePassword = (req, res)=>{
+    let {oldPassword, newPassword, confirmNewPassword} = req.body
+    
+    let errors = userValidation.changePassword(req.body)
+    if(errors)
+        return res.json({
+            success: false,
+            message: "Validation failed",
+            errors
+        })
+    
+    if(oldPassword == newPassword){
+        return res.json({
+            success: false,
+            message: "New password must not be same as old password"
+        })
+    }
+
+    let filterQuery = {_id: req.user.id}
+    User.findOne(filterQuery).then(user=>{
+        let isMatch = bcrypt.compareSync(oldPassword, user.password);
+        if(!isMatch)
+            return res.json({
+                success: false,
+                message: "Old password didnot match"
+            })
+            var hashedPassword = bcrypt.hashSync(newPassword, config.bcrypt.saltRounds)
+            User.findByIdAndUpdate(user._id, {password: hashedPassword}).then(updated=>{
+            if(updated){
+                return res.json({
+                    success: true,
+                    message: "Password successfully changed"
+                })
+            }
+        }).catch(err=>{
+            return res.json({
+                success: true,
+                message: "Something went wrong"
+            })
+        })
+        
     })
 }
 
@@ -182,6 +217,7 @@ module.exports = {
     verify,
     forgotPassword,
     resetPassword,
+    changePassword,
     profileDetails: {
         info: profileDetailsInfo,
         update: profileDetailsUpdate

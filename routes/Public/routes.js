@@ -4,10 +4,14 @@ const router = express.Router()
 const CategoryController = require('@controllers/Public/category')
 const ProductController = require('@controllers/Public/product')
 const VendorController = require('@controllers/Public/vendor')
-// const SiteController = require('@controllers/Public/siteSetting')
 const SiteController = require('@controllers/Public/site')
+const AccountController = require('@controllers/Public/account')
 const ProductEnquiryController = require('@controllers/Public/productEnquiry')
 
+
+// reset password
+router.post('/account/forgot-password', AccountController.forgotPassword)
+router.post('/account/reset-password', AccountController.resetPassword)
 
 // Category
 router.get('/category/main/list', CategoryController.listMain)
