@@ -11,6 +11,7 @@ const add = (data)=>{
         imageLink: Joi.string(),
         productDescription: Joi.string().required(),
         enquiry: Joi.string().required(),
+        expectedDeliveryDays: Joi.string().required(),
     }).options({abortEarly : false})
 
     let validation = schema.validate(data)

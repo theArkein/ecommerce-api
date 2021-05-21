@@ -30,6 +30,7 @@ const schema = new Schema({
     imageLink: {
         type: Schema.Types.String
     },
+    expectedDeliveryDays: {type: Number},
     productDescription: {
         type: Schema.Types.String,
         required: true
@@ -37,7 +38,8 @@ const schema = new Schema({
     enquiry: {
         type: Schema.Types.String,
         required: true
-    }
+    },
+    enquiredDate: {type: Date, default: Date.now}
 }, {timestamps: true});
 
 const ProductEnquiry = mongoose.model('ProductEnquiry', schema);
