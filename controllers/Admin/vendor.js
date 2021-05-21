@@ -20,7 +20,7 @@ const list = (req, res)=>{
 }
 
 const detail = (req, res)=>{
-    let filterQuery = {slug: req.params.slug}
+    let filterQuery = {_id: req.params.id}
     Vendor.findOne(filterQuery)
     .populate('products')
     .populate('orders')
@@ -32,12 +32,11 @@ const detail = (req, res)=>{
         })
          res.json({
               success: true,
-              results: vendors.length,
-              data: vendors
+              data: vendor
          })
     }).catch(err=>{
          res.json({
-              success: true,
+              success: false,
               message: "Something went wrong",
               error: err
          })

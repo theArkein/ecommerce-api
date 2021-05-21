@@ -32,13 +32,13 @@ router.get('/product/flash-deal/list', ProductController.listFlashDeal)
 
 // Vendor
 router.get('/vendor/list', VendorController.list)
+router.get('/vendor/:id/detail', VendorController.detail)
 
 
 // Site
 router.get('/site/sliders', SiteController.sliders)
-
-// router.get('/site/banner', SiteController.banner)
-// router.get('/site/slider', SiteController.slider)
+router.get('/site/banner', SiteController.banner)
+router.get('/site/ads', SiteController.ads)
 router.get('/site/recommended', SiteController.recommended)
 
 // product enquiry

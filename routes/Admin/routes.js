@@ -78,6 +78,11 @@ router.get('/user/:id/detail', UserController.detail)
 // order
 router.get('/order/list', OrderController.list)
 router.get('/order/:orderId/detail', OrderController.detail)
+router.put('/order/:orderId/cancel', OrderController.cancel)
+router.put('/order/:orderId/decline', OrderController.decline)
+router.put('/order/:orderId/ship', OrderController.ship)
+router.put('/order/:orderId/complete', OrderController.complete)
+router.put('/order/:orderId/refund', OrderController.refund)
 
 // product enquiry
 router.get('/product-enquiry/list', ProductEnquiryController.list)

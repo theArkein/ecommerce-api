@@ -41,6 +41,7 @@ const signup = (data)=>{
 
 const passwordReset = (data)=>{
     const schema = Joi.object({
+        email: Joi.string().email().required(),
         password: Joi.string()
         .pattern(new RegExp('^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,30}$'))
         .message({'string.pattern.base':"Password doesn't match strong pattern"})

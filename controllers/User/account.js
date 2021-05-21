@@ -57,7 +57,7 @@ const forgotPassword = (req, res)=>{
         })
     let filterQuery = {email}
     const OTP = uniqid.process()
-    User.findByIdAndUpdate(user._id, {passwordResetOTP: OTP}).then(user=>{
+    User.findOneAndUpdate(filterQuery, {passwordResetOTP: OTP}).then(user=>{
         if(!user)
             return res.json({
                 success: false,
@@ -83,7 +83,7 @@ const forgotPassword = (req, res)=>{
 }
 
 const resetPassword = (req, res)=>{
-    let {password, confirmPassword, otp} = req.body
+    let {email, password, confirmPassword, otp} = req.body
     
     let errors = userValidation.passwordReset(req.body)
     if(errors)
@@ -93,14 +93,19 @@ const resetPassword = (req, res)=>{
             errors
         })
 
-    let filterQuery = {passwordResetOTP: otp}
+    let filterQuery = {email}
     User.findOne(filterQuery).then(user=>{
         if(!user)
             return res.json({
                 success: false,
-                message: "OTP expired or didnot match"
+                message: "OTP expired"
             })
-            
+        if(!user.passwordResetOTP==otp){
+            return res.json({
+                success: false,
+                message: "OTP didnot match"
+            })
+        }
         var hashedPassword = bcrypt.hashSync(password, config.bcrypt.saltRounds)
         User.findByIdAndUpdate(user._id, {password: hashedPassword, passwordResetOTP: null}).then(updated=>{
             return res.json(user)

@@ -19,7 +19,27 @@ const recommended = (req, res)=>{
     })
 }
 
+const banner = (req, res)=>{
+    Site.findOne({})
+    .then(site=>{
+        res.json({
+            banner: site.banner
+        })
+    })
+}
+
+const ads = (req, res)=>{
+    Site.findOne({})
+    .then(site=>{
+        res.json({
+            ads: site.ads
+        })
+    })
+}
+
 module.exports = {
     sliders,
-    recommended
+    recommended,
+    banner,
+    ads
 }
