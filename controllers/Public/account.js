@@ -4,6 +4,7 @@ const config = require('@config/config')
 const sendOTP = require('@config/sendOTP')
 const bcrypt = require('bcrypt')
 const userValidation = require('@middlewares/Public/account')
+const User = require('@models/user')
 
 const forgotPassword = (req, res)=>{
     let {email} = req.body
@@ -40,7 +41,7 @@ const forgotPassword = (req, res)=>{
 }
 
 const resetPassword = (req, res)=>{
-    let {email, password, confirmPassword, otp} = req.body
+    let {email, password, otp} = req.body
     
     let errors = userValidation.passwordReset(req.body)
     if(errors)
@@ -57,7 +58,7 @@ const resetPassword = (req, res)=>{
                 success: false,
                 message: "OTP expired"
             })
-        if(!user.passwordResetOTP==otp){
+        if(!user.passwordResetOTP || user.passwordResetOTP!=otp){
             return res.json({
                 success: false,
                 message: "OTP didnot match"

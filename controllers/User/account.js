@@ -89,7 +89,7 @@ const resetPassword = (req, res)=>{
                 success: false,
                 message: "OTP expired"
             })
-        if(!user.passwordResetOTP==otp){
+        if(!user.passwordResetOTP || user.passwordResetOTP!=otp){
             return res.json({
                 success: false,
                 message: "OTP didnot match"
