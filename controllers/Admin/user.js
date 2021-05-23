@@ -18,7 +18,7 @@ const list = (req, res)=>{
 }
 
 const detail = (req, res)=>{
-    let filterQuery = {slug: req.params.slug}
+    let filterQuery = {id: req.params.id}
     User.findOne(filterQuery)
     .then(user=>{
         if(!user)

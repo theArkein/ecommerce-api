@@ -22,8 +22,9 @@ router.get('/statistics', authorize([2]), StatisticsController.statistics)
 router.get('/profile-details/info', authorize([2]), VendorAccountController.profile)
 router.put('/profile-details/update', authorize([2]), VendorAccountController.profileUpdate)
 router.get('/account/verify', authorize([2]), VendorAccountController.verify )
-router.post('/account/forgot-password', authorize([2]), VendorAccountController.forgotPassword)
-router.post('/account/reset-password', authorize([2]), VendorAccountController.resetPassword)
+router.post('/account/forgot-password', VendorAccountController.forgotPassword)
+router.post('/account/reset-password', VendorAccountController.resetPassword)
+router.post('/account/change-password', authorize([2]), VendorAccountController.changePassword)
 
 
 // products

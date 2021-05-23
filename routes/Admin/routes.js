@@ -18,7 +18,7 @@ const SliderController = require('@controllers/Admin/Site/slider')
 const AdController = require('@controllers/Admin/Site/ad')
 const BannerController = require('@controllers/Admin/Site/banner')
 const RecommendedCategoryController = require('@controllers/Admin/Site/recommendedCategory')
-
+const StatisticsController = require("@controllers/Admin/statistics")
 
 const authorize = require('@middlewares/authorize')
 
@@ -106,10 +106,8 @@ router.delete('/site/ad/:id', AdController.adDelete)
 
 // banner
 router.get('/site/banner', BannerController.info)
-
 router.get('/site/banner/large', BannerController.largeInfo)
 router.put('/site/banner/large', BannerController.largeUpdate)
-
 router.get('/site/banner/small', BannerController.smallInfo)
 router.put('/site/banner/small/:id', BannerController.smallUpdate)
 
@@ -122,5 +120,8 @@ router.delete('/site/recommended-category/:id', RecommendedCategoryController.de
 
 // site setting - footer Links
 // router.get('/site/setting/footer/info', SiteSetting.footer.info)
+
+// Statistics
+router.get('/statistics', StatisticsController.info)
 
 module.exports = router

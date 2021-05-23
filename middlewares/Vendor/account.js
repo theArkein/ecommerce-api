@@ -20,6 +20,7 @@ const profileUpdate = (data)=>{
 
 const passwordReset = (data)=>{
     const schema = Joi.object({
+        email: Joi.string().email(),
         password: Joi.string()
         .pattern(new RegExp('^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,30}$'))
         .message({'string.pattern.base':"Password doesn't match strong pattern"})
@@ -37,8 +38,28 @@ const passwordReset = (data)=>{
     })
     return errors 
 }
- 
+
+const changePassword = (data)=>{
+    const schema = Joi.object({
+        oldPassword: Joi.string().required(),
+        newPassword: Joi.string()
+        .pattern(new RegExp('^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,30}$'))
+        .message({'string.pattern.base':"Password doesn't match strong pattern"})
+        .required(),
+        confirmNewPassword: Joi.ref('newPassword')
+    }).options({abortEarly : false})
+
+    let validation = schema.validate(data)
+    if(!validation.error)
+        return null
+    let errors = validation.error.details.map(error=>{
+        return {message: error.message, field: error.path[0]}
+    })
+    return errors 
+}
+
 module.exports = {
     profileUpdate,
-    passwordReset
+    passwordReset,
+    changePassword
 }

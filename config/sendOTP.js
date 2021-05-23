@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 
 const sendOTP = (mail, otp)=>{
     var mailOptions = {
-        from: 'leosarad100@gmial.com',
+        from: 'theArkein.dev@gmail.com',
         to: mail,
         subject: 'Password reset otp for travel right',
         text: `Your OTP is ${otp}. This OTP will expire in 5 mins after it is generated.`

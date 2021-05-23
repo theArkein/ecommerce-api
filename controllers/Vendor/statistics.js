@@ -36,12 +36,14 @@ const statistics = async (req, res)=>{
      let shippedOrders = fetchOrders({vendor: req.user.id, status: 3})
      let completedOrders = fetchOrders({vendor: req.user.id, status: 4})
      let refundedOrders = fetchOrders({vendor: req.user.id, status: 5})
+     let todaysOrders = countOrders({"orderedDate": { 
+          $lt: new Date(), 
+          $gte: new Date(new Date().setDate(new Date().getDate()-1))
+      }})
 
-     let todaysOrders = fetchOrders({"orderedDate": { $lt: new Date()}})
 
 
-
-     let statistics = await Promise.all([totalProducts, pendingProducts, approvedProducts, suspendedProducts, totalOrders, pendingOrders, cancelledOrders, declinedOrders, shippedOrders, completedOrders, refundedOrders], todaysOrders)
+     let statistics = await Promise.all([totalProducts, pendingProducts, approvedProducts, suspendedProducts, totalOrders, pendingOrders, cancelledOrders, declinedOrders, shippedOrders, completedOrders, refundedOrders, todaysOrders])
      return res.json({
           succes: true,
           data: {
@@ -61,47 +63,6 @@ const statistics = async (req, res)=>{
      })
 }
 
-// const statistic = async (req, res)=>{
-//      let products = new Promise((resolve, reject)=>{
-//           Product.find({}).exec((err, data)=>{
-//                if(err)
-//                     reject(err)
-//                resolve(data)
-//           })
-//      })
-
-//      let orders = new Promise((resolve, reject)=>{
-//           Order.find({}).exec((err, data)=>{
-//                if(err)
-//                     reject(err)
-//                resolve(data)
-//           })
-//      })
-
-     
-
-//      promises = await Promise.all([products, orders])
-//      let pendingProducts = promises[0].filter(item=>{
-//           if(item.status == 1)
-//           return item
-//      })
-//      let approvedProducts = promises[0].filter(item=>{
-//           if(item.status == 2)
-//           return item
-//      })
-//      let suspendedProducts = promises[0].filter(item=>{
-//           if(item.status == 3)
-//           return item
-//      })
-
-//      res.json({
-//           totalProducts: products.length,
-//           pendingProducts: pendingProducts.length,
-//           approvedProducts: approvedProducts.length,
-//           suspendedProducts: suspendedProducts.length,
-
-//      })
-// }
 
 module.exports = {
      statistics

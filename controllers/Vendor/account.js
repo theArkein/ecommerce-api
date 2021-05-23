@@ -96,43 +96,42 @@ const verify = (req, res)=>{
 }
 
 const forgotPassword = (req, res)=>{
-    let {email} = req.body
-    if(!email)
+    if(!req.user && !req.body.email){
         return res.json({
             success: false,
-            message: "No email provided"
+            message: "Please provide vendor email"
         })
-    let filterQuery = {email}
-    Vendor.findOne(filterQuery).then(vendor=>{
-        if(!vendor)
-            return res.json({
-                success: false,
-                message: "No vendor found with such email"
+    }
+    let filterQuery = null
+    if(req.user)
+        filterQuery = {_id: req.user.id}
+    if(req.body.email)
+        filterQuery = {email: req.body.email}
+
+    const OTP = uniqid.process()
+    Vendor.findOneAndUpdate(filterQuery, {passwordResetOTP: OTP}).then(user=>{
+        sendOTP(user.email, OTP)
+        setTimeout(()=>{
+            Vendor.findByIdAndUpdate(user._id, {passwordResetOTP: null}).then(user=>{
+                console.log("OTP cleared for user: ", user._id)
             })
-        const OTP = uniqid.process()
-        Vendor.findByIdAndUpdate(vendor._id, {passwordResetOTP: OTP}).then(vendor=>{
-            sendOTP(email, OTP)
-            setTimeout(()=>{
-                Vendor.findByIdAndUpdate(vendor._id, {passwordResetOTP: null}).then(vendor=>{
-                    console.log("OTP cleared for vendor: ", vendor._id)
-                })
-            }, 5*60*1000)
-            return res.json({
-                success: true,
-                message: "OTP sent to reset password"
-            })
-        }).catch(err=>{
-            return res.json({
-                success: false,
-                message: "Something went wrong",
-                err
-            })
+        }, 5*60*1000)
+        return res.json({
+            success: true,
+            message: "OTP sent to reset password"
+        })
+    }).catch(err=>{
+        return res.json({
+            success: false,
+            message: "Something went wrong",
+            err
         })
     })
 }
+
 const resetPassword = (req, res)=>{
     let {password, otp} = req.body
-
+    
     let errors = vendorAccountValidate.passwordReset(req.body)
     if(errors)
         return res.json({
@@ -140,28 +139,86 @@ const resetPassword = (req, res)=>{
             message: "Validation failed",
             errors
         })
+    if(!req.user && !req.body.email){
+        return res.json({
+            success: false,
+            message: "Please provide vendor email"
+        })
+    }
+    let filterQuery = null
+    if(req.user)
+        filterQuery = {_id: req.user.id}
+    if(req.body.email)
+        filterQuery = {email: req.body.email}
 
-    let filterQuery = {passwordResetOTP: otp}
-    Vendor.findOne(filterQuery).then(vendor=>{
-        if(!vendor)
+    Vendor.findOne(filterQuery).then(user=>{
+        if(!user.passwordResetOTP)
             return res.json({
                 success: false,
-                message: "OTP expired or didnot match"
+                message: "OTP expired"
             })
-            
+        if(user.passwordResetOTP!=otp){
+            return res.json({
+                success: false,
+                message: "OTP didnot match"
+            })
+        }
         var hashedPassword = bcrypt.hashSync(password, config.bcrypt.saltRounds)
-        Vendor.findByIdAndUpdate(vendor._id, {password: hashedPassword, passwordResetOTP: null}).then(updated=>{
+        Vendor.findByIdAndUpdate(user._id, {password: hashedPassword, passwordResetOTP: null}).then(updated=>{
             return res.json({
                 success: true,
-                message: "Reset password successfull"
+                message: "Password successfully resetted"
             })
         })
     }).catch(err=>{
-        res.json({
+        return res.json({
             success: false,
-            message: "Somethign went wrong",
-            err
+            message: "Something went wrong"
         })
+    })
+}
+
+const changePassword = (req, res)=>{
+    let {oldPassword, newPassword} = req.body
+    
+    let errors = vendorAccountValidate.changePassword(req.body)
+    if(errors)
+        return res.json({
+            success: false,
+            message: "Validation failed",
+            errors
+        })
+    
+    if(oldPassword == newPassword){
+        return res.json({
+            success: false,
+            message: "New password must not be same as old password"
+        })
+    }
+
+    let filterQuery = {_id: req.user.id}
+    Vendor.findOne(filterQuery).then(user=>{
+        let isMatch = bcrypt.compareSync(oldPassword, user.password);
+        if(!isMatch)
+            return res.json({
+                success: false,
+                message: "Old password didnot match"
+            })
+            var hashedPassword = bcrypt.hashSync(newPassword, config.bcrypt.saltRounds)
+            Vendor.findByIdAndUpdate(user._id, {password: hashedPassword}).then(updated=>{
+            if(updated){
+                return res.json({
+                    success: true,
+                    message: "Password successfully changed"
+                })
+            }
+        }).catch(err=>{
+            return res.json({
+                success: true,
+                message: "Something went wrong"
+            })
+        })
+        
     })
 }
 
@@ -172,4 +229,5 @@ module.exports = {
     verify,
     forgotPassword,
     resetPassword,
+    changePassword
 }
