@@ -142,9 +142,20 @@ const googleToken = (req, res)=>{
             message: "Failed to sign in",
             error: req.error
         })
+    if(req.user.error)
+        return res.json({
+            success: false,
+            message: req.user.error.message
+        })
         
     let user = req.user
     const token = jwt.sign({ id: user._id, userType: 3 }, config.jwt.SECRET, { expiresIn: config.jwt.EXPIRY })
+    
+    if(req.user.error)
+        return res.json({
+            success: false,
+            message: req.user.error.message
+        })
 
     User.findById(user._id)
     .populate("wishlist cart.product", "name shortname discount price image")

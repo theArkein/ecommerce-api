@@ -39,7 +39,7 @@ passport.use(
                User.findOne({email: profile.emails[0].value}).then(user=>{
                     if(user){
                          let error = {
-                              message: "User with this email already exists. Please sigin"
+                              message: "Please signin using password"
                          }
                          console.log("found")
                          return done(null, {error})
@@ -82,7 +82,7 @@ passport.use(new GoogleOauthTokenStrategy({
                User.findOne({email: profile.emails[0].value}).then(user=>{
                     if(user){
                          let error = {
-                              message: "User with this email already exists. Please sigin"
+                              message: "Please signin using password"
                          }
                          console.log("found")
                          return done(null, {error})
@@ -127,7 +127,7 @@ passport.use(
                     User.findOne({email: profile.emails[0].value}).then(user=>{
                          if(user){
                               let error = {
-                                   message: "User with this email already exists. Please sigin"
+                                   message: "Please Signin suing password"
                               }
                               console.log("found")
                               return done(null, {error})
@@ -167,7 +167,7 @@ passport.use(new FacebookTokenStrategy({
                User.findOne({email: profile.emails[0].value}).then(user=>{
                     if(user){
                          let error = {
-                              message: "User with this email already exists. Please sigin"
+                              message: "Please signin using password"
                          }
                          console.log("found")
                          return done(null, {error})

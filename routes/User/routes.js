@@ -22,12 +22,12 @@ router.post('/auth/signup', UserAuthController.signup)
 // Google auth
 router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email']}))
 router.get('/auth/google/return', passport.authenticate('google', {session : false}), UserAuthController.google)
-router.post('/auth/google/token', passport.authenticate('google-oauth-token'), UserAuthController.googleToken)
+router.post('/auth/google/token', passport.authenticate('google-oauth-token', {session : false}), UserAuthController.googleToken)
 
 // Facebook auth
 router.get('/auth/facebook', passport.authenticate('facebook', {scope: ['email', 'user_birthday']} ))
 router.get('/auth/facebook/return', passport.authenticate('facebook', {session : false}), UserAuthController.facebook)
-router.post('/auth/facebook/token', passport.authenticate('facebook-token'), UserAuthController.facebookToken)
+router.post('/auth/facebook/token', passport.authenticate('facebook-token', {session : false}), UserAuthController.facebookToken)
 
 // Account Verification
 router.get('/account/verify', UserAccount.verify )
