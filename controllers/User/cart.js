@@ -134,7 +134,7 @@ const addItem = async (req, res)=>{
         .then(result=>{
             if(result){
                 return res.json({
-                    success: false,
+                    success: true,
                     message: "Product successfully added to cart"
                 })
             }
