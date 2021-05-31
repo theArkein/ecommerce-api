@@ -62,11 +62,17 @@ router.post('/cart/addItem', authorize([3]), CartController.addItem)
 router.put('/cart/updateItem/:id', authorize([3]), CartController.updateItem)
 router.delete('/cart/deleteItem/:id', authorize([3]), CartController.deleteItem)
 
+router.post('/crt/addItem', authorize([3]), CartController.addItemCrt)
+
+
 // orders
 router.get('/order/list', authorize([3]), OrderController.list)
 router.get('/order/:orderId/detail', authorize([3]), OrderController.detail)
 router.post('/order/create', authorize([3]), OrderController.create)
 router.put('/order/:orderId/cancel', authorize([3]), OrderController.cancel)
+
+router.post('/odr/create', authorize([3]), OrderController.createOdr)
+
 
 // reviews
 router.get('/review/list', authorize([3]), ReviewController.list)

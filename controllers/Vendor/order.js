@@ -5,13 +5,37 @@ const sendEmail = require('@config/sendEmail')
 
 
 const list = (req, res)=>{
-     let filterQuery = {vendor: req.user.id}
+     let filterQuery = {vendors: req.user.id}
      Order.find(filterQuery)
+     .populate('products.product', 'name shortname image vendor')
      .then(orders=>{
+          // res.json(orders)
+          let vendorOrders = orders.map(order=>{
+               let products = order.products.filter(item=>{
+                    if(item.product.vendor == req.user.id)
+                    return item
+               })
+               let totalProducts = totalCost = totalQuantity = 0
+               products.forEach(element => {
+                    totalQuantity += element.quantity
+                    totalCost += element.totalCost
+                    totalProducts++
+               });
+               let newOrder = {
+                    orderId : order.orderId,
+                    shippingAddress: order.shippingAddress,
+                    status: order.status,
+                    products,
+                    totalProducts,
+                    totalQuantity,
+                    totalCost
+               }
+               return newOrder
+          })
           return res.json({
                success: true,
                results: orders.length,
-               data: orders
+               data: vendorOrders
           })
      }).catch(err=>{
           return res.json({
@@ -24,20 +48,35 @@ const list = (req, res)=>{
 
 const detail = (req, res)=>{
      let filterQuery = {
-          vendor: req.user.id,
+          vendors: req.user.id,
           orderId : req.params.orderId,
      }
      Order.findOne(filterQuery)
-     .populate('products.product', 'name shortname image')
+     .populate('products.product', 'name shortname image vendor')
      .then(order=>{
-          if(order.vendor!=req.user.id)
-               return res.json({
-                    success: false,
-                    message: "Vendor not authorized for this product"
+
+               let products = order.products.filter(item=>{
+                    if(item.product.vendor == req.user.id)
+                    return item
                })
+               let totalProducts = totalCost = totalQuantity = 0
+               products.forEach(element => {
+                    totalQuantity += element.quantity
+                    totalCost += element.totalCost
+                    totalProducts++
+               });
+               let newOrder = {
+                    orderId : order.orderId,
+                    shippingAddress: order.shippingAddress,
+                    status: order.status,
+                    products,
+                    totalProducts,
+                    totalQuantity,
+                    totalCost
+               }
           return res.json({
                success: true,
-               data: order
+               data: newOrder
           })
      }).catch(err=>{
           return res.json({
@@ -46,23 +85,6 @@ const detail = (req, res)=>{
                error: err
           })
      })
-}
-
-const edit = (req, res)=>{
-     // let id = req.params.orderId
-     // Order.findByIdAndUpdate(id).then(updated=>{
-     //      res.json({
-     //           success: true,
-     //           message: "Successfully updated",
-     //           data: updated
-     //      })
-     // }).catch(err=>{
-     //      res.json({
-     //           success: false,
-     //           message: err.message,
-     //           errors: err.errors
-     //      })
-     // })
 }
 
 const cancel = (req, res)=>{
@@ -203,7 +225,6 @@ const refund = (req, res)=>{
 module.exports = {
      list,
      detail,
-     edit,
      cancel,
      decline,
      ship,

@@ -24,53 +24,7 @@ const info = (req, res)=>{
     })
 }
 
-const addIte = (req, res)=>{
-    let errors = userValidation.addItemToCart(req.body)
-    if(errors)
-        return res.json({
-            success: false,
-            message: "Validation failed",
-            errors
-        })
-
-    let filterQuery = {
-        _id: req.user.id,
-        "cart.product": req.body.product
-    }
-    User.findOne(filterQuery)
-    .populate('cart.product', 'vendor')
-    .then(result=>{
-        if(result){
-            return res.json({
-                success: false,
-                message: "Product already exists in cart"
-            })
-        }
-        User.findOneAndUpdate({_id: req.user.id}, {$push : {cart: req.body} }).then(updated=>{
-            console.log(updated)
-            if(!updated){
-                return res.json({
-                    success: false,
-                    message: "Failed to add"
-                })
-            }
-            return res.json({
-                success: true,
-                message: "Successfully added"
-            })
-        }).catch(err=>{
-            return res.json({
-                success: false,
-                message: "Somehting went wrong",
-                error: err.errors
-            })
-        })
-    })
-
-    
-}
-
-const addItem = async (req, res)=>{
+const addItemCrt = async (req, res)=>{
     let errors = userValidation.addItemToCart(req.body)
     if(errors)
         return res.json({
@@ -160,6 +114,89 @@ const addItem = async (req, res)=>{
         })
 }
 
+const addItem = async (req, res)=>{
+    let errors = userValidation.addItemToCart(req.body)
+    if(errors)
+        return res.json({
+            success: false,
+            message: "Validation failed",
+            errors
+        })
+
+    let cart = new Promise((resolve, reject)=>{
+        User.findById(req.user.id)
+        .populate('cart.product', 'vendor')
+        .exec((err, data)=>{
+            if(err)
+                reject(err)
+            resolve(data.cart)
+        })
+    })
+    let product = new Promise((resolve, reject)=>{
+        Product.findById(req.body.product)
+        .select('vendor')
+        .exec((err, data)=>{
+            if(!data){
+                return res.json({
+                    success: false,
+                    message: "No such product"
+                })
+            }
+            if(err)
+                reject(err)
+            resolve(data)
+        })
+
+    })
+
+    let promiseResult = await Promise.all([cart, product])
+    cart = promiseResult[0]
+    product = promiseResult[1]
+
+        let filterQuery = {
+            _id: req.user.id,
+            "cart.product": req.body.product
+        }
+        let u = {
+            "cart.$.product": req.body.product,
+            $inc: {"cart.$.quantity": 1}
+        }
+        if(req.body.quantity){
+            u = {
+                "cart.$.product": req.body.product,
+                "cart.$.quantity": req.body.quantity
+            }
+        }
+        User.findOneAndUpdate(filterQuery, u)
+        .then(result=>{
+            if(result){
+                return res.json({
+                    success: true,
+                    message: "Product successfully added to cart"
+                })
+            }
+            User.findOneAndUpdate({_id: req.user.id}, {$push : {cart: req.body} }).then(updated=>{
+                console.log(updated)
+                if(!updated){
+                    return res.json({
+                        success: false,
+                        message: "Failed to add"
+                    })
+                }
+                return res.json({
+                    success: true,
+                    message: "Successfully added"
+                })
+            }).catch(err=>{
+                return res.json({
+                    success: false,
+                    message: "Something went wrong",
+                    error: err.errors
+                })
+            })
+        })
+}
+
 const updateItem = (req, res)=>{
     let errors = userValidation.updateItemInCart(req.body)
     if(errors)
@@ -225,6 +262,7 @@ const deleteItem = (req, res)=>{
 module.exports = {
     info,
     addItem,
+    addItemCrt,
     updateItem,
     deleteItem
 }

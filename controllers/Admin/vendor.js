@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken')
 const config = require('@config/config')
 const sendEmail = require("@config/sendEmail")
 const Vendor = require('@models/vendor')
+const Order = require('@models/order')
+
 const list = (req, res)=>{
     Vendor.find()
     .then(vendors=>{
@@ -22,18 +24,48 @@ const list = (req, res)=>{
 const detail = (req, res)=>{
     let filterQuery = {_id: req.params.id}
     Vendor.findOne(filterQuery)
+    .select('-password')
     .populate('products')
-    .populate('orders')
     .then(vendor=>{
         if(!vendor)
         res.json({
             success: false,
             message: "No vendor found"
         })
-         res.json({
-              success: true,
-              data: vendor
-         })
+        filterQuery = {vendors: req.params.id}
+        Order.find(filterQuery)
+        .populate('products.product', 'name shortname image vendor')
+        .then(orders=>{
+            // res.json(orders)
+            let vendorOrders = orders.map(order=>{
+                let products = order.products.filter(item=>{
+                        if(item.product.vendor == req.params.id)
+                        return item
+                })
+                let totalProducts = totalCost = totalQuantity = 0
+                products.forEach(element => {
+                        totalQuantity += element.quantity
+                        totalCost += element.totalCost
+                        totalProducts++
+                });
+                let newOrder = {
+                        orderId : order.orderId,
+                        shippingAddress: order.shippingAddress,
+                        status: order.status,
+                        products,
+                        totalProducts,
+                        totalQuantity,
+                        totalCost
+                }
+                return newOrder
+            })
+            vendor = vendor.toObject()
+            vendor.orders = vendorOrders
+            res.json({
+                success: true,
+                data: vendor
+           })
+        })
     }).catch(err=>{
          res.json({
               success: false,

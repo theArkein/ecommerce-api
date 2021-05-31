@@ -8,7 +8,7 @@ const schema = new Schema({
     totalCost: {type: Number},
     orderedDate: {type: Date, default: Date.now},
     user: {type: Schema.Types.ObjectId, ref: 'User', required: true},
-    vendor: {type: Schema.Types.ObjectId, ref: 'Vendor', required: true},
+    vendors: [{type: Schema.Types.ObjectId, ref: 'Vendor', required: true}],
     products: [{
         _id: false,
         product: {type: Schema.Types.ObjectId, ref: 'Product', required: true},
