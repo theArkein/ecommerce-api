@@ -4,6 +4,14 @@ var jwt = require('jsonwebtoken')
 const authValidation = require('@middlewares/Admin/auth')
 const config = require("@config/config.json")
 
+const list = (req,res)=>{
+    Admin.find({}).then(admins=>{
+        res.json({
+            success: true,
+            data: admins
+        })
+    })
+}
 
 const signin = (req, res)=>{
     console.log("Admin Signin")
@@ -74,12 +82,13 @@ const signup = (req, res)=>{
         return res.json({
             success: false,
             message: (err.code == 11000 )? "Username already exists" : "Something went wrong",
-            errors: err
+            errors: err.errors
         })
     })  
 }
 
 module.exports = {
+    list,
     signin,
     signup,
 }

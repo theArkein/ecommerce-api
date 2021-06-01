@@ -4,8 +4,7 @@ const signin = (data)=>{
     const schema = Joi.object({
         username: Joi.string().required(),
         password: Joi.string().required()
-    
-    }).options({abortEarly : false, allowUnknown: true})
+    }).options({abortEarly : false})
 
     let validation = schema.validate(data)
     if(!validation.error)
@@ -23,7 +22,10 @@ const signup = (data)=>{
         .pattern(new RegExp('^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,30}$'))
         .message({'string.pattern.base':"Password doesn't match strong pattern"})
         .required(),
-        confirmPassword: Joi.string().required().valid(Joi.ref('password'))
+        confirmPassword: Joi.string().required().valid(Joi.ref('password')),
+        adminRole: Joi.string(),
+        adminPermissions: Joi.array(),
+        permittedEntities: Joi.array()
     }).options({abortEarly : false})
 
     let validation = schema.validate(data)

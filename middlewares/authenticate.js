@@ -80,6 +80,7 @@ const authenticate = (req, res, next)=>{
                     message: "User doesnot exists. (Deleted)",
                 })
             }
+            req.admin = admin
             next()
         })
     }

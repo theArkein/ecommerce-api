@@ -36,7 +36,7 @@ const statistics = async (req, res)=>{
      let shippedOrders = fetchOrders({vendor: req.user.id, status: 3})
      let completedOrders = fetchOrders({vendor: req.user.id, status: 4})
      let refundedOrders = fetchOrders({vendor: req.user.id, status: 5})
-     let todaysOrders = countOrders({"orderedDate": { 
+     let todaysOrders = fetchOrders({"orderedDate": { 
           $lt: new Date(), 
           $gte: new Date(new Date().setDate(new Date().getDate()-1))
       }})
