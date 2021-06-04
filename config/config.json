@@ -1,21 +1,19 @@
 {
-    "host": "http://localhost:5500",
-    "production": "https://haatbazaar.herokuapp.com",
     "base": "/api/v1",
     "bcrypt": {
         "saltRounds": 10
     },
     "jwt": {
         "SECRET": "hsda89uasdkkjskaus989wqwhaksj",
-        "EXPIRY": "1d"
+        "EXPIRY": "30d"
     },
     "keys": {
-        "google": {     
-            "clientID": "348489310053-k55d0d79tovpva7debii65g9uerh7d1k.apps.googleusercontent.com",
-            "clientSecret": "HFf5lz1sidfE5EKzhH_hAYe9"
-       },
+       "google": {
+            "clientID": "235305639178-b1fe0hd8ptls9hs33mj3727q7e8nrleu.apps.googleusercontent.com",
+            "clientSecret": "dgghzk-XAv0WpxRBpDgHlV1d"
+        },
         "facebook": {     
-            "clientID": "1352578591773787",
+            "clientID": "31352578591773787",
             "clientSecret": "ca51828f7321bd557e30ae49f4a4585f"
         }
     }
