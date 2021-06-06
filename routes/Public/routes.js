@@ -21,6 +21,7 @@ router.get('/category/:sub/child/list', CategoryController.listChild)
 // Product
 router.get('/product/list', ProductController.list)
 router.get('/product/:id/detail', ProductController.detail)
+router.get('/product/:id/related', ProductController.related)
 router.get('/product/vendor/:id/list', ProductController.listByVendor)
 router.get('/product/category/main/:id/list', ProductController.listByMainCategory)
 router.get('/product/category/sub/:id/list', ProductController.listBySubCategory)

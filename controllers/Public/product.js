@@ -61,6 +61,44 @@ const detail = (req, res)=>{
           })
      })
 }
+const related = async (req, res)=>{
+     let relatedToId = req.params.id
+     let product = await Product.findById(relatedToId)
+
+     let tags = product.tags
+     let query = [tags, product.brand, product.name, product.shortname]
+     query = query.join(" ")
+
+     console.log(query)
+     // let filterQuery = {$or: [{$text: { $search: tags }}], publish:true, status: 2}
+     let filterQuery = {
+          $or: [
+               {$text: { $search: query }},
+               {mainCategory: product.mainCategory},
+               {subCategory: product.mainCategory}, 
+               {childCategory: product.mainCategory},
+               {brand: product.brand},
+               {vendor: product.vendor},
+          ],
+          publish:true,
+          status: 2
+     }
+          
+     let options = paginateOption(req.query.page, req.query.limit)
+
+     Product.paginate(filterQuery, options)
+     .then(response=>{
+          response.results  = response.data.length
+          response.success = true
+          return res.json(response)
+     }).catch(err=>{
+          res.json({
+               success: false,
+               message: "Something went wrong",
+               error: err
+          })
+     })
+}
 const listByVendor = (req, res)=>{
      let filterQuery = {publish: true,status: 2, vendor: req.params.id}
      let options = paginateOption(req.query.page, req.query.limit)
@@ -274,6 +312,7 @@ const search = (req, res)=>{
 module.exports = {
      list,
      detail,
+     related,
      listByVendor,
      listByMainCategory,
      listBySubCategory,

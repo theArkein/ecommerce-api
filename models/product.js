@@ -22,7 +22,8 @@ const schema = new Schema({
     },
     vendor: {
         type: Schema.Types.ObjectId, ref: 'Vendor',
-        required: true
+        required: true,
+        index: true
     },
     price: {
         type: Number,
@@ -49,7 +50,8 @@ const schema = new Schema({
     },
     gallery: [],
     brand: {
-        type: Schema.Types.String
+        type: Schema.Types.String,
+        index: true
     },
     description: {
         type: Schema.Types.String,
@@ -116,15 +118,18 @@ const schema = new Schema({
     },
     mainCategory: {
         type: Schema.Types.ObjectId, ref: 'MainCategory',
-        required: true
+        required: true,
+        index: true
     },
     subCategory: {
         type: Schema.Types.ObjectId, ref: 'SubCategory',
-        default: null
+        default: null,
+        index: true
     },
     childCategory: {
         type: Schema.Types.ObjectId, ref: 'ChildCategory',
-        default: null
+        default: null,
+        index: true
     },
     reviews: [{
         type: Schema.Types.ObjectId, ref: 'Review'
