@@ -48,10 +48,10 @@ const create = (req, res)=>{
 
      let categoryIcon = `images/main-category/icons/${slug}.png`
      category.icon = categoryIcon
+     saveImage(icon , categoryIcon)
 
      category.save().then(created=>{
           // save image
-          saveImage(icon , categoryIcon)
 
           return res.json({
                success: true,
