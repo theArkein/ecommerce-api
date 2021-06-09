@@ -206,7 +206,6 @@ const schema = new Schema({
             default: null
         }
     }]
-
 });
 
 const Site = mongoose.model('Site', schema);

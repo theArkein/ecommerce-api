@@ -13,7 +13,7 @@ const ProductController = require('@controllers/Admin/product')
 const OrderController = require('@controllers/Admin/order')
 const ProductEnquiryController = require('@controllers/Admin/productEnquiry.js')
 
-
+const SettingController = require('@controllers/Admin/setting')
 const SliderController = require('@controllers/Admin/Site/slider')
 const AdController = require('@controllers/Admin/Site/ad')
 const BannerController = require('@controllers/Admin/Site/banner')
@@ -92,6 +92,14 @@ router.get('/product-enquiry/list', adminAuthorize(null, "READ", "PRODUCT_ENQUIR
 router.delete('/product-enquiry/:id/delete', adminAuthorize(null, "DELETE", "PRODUCT_ENQUIRIES"), ProductEnquiryController.remove)
 
 // site
+
+router.get('/site/settings', SettingController.info)
+router.post('/site/settings', SettingController.add)
+router.put('/site/settings/:id', SettingController.update)
+router.delete('/site/settings/:id', SettingController.remove)
+
+
+
 
 // sliders
 router.get('/site/sliders/featured', adminAuthorize(null, "READ", "SETTINGS"), SliderController.featuredSlidersInfo)
