@@ -1,7 +1,7 @@
 {
-  "name": "travel-right",
+  "name": "ecommerce-api",
   "version": "1.0.0",
-  "description": "API endpoints for travel-right e-commerce",
+  "description": "API endpoints for multivendor ecommerce",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
