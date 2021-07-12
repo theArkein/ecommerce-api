@@ -45,8 +45,8 @@ app.use(multer().any())
 // Default route
 app.get('/', (req,res)=>{
     res.json({
-        'name': 'Travel Right',
-        'description': 'multi vendor ecommerce api',
+        'name': 'ecommerce',
+        'description': 'Multi vendor ecommerce api',
         'version': '1.0',
         'base': '/api/v1'
     })
